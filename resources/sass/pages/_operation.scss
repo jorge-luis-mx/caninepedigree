@@ -1,0 +1,62 @@
+.card-custom-operation{
+
+    .card-header{
+        border: 1px solid #e9e9ef;
+        border-radius: 5px 5px 0 0;
+        padding-left: 10px;
+    }
+    .card-content{
+        border: 1px solid #e9e9ef;
+        border-top: 0;
+        padding: 10px;
+        cursor: pointer;
+        .card-operation{
+            background-color: #f7fafc;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, .1);
+            border-radius: 0.75rem;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            .content-operation-star{
+                flex: 0 0 15%;
+            }
+            .content-operation-center{
+                flex: 0 0 55%;
+                border-right: 2px dashed #e9e9ef;
+            }
+            .content-operation-end{
+                flex: 0 0 30%;
+            }
+        }
+    }
+}
+
+.custom-details{
+    .card-details-header{
+        box-shadow: 0 5px 15px rgba(0, 0, 0, .1);
+        border-radius: 0.75rem;
+        .card-client{
+            flex: 0 0 70%;
+        }
+        .card-payment{
+            flex: 0 0 30%;
+        }
+    }
+}
+
+.card-custom-details{
+    .card-header{
+        border: 1px solid #e9e9ef;
+        border-radius: 5px 5px 0 0;
+       
+    }
+    .card-content-details{
+
+        border: 1px solid #e9e9ef;
+        border-top: 0;
+        padding: 10px;
+        .card{
+            border-radius: 0.75rem !important;
+            margin-top: 20px;
+        }
+    }
+}

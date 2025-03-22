@@ -1,0 +1,117 @@
+@use '../base/variables' as v;
+
+
+body{
+ font-family: v.$primary-font;
+ font-size: 1.1rem !important;
+ padding-right:0px !important;
+}
+.container-dashboard {
+    display: flex; 
+}
+
+.content {
+    padding: 20px;
+}
+
+.box-content {
+    padding: 10px;
+}
+
+.custom-btn_color{
+    background-color: v.$colorAzulCielo;
+    color: v.$colorBlanco;
+}
+
+.btn-save{
+    background-color: v.$colorPrimary;
+    color: v.$colorBlanco;
+}
+.btn-update{
+    background-color: v.$colorPrimary;
+    color: v.$colorBlanco;
+}
+
+/* Bulma Elements */
+.navbar-link:not(.is-arrowless)::after, .select:not(.is-multiple):not(.is-loading)::after {
+    border:none
+
+}
+
+//data table
+.dataTables_wrapper .dataTables_length select {
+    padding: 1 !important;
+    width: 66px;
+}
+.dt-buttons {
+    margin-left: 5px;
+    display: inline-block; 
+    margin-bottom: 10px;
+    color: v.$colorBlanco;
+}
+
+.dt-button{
+    background-color: v.$colorAzulCielo !important;
+    color: v.$colorBlanco !important;
+    border: none !important;
+    border-radius: 5px !important;
+}
+.dt-button span{
+    background-color: v.$colorAzulCielo !important;
+    box-shadow: none !important;
+}
+
+
+
+/* Para controlar el tamaño de los íconos */
+.custom-size-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.custom-size-icon-list{
+    width: 15px;
+    height: 15px;
+}
+.custom-icon-chevron {
+    width: 30px;
+    
+}
+.custom-icon-profile{
+    width: 20px;
+    height: auto;
+}
+
+
+
+.custom-icon-action{
+    width: 20px; 
+    height: 20px; 
+}
+
+.btn-edit:hover {
+    background-color: v.$colorBtnLink; 
+}
+.btn-delete:hover {
+    background-color: v.$colorBtnLink; 
+}
+.btn-map:hover {
+    background-color: v.$colorBtnLink; 
+}
+.btn-save:hover{
+    background-color: v.$colorBtnLink;
+}
+.btn-icon-map{
+    width: 24px;
+    height: 24px;
+}
+
+.btn-general{
+
+    background-color: v.$colorPrimary;
+    color: v.$colorBlanco;
+}
+.icon-save{
+    background-color: aliceblue;
+    color: white;
+}

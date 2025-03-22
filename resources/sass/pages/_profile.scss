@@ -1,0 +1,23 @@
+@use '../base/variables' as v;
+@use '../base/mixins' as m;
+
+.nav-profile-custom{
+    margin-bottom: 15px !important;
+}
+
+//payment information
+.platform.is-active {
+    border: 2px solid #fdaa2d; /* Borde de color naranja */
+    background-color: #fff7e6; /* Fondo claro */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+
+
+.card .platform-paypal{
+    background-color: #002e83;
+    .card-content{
+        strong{
+            color: v.$colorBlanco;
+        }
+    }
+}

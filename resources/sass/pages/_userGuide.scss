@@ -1,0 +1,18 @@
+@use '../base/variables' as v;
+@use '../base/mixins' as m;
+
+.user-guide{
+    h3{
+        font-size: 20px;
+        font-weight: 700;
+    }
+    .item-link{
+        span{
+            color: v.$colorPrimary;
+        }
+        svg{
+            margin-left: 10px;
+            
+        }
+    }
+}

@@ -1,0 +1,21 @@
+@import url('https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap');
+@import 'bulma/bulma';
+
+$colorPrimary:#FBA53E;
+$colorAzulCielo:#5d87ff; 
+$colorBlanco:#fff;
+$colorNegro:#000;
+$colorGris:#ccc;
+
+$colorBtnLink:#ebedf2;
+$colorDanger:hsl(348, 100%, 61%);
+
+$colorStripe:#635bff;
+$colorPaypal:#002e83;
+//Fonts
+$primary-font: 'Figtree', sans-serif;
+
+//Media query
+$mobile:480px;
+$tablet:768px;
+$desktop:1024px;
