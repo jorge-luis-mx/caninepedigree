@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use App\Traits\CountryTrait;
 
-use App\Models\Provider;
+use App\Models\UserProfile;
 class ProfileController extends Controller
 {
     /**
@@ -20,13 +20,13 @@ class ProfileController extends Controller
     use CountryTrait;
     public function edit(Request $request): View
     {
-        $countries = $this->getCountries();
 
+        $countries = $this->getCountries();
+        //acceso siempre con model user
         $user = auth()->user();
-        $user_auth = $user->pvr_auth_id;
-        $provider_auth = $user->pvr_id;
-        $provider = Provider::where('pvr_id',$provider_auth)->get();
-        return view('profile.edit', ['user' => $user,'provider'=>$provider,'countries'=>$countries]);
+        $profileUser = UserProfile::where('profile_id',$user->profile_id)->first();
+    
+        return view('profile.edit', ['user' => $user,'profileUser'=>$profileUser,'countries'=>$countries]);
     }
 
     /**
@@ -38,8 +38,9 @@ class ProfileController extends Controller
         // validated
         $validatedData = $request->validated();
 
-        $provider = $request->user()->provider;
-        if (!$provider) {
+        $userProfile = $request->user()->UserProfile;
+       
+        if (!$userProfile) {
             return redirect()->back()->withErrors(['error' => 'No associated provider found.']);
         }
 
@@ -48,18 +49,18 @@ class ProfileController extends Controller
             'message' => 'Yeah! Your company information has been successfully updated.'
         ];
         
-        if ($provider->pvr_status===1) {
+        if ($userProfile->status===1) {
              // update provider
-             $provider->fill([
-                'pvr_name' => $validatedData['companyName'] ?? $provider->pvr_name,
-                'pvr_contact' => $validatedData['contactName'] ?? $provider->pvr_contact,
-                'pvr_email' => $validatedData['email'] ?? $provider->pvr_email,
-                'pvr_phone' => $validatedData['phone'] ?? $provider->pvr_phone,
-                'pvr_country' => $validatedData['country'] ?? $provider->pvr_country,
+             $userProfile->fill([
+                'name' => $validatedData['fullname'] ?? $userProfile->name,
+                'email' => $validatedData['email'] ?? $userProfile->email,
+                'phone' => $validatedData['phone'] ?? $userProfile->phone,
+                'address' => $validatedData['address'] ?? $userProfile->addres,
+                'country' => $validatedData['country'] ?? $userProfile->country,
             ]);
     
             // Guardar los cambios en la base de datos
-            $provider->save();
+            $userProfile->save();
         }else{
             
             $data['status']  = 'error';

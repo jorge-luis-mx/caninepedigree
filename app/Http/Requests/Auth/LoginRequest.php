@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 
-use App\Models\Provider;
+use App\Models\UserProfile;
 use App\Models\User;
 class LoginRequest extends FormRequest
 {
@@ -35,14 +35,6 @@ class LoginRequest extends FormRequest
     //     ];
     // }
 
-
-    public function rules(): array
-    {
-        return [
-            'login' => ['required', 'string'], // Puede ser username o email
-            'password' => ['required', 'string'],
-        ];
-    }
 
     /**
      * Attempt to authenticate the request's credentials.
@@ -117,6 +109,13 @@ class LoginRequest extends FormRequest
     //     RateLimiter::clear($this->throttleKey());
     // }
 
+    public function rules(): array
+    {
+        return [
+            'login' => ['required', 'string'], // Puede ser username o email
+            'password' => ['required', 'string'],
+        ];
+    }
 
     public function authenticate(): void
     {
@@ -137,35 +136,21 @@ class LoginRequest extends FormRequest
             'password' => ['required', 'min:8'], // La contraseña debe tener al menos 8 caracteres
         ]);
 
-        
         // Verifica si el login es un email
         $isEmail = filter_var($this->input('login'), FILTER_VALIDATE_EMAIL);
        
-        $findUser = $isEmail ? Provider::where('pvr_email', $this->input('login'))->first(): User::where('pvr_auth_username', $this->input('login'))->first();
-        
+        $findUser = $isEmail ? UserProfile::where('email', $this->input('login'))->first(): User::where('username', $this->input('login'))->first();
+    
         if (!$findUser) {
             throw ValidationException::withMessages([
                 'login' => 'No account was found associated with the provided username or email address. Please verify your input and try again.',
             ]);
         }
-
-        // Intentar autenticación
-        // if (!Auth::attempt([$loginField => $credentials['login'], 'password' => $credentials['password']], $this->boolean('remember'))) {
-        //     RateLimiter::hit($this->throttleKey());
-
-        //     throw ValidationException::withMessages([
-        //         'password' => 'La contraseña proporcionada es incorrecta.',
-        //     ]);
-        // }
-
+        
         // Autenticación estándar con username o email en provider_auth
-        $credentials = $isEmail 
-            ? ['pvr_id' => $findUser->pvr_id, 'password' => $this->input('password')]
-            : ['pvr_auth_username' => $this->input('login'), 'password' => $this->input('password')];
-    
-
-
-        // Intentar autenticación en la tabla p_auth con los credenciales ajustados
+        $credentials = $isEmail ? ['profile_id' => $findUser->profile_id, 'password' => $this->input('password')] : ['username' => $this->input('login'), 'password' => $this->input('password')];
+       
+        // Auth default de laravel lo define siempre el modelo User o que debe exister model user
         if (!Auth::attempt($credentials, $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
     
@@ -175,9 +160,9 @@ class LoginRequest extends FormRequest
             ]);
         }
 
-        //verify user auth si no desloguear
+        //verify si no esta deslogueado
         $user = Auth::user(); 
-        if ($user->pvr_auth_status !== 1) { 
+        if ($user->status !== 1) { 
             Auth::logout(); 
             throw ValidationException::withMessages([
                 'login' => trans('inactive_account'),

@@ -17,13 +17,11 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'companyName' => ['required', 'string', 'max:255','regex:/^[a-zA-Z\s&]+$/'],
-            'contactName'=>['required', 'string', 'max:255','regex:/^[a-zA-Z\s&]+$/'],
+            'fullname' => ['required', 'string', 'max:255','regex:/^[\pL\s&]+$/u'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 
-          
-                Rule::unique('providers', 'pvr_email')->ignore(
-                    $this->user()->provider->pvr_id, // Ignora el proveedor autenticado
-                    'pvr_id' // Columna que actúa como identificador
+                Rule::unique('users_profile', 'email')->ignore(
+                    $this->user()->UserProfile->profile_id, // Ignora el proveedor autenticado
+                    'profile_id' // Columna que actúa como identificador
                 ),
             ],
             'phone' => [
@@ -31,6 +29,8 @@ class ProfileUpdateRequest extends FormRequest
                 'string',
                 'regex:/^\+?[0-9]{7,15}$/', // Acepta números de teléfono internacionales y locales (7-15 dígitos)
             ],
+            'address' => ['required', 'string', 'max:255', 'regex:/^[\pL0-9\s.,#-]+$/u'],
+
             'country' => [
                 'required', 
                 'string',
@@ -42,15 +42,11 @@ class ProfileUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'companyName.required' => 'The provider name is required.',
-            'companyName.string' => 'The provider name must be a string.',
-            'companyName.max' => 'The provider name must not exceed 255 characters.',
-            'companyName.regex' => 'The provider name can only contain letters and spaces.',
+            'fullname.required' => 'The provider name is required.',
+            'fullname.string' => 'The provider name must be a string.',
+            'fullname.max' => 'The provider name must not exceed 255 characters.',
+            'fullname.regex' => 'El nombre de la empresa solo puede contener letras, espacios y "&". No se permiten números ni caracteres especiales.',
 
-            'contactName.required' => 'The provider name is required.',
-            'contactName.string' => 'The provider name must be a string.',
-            'contactName.max' => 'The provider name must not exceed 255 characters.',
-            'contactName.regex' => 'The provider name can only contain letters and spaces.',
 
             'email.required' => 'The provider email is required.',
             'email.string' => 'The provider email must be a string.',
@@ -61,6 +57,11 @@ class ProfileUpdateRequest extends FormRequest
 
             'phone.required' => 'The phone number is required.',
             'phone.regex' => 'The phone number must be valid (7-15 digits, optional +).',
+
+            'address.required' => 'The provider name is required.',
+            'address.string' => 'The provider name must be a string.',
+            'address.max' => 'The provider name must not exceed 255 characters.',
+            'address.regex' => 'La dirección solo puede contener letras, números, espacios, comas, puntos, guiones y "#".',
 
             'country.required' => 'The country is required.',
             'country.regex' => 'The country name must only contain letters, numbers, and spaces.',

@@ -7,6 +7,7 @@ import { serviceType } from './serviceType.js';
 import { pricing } from './pricing.js';
 import { operations } from './operations.js';
 import { profile } from './profile.js';
+import { dogs } from './dogs.js';
 
 
 window.Alpine = Alpine;

@@ -3,6 +3,10 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Middleware\HandleCors;
+
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
+
 //Custom controllers
 use App\Http\Controllers\AirportController;
 use App\Http\Controllers\MapController;
@@ -30,6 +34,47 @@ use App\Http\Controllers\DogController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+//lang
+Route::middleware('auth')->get('/lang/{locale}', function ($locale) {
+    if (in_array($locale, ['en', 'es'])) {
+        if (auth()->check()) {
+            $user = auth()->user();
+            // Intentamos actualizar el campo locale
+            $user->update(['locale' => $locale]);
+        } else {
+            // Si no está autenticado, guarda el idioma en la sesión
+            Session::put('locale', $locale);
+        }
+
+        // Establece el idioma para la aplicación
+        App::setLocale($locale);
+    }
+    return back();  // Redirige a la página anterior
+});
+
+
+// Route::middleware('auth')->get('/lang/{locale}', function ($locale) {
+//     if (in_array($locale, ['en', 'es'])) {
+//         if (auth()->check()) {
+//             $user = auth()->user();
+//             $user->locale = $locale;  // Establecer el idioma del usuario
+//             $user->save();  // Guardar el idioma en la base de datos
+//         } else {
+//             Session::put('locale', $locale);  // Si no está autenticado, guardar en la sesión
+//         }
+//         App::setLocale($locale);  // Cambiar el idioma de la aplicación
+//     }
+//     return response()->json(['status' => 'success']);  // Respuesta de éxito
+// });
+
+// Route::get('/lang/{locale}', function ($locale) {
+//     if (in_array($locale, ['en', 'es'])) {
+//         Session::put('locale', $locale);  // Guardar en la sesión
+//         App::setLocale($locale);  // Cambiar el idioma de la aplicación
+//     }
+//     return response()->json(['status' => 'success']);  // Respuesta de éxito
+// });
 
 
 //admin

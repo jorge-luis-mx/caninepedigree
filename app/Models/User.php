@@ -46,37 +46,32 @@ class User extends Authenticatable
     // ];
 
 
-
-    protected $table = 'provider_auth';
-    protected $primaryKey = 'pvr_auth_id';
-    public $timestamps = false;
+    protected $table = 'users';
+    protected $primaryKey = 'user_id';
+    public    $timestamps = false;
 
     protected $fillable = [
-        'pvr_id',
-        'pvr_auth_username',
-        'pvr_auth_password',
-        'pvr_auth_rol',
-        'pvr_auth_status',
+        'profile_id',
+        'username',
+        'password',
+        'role',
+        'locale',
+        'status',
     ];
 
     protected $hidden = [
-        'pvr_auth_password',
+        'password',
     ];
 
     // Especifica que el campo de contraseña es `p_auth_password`
     public function getAuthPassword()
     {
-        return $this->pvr_auth_password;
+        return $this->password;
     }
 
-    
-    
-    public function provider(): BelongsTo
+    public function userprofile(): BelongsTo
     {
-        return $this->belongsTo(Provider::class, 'pvr_id', 'pvr_id');
+        return $this->belongsTo(UserProfile::class, 'profile_id', 'profile_id');
     }
-
-
-
 
 }
