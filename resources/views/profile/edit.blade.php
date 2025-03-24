@@ -1,6 +1,6 @@
 <x-app-layout>
     
-    <h1 class="is-size-4">Profile</h1>
+    <h1 class="is-size-4">{{__('messages.main.profile.title')}}</h1>
 
     <!-- @include('profile.partials.nav-profile') -->
 
@@ -12,14 +12,14 @@
             <div class="card" style="box-shadow: none;">
                 <div class="card-content">
 
-                    <h2 class="title is-4 mb-4 pb-3">Edit Profile</h2>
+                    <!-- <h2 class="title is-4 mb-4 pb-3">{{__('messages.main.profile.subtitle')}}</h2> -->
 
                     <form action="{{ route('profile.update') }}" method="post">
                         @csrf
                         @method('patch')
                         <!-- Campo: Company Name -->
                         <div class="field mb-4">
-                            <label class="label" for="fullname">Full Name</label>
+                            <label class="label" for="fullname">{{__('messages.main.profile.name')}}</label>
                             <div class="control">
                                 <input
                                     class="input"
@@ -36,7 +36,7 @@
 
                             <div class="column">
                                 <div class="field">
-                                    <label class="label" for="email">Email</label>
+                                    <label class="label" for="email">{{__('messages.main.profile.email')}}</label>
                                     <div class="control">
                                         <input
                                             class="input"
@@ -51,7 +51,7 @@
 
                             <div class="column">
                                 <div class="field">
-                                    <label class="label" for="phone">Phone Number</label>
+                                    <label class="label" for="phone">{{__('messages.main.profile.phone')}}</label>
                                     <div class="control">
                                         <input
                                             class="input"
@@ -71,7 +71,7 @@
 
                             <div class="column">
                                 <div class="field">
-                                    <label class="label" for="email">Address</label>
+                                    <label class="label" for="email">{{__('messages.main.profile.address')}}</label>
                                     <div class="control">
                                         <input
                                             class="input"
@@ -87,7 +87,7 @@
                             <div class="column">
                                 <!-- Campo: Select -->
                                 <div class="field ">
-                                    <label class="label" for="country">Country</label>
+                                    <label class="label" for="country">{{__('messages.main.profile.country')}}</label>
                                     <div class="control">
                                         <div class="select is-fullwidth">
                                             <select id="country" name="country">

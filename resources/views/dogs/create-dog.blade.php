@@ -1,13 +1,13 @@
 <x-app-layout>
 
-   <h1 class="is-size-4">Register a New Dog</h1>
+   <h1 class="is-size-4">{{__('messages.main.dogs.title')}}</h1>
 
    <div class="columns is-multiline mt-4">
 
       <div class="column is-full">
          <div class="card" style="box-shadow: none;">
                <div class="card-content">
-                  <h2 class="title is-4 mb-4 pb-3">Create a New Profile for Your Dog</h2>
+                  <!-- <h2 class="title is-4 mb-4 pb-3">{{__('messages.main.dogs.title')}}</h2> -->
                   <form action="{{ route('dogs.store') }}" method="post">
                      @csrf
                      @method('post')
