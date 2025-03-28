@@ -126,8 +126,8 @@ class DogController extends Controller
         }
 
         $sire_id = (isset($dog->sire_id) && !empty($dog->sire_id) && $dog->sire_id != null) ? $dog->sire_id : null;
-
-       
+        $dam_id = (isset($dog->dam_id) && !empty($dog->dam_id) && $dog->dam_id != null) ? $dog->dam_id : null;
+        
         try {
 
             // Crea el registro sin reg_no
@@ -138,7 +138,7 @@ class DogController extends Controller
                 'sex' => $validatedData['sex'],
                 'birthdate' => $validatedData['birthdate'],
                 'sire_id' => $sire_id,
-                'dam_id' => null,
+                'dam_id' => $dam_id,
                 'breeder_id' => $owner,
                 'current_owner_id' => $owner,
                 'status' => 1
@@ -148,12 +148,21 @@ class DogController extends Controller
             $dog->reg_no = "DOG-" . str_pad($dog->dog_id, 5, '0', STR_PAD_LEFT);
             $dog->save();
 
-            if ($sire_id == null && isset($dog->dog_id)) {
+            if ($sire_id == null ) {
 
                 $sireEmail = $validatedData['sire_email'];
                 $descriptionSire = $validatedData['descriptionSire'];
     
             }
+
+            if ($dam_id == null ) {
+
+                $damEmail = $validatedData['dam_email'];
+                $descriptionDam = $validatedData['descriptionDam'];
+    
+            }
+
+           
 
             $data['message'] = 'Pricing inserted successfully';
             $data['status'] = 200;

@@ -80,7 +80,7 @@ export  function dogs() {
                     data[key] = value;
                 }
             });
-            
+            console.log(data);
             objets.saveDog(e, form, data);
     
         });
@@ -144,10 +144,10 @@ export  function dogs() {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 200) {
-
+                    showDamResults(data.data, form);
                     // Aquí puedes mostrar el resultado en el formulario, por ejemplo:
-                    form.querySelector('.dam_name').textContent = data.name;
-                    form.querySelector('.dam_id').value = data.dog_id;
+                    // form.querySelector('.dam_name').textContent = data.name;
+                    // form.querySelector('.dam_id').value = data.dog_id;
                 } else {
 
                     Swal.fire({
@@ -201,6 +201,11 @@ function showDamResults(dogs, form) {
 
         // Asignar un evento de clic para seleccionar un perro
         dogItem.addEventListener('click', function () {
+            selectSire(dog.dog_id, dog.name, form);
+        });
+
+        // Asignar un evento de clic para seleccionar un perro
+        dogItem.addEventListener('click', function () {
             selectDam(dog.dog_id, dog.name, form);
         });
 
@@ -211,7 +216,7 @@ function showDamResults(dogs, form) {
 }
 
 
-function selectDam(dogId, dogName, form) {
+function selectSire(dogId, dogName, form) {
     // Actualiza el campo de entrada con el nombre del perro seleccionado
     form.querySelector('input[name="sire"]').value = dogName; 
     form.querySelector('input[name="sire_id"]').value = dogId;
@@ -219,6 +224,14 @@ function selectDam(dogId, dogName, form) {
     document.getElementById('sireResults').style.display = 'none';
 }
 
+// Función para seleccionar un Dam
+function selectDam(dogId, dogName, form) {
+    // Actualiza el campo de entrada con el nombre del perro seleccionado
+    form.querySelector('input[name="dam"]').value = dogName; 
+    form.querySelector('input[name="dam_id"]').value = dogId;
+    // Ocultar el contenedor de resultados después de seleccionar un perro
+    document.getElementById('damResults').style.display = 'none';
+}
 
 
     const objets = {
