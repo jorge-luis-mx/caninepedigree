@@ -53,30 +53,6 @@ Route::middleware('auth')->get('/lang/{locale}', function ($locale) {
     return back();  // Redirige a la página anterior
 });
 
-
-// Route::middleware('auth')->get('/lang/{locale}', function ($locale) {
-//     if (in_array($locale, ['en', 'es'])) {
-//         if (auth()->check()) {
-//             $user = auth()->user();
-//             $user->locale = $locale;  // Establecer el idioma del usuario
-//             $user->save();  // Guardar el idioma en la base de datos
-//         } else {
-//             Session::put('locale', $locale);  // Si no está autenticado, guardar en la sesión
-//         }
-//         App::setLocale($locale);  // Cambiar el idioma de la aplicación
-//     }
-//     return response()->json(['status' => 'success']);  // Respuesta de éxito
-// });
-
-// Route::get('/lang/{locale}', function ($locale) {
-//     if (in_array($locale, ['en', 'es'])) {
-//         Session::put('locale', $locale);  // Guardar en la sesión
-//         App::setLocale($locale);  // Cambiar el idioma de la aplicación
-//     }
-//     return response()->json(['status' => 'success']);  // Respuesta de éxito
-// });
-
-
 //admin
 Route::get('/dashboard', [AdminController::class, 'index'])
     ->middleware(['auth', 'verified'])
@@ -104,7 +80,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/dogs/{dog}', [DogController::class, 'update'])->name('dogs.update'); 
     Route::get('/dogs/{dog}', [DogController::class, 'show'])->name('dogs.show');//para mostrar los detalles de un perro específico.
     Route::delete('/dogs/{dog}', [DogController::class, 'destroy'])->name('dogs.destroy');
-    
+    //
+    Route::get('/dogs/search/{reg_no}', [DogController::class, 'searchDog'])->name('dogs.search');
 
 
 

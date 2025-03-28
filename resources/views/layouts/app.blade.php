@@ -14,11 +14,9 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/introjs.min.css" rel="stylesheet" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.min.css">
         
         <!-- Scripts -->
-        <script src="{{ asset('assets/js/crypto-js.min.js') }}"></script>
         <script src="{{ asset('assets/js/sweetalert2.all.min.js') }}"></script>
         @vite(['resources/sass/app.scss', 'resources/js/app.js'])
        
@@ -43,7 +41,7 @@
             </div>
         </div>
     </div>
-
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.min.js"></script>
 
     </body>
 </html>

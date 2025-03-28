@@ -36,5 +36,11 @@ class UserProfile extends Model
     {
         return $this->hasMany(User::class, 'profile_id','profile_id'); 
     }
+
+
+    public function dogs():HasMany
+    {
+        return $this->hasMany(Dog::class, 'breeder_id');
+    }
     
 }

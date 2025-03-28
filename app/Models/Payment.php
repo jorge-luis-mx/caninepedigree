@@ -11,27 +11,24 @@ class Payment extends Model
 
 
     protected $table = 'payments';
-    protected $primaryKey = 'pay_id';
+    protected $primaryKey = 'payment_id';
     public $incrementing = true; 
 
     protected $fillable = [
-        'pay_sale_id',
-        'pay_transaction_id',
-        'pay_amount',
-        'pay_fee',
-        'pay_currency',
-        'pay_status',
-        'pay_method',
-        'pay_platform'
-
+        'breeding_request_id',
+        'user_id',
+        'amount',
+        'payment_method',
+        'status'
     ];
 
-    const CREATED_AT = 'pay_created';
-    const UPDATED_AT = 'pay_updated';
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';
 
-    public function sales(): BelongsTo
+
+    public function userProfile():BelongsTo
     {
-        return $this->belongsTo(Sale::class, 'pay_sale_id', 'sale_id');
+        return $this->belongsTo(UserProfile::class, 'user_id');
     }
 
 }

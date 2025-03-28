@@ -44,6 +44,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 });
 
+dogs();
 mainFunction();
 airport();
 map();
