@@ -229,6 +229,12 @@ class DogController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $dog = Dog::find($id);
+        if ($dog) {
+            $dog->delete();
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false], 400);
+        
     }
 }

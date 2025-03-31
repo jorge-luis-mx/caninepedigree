@@ -75,12 +75,12 @@
                         <td>${dog.status}</td>
                         <td>
                             ${dog.status === 'completed' ? 
-                            `<button class="button is-info is-small" onclick="viewDetails(${index})">Ver Detalles</button>` : ''}
+                            `<button class="button is-info is-small" onclick="viewDetails(${dog.dog_id})">Ver Detalles</button>` : ''}
 
-                            <button class="button is-danger is-small" onclick="deleteDog(${index})">Eliminar</button>
-                            <button class="button is-warning is-small" onclick="requestMating(${index})">Solicitar Monta</button>
+                            <button class="button is-danger is-small" onclick="deleteDog(${dog.dog_id})">Eliminar</button>
+                            <button class="button is-warning is-small" onclick="requestMating(${dog.dog_id})">Solicitar Monta</button>
                             ${dog.status === 'pending' ? 
-                                `<button class="button is-success is-small" onclick="makePayment(${index})">Pagar</button>` : 
+                                `<button class="button is-success is-small" onclick="makePayment(${dog.dog_id})">Pagar</button>` : 
                                 ''}
                         </td>
                     `;
@@ -96,27 +96,45 @@
             }
 
             // Funciones para manejar las acciones
-            window.viewDetails = function(index) {
-                alert(`Ver detalles de ${dogs[index].name}`);
+            window.viewDetails = function(dogId) {
+                alert(`Ver detalles de ${dogId}`);
             }
 
-            window.deleteDog = function(index) {
-                const confirmation = confirm(`¿Estás seguro de eliminar a ${dogs[index].name}?`);
+            window.deleteDog = function(dogId) {
+
+                const confirmation = confirm(`¿Estás seguro de eliminar a este perro?`);
                 if (confirmation) {
-                    dogs.splice(index, 1); // Eliminar el perro del array
-                    populateTable(dogs); // Refrescar la tabla
+                    
+                    fetch(`/dogs/${dogId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Perro eliminado con éxito');
+                            dogs = dogs.filter(dog => dog.id !== dogId); // Eliminar perro del array local
+                            populateTable(dogs); // Refrescar la tabla
+                        } else {
+                            alert('Error al eliminar el perro');
+                        }
+                    })
+                    .catch(error => alert('Error al eliminar el perro: ' + error));
                 }
             }
 
-            window.requestMating = function(index) {
+            window.requestMating = function(dogId) {
                 alert(`Solicitar cruza para ${dogs[index].name}`);
             }
 
-            window.makePayment = function(index) {
+            window.makePayment = function(dogId) {
                 alert(`Realizar pago para ${dogs[index].name}`);
             }
 
-            // Llamada inicial a la función para llenar la tabla con todos los perros
+            
             populateTable(dogs);
         });
     </script>
