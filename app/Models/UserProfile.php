@@ -13,7 +13,7 @@ class UserProfile extends Model
     use HasFactory;
 
 
-    protected $table = 'users_profile';
+    protected $table = 'user_profiles';
     protected $primaryKey = 'profile_id';
     public $incrementing = true; 
     
@@ -37,10 +37,14 @@ class UserProfile extends Model
         return $this->hasMany(User::class, 'profile_id','profile_id'); 
     }
 
-
-    public function dogs():HasMany
+    public function dogs()
     {
-        return $this->hasMany(Dog::class, 'breeder_id');
+        return $this->hasMany(Dog::class, 'current_owner_id');
     }
+
+    // public function dogs():HasMany
+    // {
+    //     return $this->hasMany(Dog::class, 'breeder_id');
+    // }
     
 }

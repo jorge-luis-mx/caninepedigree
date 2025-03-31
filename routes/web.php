@@ -23,6 +23,7 @@ use App\Http\Controllers\UserGuideController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DogController;
 
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,15 +77,23 @@ Route::middleware('auth')->group(function () {
     Route::get('/dogs', [DogController::class, 'index'])->name('dogs.index');
     Route::get('/dogs/create', [DogController::class, 'create'])->name('dogs.create');
     Route::post('/dogs', [DogController::class, 'store'])->name('dogs.store');
-    Route::get('/dogs/{dog}/edit', [DogController::class, 'edit'])->name('dogs.edit'); // para mostrar formulario de edicion
-    Route::put('/dogs/{dog}', [DogController::class, 'update'])->name('dogs.update'); 
-    Route::get('/dogs/{dog}', [DogController::class, 'show'])->name('dogs.show');//para mostrar los detalles de un perro específico.
-    Route::delete('/dogs/{dog}', [DogController::class, 'destroy'])->name('dogs.destroy');
-    //
+    // Route::get('/dogs/{dog}/edit', [DogController::class, 'edit'])->name('dogs.edit'); 
+    // Route::put('/dogs/{dog}', [DogController::class, 'update'])->name('dogs.update'); 
+    // Route::get('/dogs/{dog}', [DogController::class, 'show'])->name('dogs.show');
+    // Route::delete('/dogs/{dog}', [DogController::class, 'destroy'])->name('dogs.destroy');
+
+    
+
+    //serch
     Route::get('/dogs/search/{reg_no}', [DogController::class, 'searchDog'])->name('dogs.search');
 
-
-
+    //payments
+    Route::get('/payments/pay/{id}', [PaymentController::class,'pay']);
+    Route::post('/payments/paypal/create', [PaymentController::class,'createOrder']);
+    Route::get('/payments/paypal/capture/{id}', [PaymentController::class,'captureOrder']);
+    Route::post('/payments/paypal/payed', [PaymentController::class,'payedOrder']);
+    Route::post('/payments/paypal/pending', [PaymentController::class,'payedOrderPending']);
+    Route::get('/payments/paypal/paid', [PaymentController::class,'completed']);
 
 
 

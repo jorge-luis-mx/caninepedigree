@@ -19,7 +19,7 @@ class ProfileUpdateRequest extends FormRequest
         return [
             'fullname' => ['required', 'string', 'max:255','regex:/^[\pL\s&]+$/u'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 
-                Rule::unique('users_profile', 'email')->ignore(
+                Rule::unique('user_profiles', 'email')->ignore(
                     $this->user()->UserProfile->profile_id, // Ignora el proveedor autenticado
                     'profile_id' // Columna que actúa como identificador
                 ),

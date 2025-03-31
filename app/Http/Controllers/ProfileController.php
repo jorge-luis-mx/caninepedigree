@@ -25,7 +25,7 @@ class ProfileController extends Controller
         //acceso siempre con model user
         $user = auth()->user();
         $profileUser = UserProfile::where('profile_id',$user->profile_id)->first();
-    
+  
         return view('profile.edit', ['user' => $user,'profileUser'=>$profileUser,'countries'=>$countries]);
     }
 

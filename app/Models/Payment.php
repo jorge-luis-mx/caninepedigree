@@ -15,9 +15,10 @@ class Payment extends Model
     public $incrementing = true; 
 
     protected $fillable = [
-        'breeding_request_id',
         'user_id',
         'amount',
+        'type',
+        'breeding_request_id',
         'payment_method',
         'status'
     ];
@@ -30,5 +31,16 @@ class Payment extends Model
     {
         return $this->belongsTo(UserProfile::class, 'user_id');
     }
+
+    // public function breedingRequest()
+    // {
+    //     return $this->belongsTo(BreedingRequest::class, 'breeding_request_id');
+    // }
+
+    public function dogs()
+    {
+        return $this->belongsToMany(Dog::class, 'dog_payments', 'payment_id', 'dog_id');
+    }
+
 
 }

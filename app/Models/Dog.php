@@ -38,4 +38,24 @@ class Dog extends Model
         return $this->belongsTo(UserProfile::class, 'breeder_id');
     }
 
+    public function currentOwner()
+    {
+        return $this->belongsTo(UserProfile::class, 'current_owner_id');
+    }
+
+    public function sire()
+    {
+        return $this->belongsTo(Dog::class, 'sire_id');
+    }
+
+    public function dam()
+    {
+        return $this->belongsTo(Dog::class, 'dam_id');
+    }
+
+    public function payments()
+    {
+        return $this->belongsToMany(Payment::class, 'dog_payments', 'dog_id', 'payment_id');
+    }
+
 }

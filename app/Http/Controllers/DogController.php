@@ -5,8 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Validations\DogsValidations;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Yajra\DataTables\Facades\DataTables;
 //model
 use App\Models\Dog;
+use App\Models\Payment;
+use App\Models\DogPayment;
 class DogController extends Controller
 {
     /**
@@ -15,35 +20,35 @@ class DogController extends Controller
     public function index(Request $request)
     {
 
-        // if ($request->ajax()) {
-        //     $users = Dog::select(['id', 'name', 'email'])->get();
+        $dogs = Dog::whereIn('dogs.status', ['pending', 'completed']) // Especificar la tabla en la condición
+        ->leftJoin('dog_payments', 'dogs.dog_id', '=', 'dog_payments.dog_id')
+        ->leftJoin('payments', 'dog_payments.payment_id', '=', 'payments.payment_id')
+        ->select(
+            'dogs.dog_id',
+            'dogs.name',
+            'dogs.breed',
+            'dogs.sex',
+            'dogs.status',
+            DB::raw('COALESCE(SUM(payments.amount), 0) as total_paid'),
+            DB::raw('100 - COALESCE(SUM(payments.amount), 0) as amount_due')
+        )
+        ->groupBy('dogs.dog_id', 'dogs.name', 'dogs.sex', 'dogs.status')
+        ->get();
     
-        //     $data = $users->map(function ($user) {
-        //         return [
-        //             'id' => $user->id,
-        //             'name' => $user->name,
-        //             'email' => $user->email,
-        //             'action' => '
-        //                 <a href="' . route('users.show', $user->id) . '" class="btn btn-sm btn-info">Ver</a>
-        //                 <a href="' . route('users.edit', $user->id) . '" class="btn btn-sm btn-warning">Editar</a>
-        //                 <button class="btn btn-sm btn-danger deleteUser" data-id="' . $user->id . '">Eliminar</button>
-        //             '
-        //         ];
-        //     });
-        //     return response()->json(['data' => $data]);
-        // }
+    
+    
 
 
-        // $userProfileId = auth()->user()->profile_id;
-        // $dogs = Dog::where('current_owner_id', $userProfileId)
-        //     ->with(['payment' => function ($query) {
-        //         $query->where('status', 'completado');
-        //     }])
-        //     ->get();
+        // $dogs = Dog::whereHas('payments', function ($query) {
+        //     $query->whereIn('status', ['completado', 'pendiente']);
+        // })
+        // ->with('payments') // Cargar pagos relacionados
+        // ->get();
+        
+        
 
-        // return view('dogs.list-dogs', compact('dogs'));
-
-        return view('dogs.list-dogs');
+       
+        return view('dogs.list-dogs',compact('dogs'));
     }
 
     /**
@@ -128,8 +133,10 @@ class DogController extends Controller
         $sire_id = (isset($dog->sire_id) && !empty($dog->sire_id) && $dog->sire_id != null) ? $dog->sire_id : null;
         $dam_id = (isset($dog->dam_id) && !empty($dog->dam_id) && $dog->dam_id != null) ? $dog->dam_id : null;
         
-        try {
+        DB::beginTransaction();
 
+        try {
+            
             // Crea el registro sin reg_no
             $dog = Dog::create([
                 'name' => $validatedData['name'],
@@ -143,10 +150,24 @@ class DogController extends Controller
                 'current_owner_id' => $owner,
                 'status' => 1
             ]);
-
             // Asigna reg_no después de la creación
             $dog->reg_no = "DOG-" . str_pad($dog->dog_id, 5, '0', STR_PAD_LEFT);
             $dog->save();
+
+            // Crear el pago
+            $payment = Payment::create([
+                'user_id' => $owner, // Usuario que realiza el pago
+                'amount' => 100.00, // Monto del pago (puedes ajustarlo según corresponda)
+                'type' => 'registration', // Tipo de pago (registro del perro)
+                'status' => 'pending', // Estado del pago (aún no completado)
+                'payment_method' => 'card' // Método de pago (ajústalo según la lógica de pago)
+            ]);
+
+            // Registrar la relación en dog_payments
+            DogPayment::create([
+                'dog_id' => $dog->dog_id,
+                'payment_id' => $payment->payment_id
+            ]);
 
             if ($sire_id == null ) {
 
@@ -154,24 +175,25 @@ class DogController extends Controller
                 $descriptionSire = $validatedData['descriptionSire'];
     
             }
-
             if ($dam_id == null ) {
 
                 $damEmail = $validatedData['dam_email'];
                 $descriptionDam = $validatedData['descriptionDam'];
-    
             }
-
+            $dog->dog_id_md = md5($dog->dog_id);
+            //insert payments
            
-
             $data['message'] = 'Pricing inserted successfully';
             $data['status'] = 200;
-
+            $data['data'] = $dog;
+            // Confirma la transacción
+            DB::commit();
         } catch (\Exception $e) {
 
             $data['message'] = 'Failed to insert the pricing. Please check the data and try again';
             $data['status'] = 500;
             $data['errors'] = $e->getMessage();
+            DB::rollBack();
         }
 
         

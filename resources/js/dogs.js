@@ -80,7 +80,7 @@ export  function dogs() {
                     data[key] = value;
                 }
             });
-            console.log(data);
+            
             objets.saveDog(e, form, data);
     
         });
@@ -240,7 +240,7 @@ function selectDam(dogId, dogName, form) {
         saveDog: function(e,form,data) {
             e.preventDefault();
 
-            // Enviar datos mediante Fetch API (ejemplo con POST)
+            
             fetch(form.action, {
                 method: form.method.toUpperCase(),
                 headers: {
@@ -252,6 +252,14 @@ function selectDam(dogId, dogName, form) {
             .then(response => response.json())
             .then(result => {
 
+                if (result.status ===200) {
+                    
+                    let id = result.data.dog_id_md;
+                    const editUrl = `/payments/pay/${id}`; 
+                    window.location.href = editUrl;
+        
+                }
+                
 
             })
             .catch(error => {

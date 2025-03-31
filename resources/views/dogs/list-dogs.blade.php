@@ -20,40 +20,108 @@
       </div>
    </div>
 
-<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Nombre</th>
-      <th>Raza</th>
-      <th>Edad</th>
-      <th>Dueño</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>1</td>
-      <td>Max</td>
-      <td>Labrador</td>
-      <td>3 años</td>
-      <td>Juan Pérez</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>Luna</td>
-      <td>Golden Retriever</td>
-      <td>2 años</td>
-      <td>María Gómez</td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td>Rocky</td>
-      <td>Bulldog</td>
-      <td>4 años</td>
-      <td>Carlos López</td>
-    </tr>
-  </tbody>
-</table>
+   <div class="container">
+        <h1 class="title">Lista de Perros</h1>
 
+        <!-- Campo de búsqueda -->
+        <div class="field">
+            <label class="label">Buscar por Nombre</label>
+            <div class="control">
+                <input class="input" type="text" id="searchInput" placeholder="Buscar por nombre..." oninput="filterDogs()">
+            </div>
+        </div>
+        
+
+        <div class="table-container mt-5">
+            <table class="table is-fullwidth is-striped is-hoverable is-bordered">
+                <thead class="has-background-primary-light">
+                    <tr class="has-text-weight-bold">
+                        <th>Nombre</th>
+                        <th>Raza</th>
+                        <th>Sexo</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="dogTableBody">
+                    <!-- Aquí se insertarán las filas dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+
+   @push('scripts')
+   <script>
+
+
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            let dogs = @json($dogs);
+
+            // Función para llenar la tabla
+            function populateTable(dogsToDisplay) {
+                const tableBody = document.getElementById('dogTableBody');
+                tableBody.innerHTML = ''; // Limpiar tabla antes de agregar datos
+
+                dogsToDisplay.forEach((dog, index) => {
+                    const row = document.createElement('tr');
+                    let sex = dog.sex =='M'? 'Macho':'Hembra';
+                    row.innerHTML = `
+                        <td>${dog.name}</td>
+                        <td>${dog.breed}</td>
+                         <td>${sex}</td>
+                        <td>${dog.status}</td>
+                        <td>
+                            ${dog.status === 'completed' ? 
+                            `<button class="button is-info is-small" onclick="viewDetails(${index})">Ver Detalles</button>` : ''}
+
+                            <button class="button is-danger is-small" onclick="deleteDog(${index})">Eliminar</button>
+                            <button class="button is-warning is-small" onclick="requestMating(${index})">Solicitar Monta</button>
+                            ${dog.status === 'pending' ? 
+                                `<button class="button is-success is-small" onclick="makePayment(${index})">Pagar</button>` : 
+                                ''}
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // Función para filtrar perros por nombre
+            window.filterDogs = function() {
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                const filteredDogs = dogs.filter(dog => dog.name.toLowerCase().includes(searchTerm));
+                populateTable(filteredDogs);
+            }
+
+            // Funciones para manejar las acciones
+            window.viewDetails = function(index) {
+                alert(`Ver detalles de ${dogs[index].name}`);
+            }
+
+            window.deleteDog = function(index) {
+                const confirmation = confirm(`¿Estás seguro de eliminar a ${dogs[index].name}?`);
+                if (confirmation) {
+                    dogs.splice(index, 1); // Eliminar el perro del array
+                    populateTable(dogs); // Refrescar la tabla
+                }
+            }
+
+            window.requestMating = function(index) {
+                alert(`Solicitar cruza para ${dogs[index].name}`);
+            }
+
+            window.makePayment = function(index) {
+                alert(`Realizar pago para ${dogs[index].name}`);
+            }
+
+            // Llamada inicial a la función para llenar la tabla con todos los perros
+            populateTable(dogs);
+        });
+    </script>
+
+    </script>
+   @endpush
 
 </x-app-layout>
