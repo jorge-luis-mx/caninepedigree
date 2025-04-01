@@ -8,6 +8,10 @@ use App\Validations\DogsValidations;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Yajra\DataTables\Facades\DataTables;
+
+use App\Mail\sendEmailDogs;
+use Illuminate\Support\Facades\Mail;
+
 //model
 use App\Models\Dog;
 use App\Models\Payment;
@@ -161,15 +165,34 @@ class DogController extends Controller
 
                 $sireEmail = $validatedData['sire_email'];
                 $descriptionSire = $validatedData['descriptionSire'];
+
+                //send mails
+                $datos = [
+                    'from'=>'jorge06g92@gmail.com',
+                    'subject' => 'Password change request | Airport Transportation',
+                    'url'=>'http://www.caninepedigree-dev.com/register',
+                    'dog'=>$dog
+                ];
+                Mail::to($sireEmail)->send(new sendEmailDogs($datos));
     
             }
             if ($dam_id == null ) {
 
                 $damEmail = $validatedData['dam_email'];
                 $descriptionDam = $validatedData['descriptionDam'];
+
+                //send mails
+                $datos = [
+                    'from'=>'jorge06g92@gmail.com',
+                    'subject' => 'Password change request | Airport Transportation',
+                    'url'=>'http://www.caninepedigree-dev.com/register',
+                    'dog'=>$dog
+                ];
+                Mail::to($damEmail)->send(new sendEmailDogs($datos));
             }
             $dog->dog_id_md = md5($dog->dog_id);
-            //insert payments
+
+
            
             $data['message'] = 'Pricing inserted successfully';
             $data['status'] = 200;

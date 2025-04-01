@@ -24,6 +24,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DogController;
 
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\BreedingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,9 +82,7 @@ Route::middleware('auth')->group(function () {
     // Route::put('/dogs/{dog}', [DogController::class, 'update'])->name('dogs.update'); 
     Route::get('/dogs/{dog}/show', [DogController::class, 'show'])->name('dogs.show');
     Route::delete('/dogs/{dog}', [DogController::class, 'destroy'])->name('dogs.destroy');
-
     
-
     //serch
     Route::get('/dogs/search/{reg_no}', [DogController::class, 'searchDog'])->name('dogs.search');
 
@@ -96,7 +95,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/payments/paypal/paid', [PaymentController::class,'completed']);
 
 
-
+    Route::post('/breeding-request', [BreedingController::class, 'store'])->name('breeding.index');
+    Route::post('/breeding-request', [BreedingController::class, 'store'])->name('breeding.store');
 
 
 
