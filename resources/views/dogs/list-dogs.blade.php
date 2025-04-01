@@ -21,7 +21,7 @@
    </div>
 
    <div class="container">
-        <h1 class="title">Lista de Perros</h1>
+        
 
         <!-- Campo de búsqueda -->
         <div class="field">
@@ -56,87 +56,88 @@
    <script>
 
 
-        document.addEventListener("DOMContentLoaded", function() {
-            
-            let dogs = @json($dogs);
 
-            // Función para llenar la tabla
-            function populateTable(dogsToDisplay) {
-                const tableBody = document.getElementById('dogTableBody');
-                tableBody.innerHTML = ''; // Limpiar tabla antes de agregar datos
+document.addEventListener("DOMContentLoaded", function() {
+    let dogs = @json($dogs);
 
-                dogsToDisplay.forEach((dog, index) => {
-                    const row = document.createElement('tr');
-                    let sex = dog.sex =='M'? 'Macho':'Hembra';
-                    row.innerHTML = `
-                        <td>${dog.name}</td>
-                        <td>${dog.breed}</td>
-                         <td>${sex}</td>
-                        <td>${dog.status}</td>
-                        <td>
-                            ${dog.status === 'completed' ? 
-                            `<button class="button is-info is-small" onclick="viewDetails(${dog.dog_id})">Ver Detalles</button>` : ''}
+    // Función para llenar la tabla
+    function populateTable(dogsToDisplay) {
+        const tableBody = document.getElementById('dogTableBody');
+        tableBody.innerHTML = ''; // Limpiar tabla antes de agregar datos
 
-                            <button class="button is-danger is-small" onclick="deleteDog(${dog.dog_id})">Eliminar</button>
-                            <button class="button is-warning is-small" onclick="requestMating(${dog.dog_id})">Solicitar Monta</button>
-                            ${dog.status === 'pending' ? 
-                                `<button class="button is-success is-small" onclick="makePayment(${dog.dog_id})">Pagar</button>` : 
-                                ''}
-                        </td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            }
+        dogsToDisplay.forEach((dog) => {  // Eliminado el "index" porque no lo necesitamos
+            let sex = dog.sex == 'M' ? 'Macho' : 'Hembra';
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${dog.name}</td>
+                <td>${dog.breed}</td>
+                <td>${sex}</td>
+                <td>${dog.status}</td>
+                <td>
+                    ${dog.status === 'completed' ? 
+                    `<button class="button is-info is-small" onclick="viewDetails(${dog.dog_id})">Ver Detalles</button>` : ''}
 
-            // Función para filtrar perros por nombre
-            window.filterDogs = function() {
-                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-                const filteredDogs = dogs.filter(dog => dog.name.toLowerCase().includes(searchTerm));
-                populateTable(filteredDogs);
-            }
-
-            // Funciones para manejar las acciones
-            window.viewDetails = function(dogId) {
-                alert(`Ver detalles de ${dogId}`);
-            }
-
-            window.deleteDog = function(dogId) {
-
-                const confirmation = confirm(`¿Estás seguro de eliminar a este perro?`);
-                if (confirmation) {
-                    
-                    fetch(`/dogs/${dogId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Perro eliminado con éxito');
-                            dogs = dogs.filter(dog => dog.id !== dogId); // Eliminar perro del array local
-                            populateTable(dogs); // Refrescar la tabla
-                        } else {
-                            alert('Error al eliminar el perro');
-                        }
-                    })
-                    .catch(error => alert('Error al eliminar el perro: ' + error));
-                }
-            }
-
-            window.requestMating = function(dogId) {
-                alert(`Solicitar cruza para ${dogs[index].name}`);
-            }
-
-            window.makePayment = function(dogId) {
-                alert(`Realizar pago para ${dogs[index].name}`);
-            }
-
-            
-            populateTable(dogs);
+                    <button class="button is-danger is-small" onclick="deleteDog(${dog.dog_id})">Eliminar</button>
+                    <button class="button is-warning is-small" onclick="requestMating(${dog.dog_id})">Solicitar Monta</button>
+                    ${dog.status === 'pending' ? 
+                        `<button class="button is-success is-small" onclick="makePayment(${dog.dog_id})">Pagar</button>` : 
+                        ''}
+                </td>
+            `;
+            tableBody.appendChild(row);
         });
+    }
+
+    // Función para filtrar perros por nombre
+    window.filterDogs = function() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const filteredDogs = dogs.filter(dog => dog.name.toLowerCase().includes(searchTerm));
+        populateTable(filteredDogs);
+    }
+
+    // Funciones para manejar las acciones
+    window.viewDetails = function(dogId) {
+        
+        window.location.href = `/dogs/${dogId}/show`;
+    }
+
+    window.deleteDog = function(dogId) {
+        const confirmation = confirm(`¿Estás seguro de eliminar a este perro?`);
+        if (confirmation) {
+            fetch(`/dogs/${dogId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Perro eliminado con éxito');
+                    dogs = dogs.filter(dog => dog.dog_id !== dogId); // Corregido: usar dog.dog_id en lugar de dog.id
+                    populateTable(dogs); // Refrescar la tabla
+                } else {
+                    alert('Error al eliminar el perro');
+                }
+            })
+            .catch(error => alert('Error al eliminar el perro: ' + error));
+        }
+    }
+
+    window.requestMating = function(dogId) {
+        alert(`Solicitar cruza para ${dogs[index].name}`);
+    }
+
+    window.makePayment = function(dogId) {
+        alert(`Realizar pago para ${dogs[index].name}`);
+    }
+
+    // Llamada inicial a la función para llenar la tabla con todos los perros
+    populateTable(dogs);
+});
+
+
     </script>
 
     </script>

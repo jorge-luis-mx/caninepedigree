@@ -35,18 +35,6 @@ class DogController extends Controller
         ->groupBy('dogs.dog_id', 'dogs.name', 'dogs.sex', 'dogs.status')
         ->get();
     
-    
-    
-
-
-        // $dogs = Dog::whereHas('payments', function ($query) {
-        //     $query->whereIn('status', ['completado', 'pendiente']);
-        // })
-        // ->with('payments') // Cargar pagos relacionados
-        // ->get();
-        
-        
-
        
         return view('dogs.list-dogs',compact('dogs'));
     }
@@ -205,7 +193,11 @@ class DogController extends Controller
      */
     public function show(string $id)
     {
-        //
+        
+        
+        $dog = Dog::where('dog_id', $id)->first();
+        $birthdate = $dog->birthdate;
+        return view('dogs/show-dog',compact('dog','birthdate'));
     }
 
     /**

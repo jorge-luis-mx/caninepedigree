@@ -5,7 +5,7 @@
    <div class="columns is-multiline mt-4">
 
       <div class="column">
-         <div class="card  m-4" style="box-shadow: none;">
+         <div class="card" style="box-shadow: none;">
             <form action="{{ route('dogs.store') }}" method="post" id="dog-form">
                @csrf
                @method('post')
