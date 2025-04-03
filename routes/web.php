@@ -84,7 +84,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/dogs/{dog}', [DogController::class, 'destroy'])->name('dogs.destroy');
     
     //serch
-    Route::get('/dogs/search/{reg_no}', [DogController::class, 'searchDog'])->name('dogs.search');
+    Route::get('/dogs/search/{reg_no}', [DogController::class, 'serch'])->name('dogs.search');
 
     //payments
     Route::get('/payments/pay/{id}', [PaymentController::class,'pay']);
@@ -95,10 +95,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/payments/paypal/paid', [PaymentController::class,'completed']);
 
 
-    Route::post('/breeding-request', [BreedingController::class, 'store'])->name('breeding.index');
-    Route::post('/breeding-request', [BreedingController::class, 'store'])->name('breeding.store');
+    // Route::post('/breeding-request', [BreedingController::class, 'store'])->name('breeding.index');
+    // Route::post('/breeding-request', [BreedingController::class, 'store'])->name('breeding.store');
 
 
+    Route::get('/dogs/{id}/pedigree', [DogController::class, 'showPedigree'])->name('pediree.showPedigree');
 
 
 

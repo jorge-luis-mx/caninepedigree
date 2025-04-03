@@ -6,7 +6,9 @@
                     <div class="container-box-logo">
                         <!-- <img id="logo-normal" class="" src="{{ asset('assets/img/cropped-airport-transportation-1.webp') }}" alt="logo">
                         <img id="logo-reduced" class="is-hidden" src="{{ asset('assets/img/logo.webp') }}" alt="logo">        -->
-                        logo
+                        <img id="logo-normal" class="" src="https://www.devscun.com/assets/img/logo-devscun.webp" alt="logo">
+                        <img id="logo-reduced" class="is-hidden" src="{{ asset('assets/img/logo.webp') }}" alt="logo">  
+                       
                     </div>
                 </div>
 
@@ -60,3 +62,4 @@
             </div>
 
         </aside>
+        <div id="overlay"></div>

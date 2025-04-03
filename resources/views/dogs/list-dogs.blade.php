@@ -22,7 +22,7 @@
 
    <div class="container">
         
-
+        @if(!empty($dogs))
         <!-- Campo de búsqueda -->
         <div class="field">
             <label class="label">Buscar por Nombre</label>
@@ -31,7 +31,7 @@
             </div>
         </div>
         
-
+        
         <div class="table-container mt-5">
             <table class="table is-fullwidth is-striped is-hoverable is-bordered">
                 <thead class="has-background-primary-light">
@@ -48,7 +48,14 @@
                 </tbody>
             </table>
         </div>
+        @else
 
+        <div class="columns is-multiline">
+            <div class="column mt-4">
+                No dogs found for this profile.
+            </div>
+        </div>
+        @endif
 
     </div>
 

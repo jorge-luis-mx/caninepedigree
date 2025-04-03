@@ -1,19 +1,20 @@
-
-
 @use '../base/variables' as v;
-
+@use '../base/mixins' as m;
 aside {
-    width: 250px;/* Ancho completo del aside */
-    height: 100vh;
+    width: 250px;
+    height: 100dvh;
+    position: fixed;
     background-color: v.$colorBlanco;
     border-right: 1px solid v.$colorGris;
-    position: fixed;
     top: 0;
     left: 0;
     transition: width 0.3s ease; 
+    z-index: 1000;
+    display: none;
+    
 
     .side-bar {
-
+        
         .box-logo {
             display: flex;
             justify-content: center;
@@ -96,67 +97,179 @@ aside {
 
 }
 
-
-/* Reducido (solo íconos visibles) */
-aside.reduced {
-    width: 90px; 
-    z-index: 1050;
-}
-aside.reduced .menu{
-    margin-left: 1rem;
-}
-aside.reduced .menu-label-dasboard a button{
-    width: 95%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 18px 0px 18px 0px;
-}
-
-
-aside.reduced .side-bar .container-box-logo img {
-    width: 100%; 
-    height: 30px; 
-    padding-right:0rem;
-}
-
-/* Para mostrar solo los íconos cuando está reducido */
-aside.reduced .menu-list span,
-aside.reduced .menu-list .nav-drop .nav-link .custom-icon-chevron,
-aside.reduced .menu-list .nav-drop .submenu li .custom-size-icon-list{
-    display: none; /* Esconder el texto */
-}
-aside.reduced .menu-label-dasboard a button span{
-    display: none; 
-    opacity: 0; /* Inicialmente invisible */
-    transition: opacity 0.3s; /* Transición suave */
-}
-/* Mostrar el texto al hacer hover si está en modo reducido */
-aside.reduced:hover .menu-list span,
-aside.reduced:hover .menu-list .nav-drop .nav-link .custom-icon-chevron,
-aside.reduced .menu-list .nav-drop .submenu li
-{
-    display: inline; /* Mostrar el texto cuando esté expandido por hover */
-}
-
-aside.reduced:hover .menu-label-dasboard a button span{
-    display: inline;
-    opacity: 1;
-}
-
-/* Mostrar texto y expandir aside al pasar el mouse SOLO si está reducido */
-aside.reduced:hover {
-    width: 250px; 
-    cursor: pointer;
-}
-
-aside.reduced:hover .menu-label-dasboard a button{
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    padding: 18px 0px 18px 15px;
-    
+    height: 100dvh;
+    background: rgba(0, 0, 0, 0.5); 
+    z-index: 900; /* Debajo del aside */
+    display: none; 
 }
+
+
+@include m.tablet(){
+
+    aside {
+        width: 250px;/* Ancho completo del aside */
+        height: 100vh;
+        background-color: v.$colorBlanco;
+        border-right: 1px solid v.$colorGris;
+        position: fixed;
+        top: 0;
+        left: 0;
+        transition: width 0.3s ease; 
+        display: block;
+        .side-bar {
+    
+            .box-logo {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-top: 1rem;
+    
+                .container-box-logo img {
+                    width: 100%; 
+                    height: 50px; 
+                }
+            }
+            
+    
+    
+            .menu {
+                margin-top: 2rem; 
+                .menu-label-dasboard{
+                    margin-bottom: 1rem;
+                        button{
+                            display: flex;
+                            padding: 18px 0px 18px 15px;
+                            border-radius: 4px;
+                            background-color: v.$colorPrimary;
+                            border-radius: 4px; 
+                            align-items: center;
+                            color: v.$colorBlanco;
+                            width: 100%;
+                            span{
+                                font-family: v.$primary-font;
+                            }
+                        }
+                    
+                }
+        
+    
+                .menu-list{
+            
+                    .nav-drop{
+    
+                        .nav-link{
+                            height:45px;
+                            margin-bottom: .5rem;
+                            span{
+                                font-size: 1.2rem;
+                                margin-left: 10px;
+                            }
+                        }
+    
+                        .submenu li a span{
+                            margin-left: .8rem;
+                        }
+    
+                        .submenu {
+                            display: none;
+                        }
+                        
+                        .submenu.is-visible {
+                            display: block;
+                        }
+                        
+                        .custom-icon-chevron {
+                            transition: transform 0.3s ease, translate 0.3s ease;
+                            transform-origin: center center; /* Asegura que la rotación se realice desde el centro */
+                            margin-top: 12px;
+                            height: 30px;
+                        }
+                        
+                        /* Rotación y ajuste de desplazamiento */
+                        .custom-icon-chevron.rotate {
+                            transform: rotate(-180deg) translateY(12px); /* La rotación y el desplazamiento */
+                        }
+                    }
+            
+            
+                }
+            }
+        
+        }
+    
+    
+    }
+    
+    #overlay {
+        display: none; /* Ocultamos inicialmente */
+    }
+    /* Reducido (solo íconos visibles) */
+    aside.reduced {
+        width: 90px; 
+        z-index: 1050;
+    }
+    aside.reduced .menu{
+        margin-left: 1rem;
+    }
+    aside.reduced .menu-label-dasboard a button{
+        width: 95%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 18px 0px 18px 0px;
+    }
+    
+    
+    aside.reduced .side-bar .container-box-logo img {
+        width: 100%; 
+        height: 30px; 
+        padding-right:0rem;
+    }
+    
+    /* Para mostrar solo los íconos cuando está reducido */
+    aside.reduced .menu-list span,
+    aside.reduced .menu-list .nav-drop .nav-link .custom-icon-chevron,
+    aside.reduced .menu-list .nav-drop .submenu li .custom-size-icon-list{
+        display: none; /* Esconder el texto */
+    }
+    aside.reduced .menu-label-dasboard a button span{
+        display: none; 
+        opacity: 0; /* Inicialmente invisible */
+        transition: opacity 0.3s; /* Transición suave */
+    }
+    /* Mostrar el texto al hacer hover si está en modo reducido */
+    aside.reduced:hover .menu-list span,
+    aside.reduced:hover .menu-list .nav-drop .nav-link .custom-icon-chevron,
+    aside.reduced .menu-list .nav-drop .submenu li
+    {
+        display: inline; /* Mostrar el texto cuando esté expandido por hover */
+    }
+    
+    aside.reduced:hover .menu-label-dasboard a button span{
+        display: inline;
+        opacity: 1;
+    }
+    
+    /* Mostrar texto y expandir aside al pasar el mouse SOLO si está reducido */
+    aside.reduced:hover {
+        width: 250px; 
+        cursor: pointer;
+    }
+    
+    aside.reduced:hover .menu-label-dasboard a button{
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        padding: 18px 0px 18px 15px;
+        
+    }
+}
+
 
 
 

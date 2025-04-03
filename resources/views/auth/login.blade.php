@@ -3,7 +3,7 @@
 <div class="w-full flex h-screen flex-col md:flex-row ">
     <!-- Content section -->
     <div class="hidden md:flex w-1/2  bg-custom-gray flex-col">
-            Logo
+        
             <!-- <x-application-logo/> -->
             <!-- <x-image-component-logo image-path="{{ asset('assets/img/dog.jpg') }}" /> -->
     </div>

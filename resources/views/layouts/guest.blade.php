@@ -18,7 +18,7 @@
     </head>
     <body class="font-sans text-gray-900 antialiased">
 
-        <div class="flex h-screen">
+        <div>
 
             {{ $slot }}
         </div>

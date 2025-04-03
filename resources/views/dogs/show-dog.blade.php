@@ -11,7 +11,8 @@
 
          <div class="container-btn-actions is-flex is-justify-content-flex-end is-align-items-center m-2">
             <button class="button is-link mr-2">Generate Certificate</button>
-            <button class="button is-link">Generate Pedigree</button>
+            
+            <a href="{{ route('pediree.showPedigree', ['id' => $dog->dog_id]) }}"><button class="button is-link">Generate Pedigree</button></a>
          </div>
 
          <div class="card " style="box-shadow: none;">

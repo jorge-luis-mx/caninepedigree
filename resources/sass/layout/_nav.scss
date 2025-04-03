@@ -1,7 +1,9 @@
 @use '../base/variables' as v;
+@use '../base/mixins' as m;
+
 .main {
-    margin-left: 250px; 
-    width: calc(100% - 250px);
+    margin-left: 0px; 
+    overflow: hidden; 
     
     .navbar {
         position: sticky;
@@ -11,11 +13,11 @@
         padding: 10px;
         display: flex;
         justify-content: space-between;
-        box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;
+
         .navbar-brand{
 
             .navbar-item:hover{
-                background-color: v.$colorBtnLink;
+                background-color: v.$colorBlancoGris;
                 border-radius: 4px;
             }
     
@@ -32,7 +34,7 @@
                 display: inline-flex;
                 justify-content: center;
                 align-items: center;
-                background-color: v.$colorBtnLink !important; 
+                background-color: v.$colorBlancoGris !important; 
                 border-radius: 50%; 
                 width: 45px; 
                 height: 45px; 
@@ -79,9 +81,94 @@
     
 }
 
-.main.reduced {
-    margin-left: 90px; 
-    width: calc(100% - 90px);
+
+
+@include m.tablet(){
+
+    .main {
+        margin-left: 250px; 
+        width: calc(100% - 250px);
+        
+        .navbar {
+            position: sticky;
+            top: 0 ;
+            z-index: 10;
+            background-color: v.$colorBlanco; 
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+    
+            .navbar-brand{
+    
+                .navbar-item:hover{
+                    background-color: v.$colorBlancoGris;
+                    border-radius: 4px;
+                }
+        
+                .icon-navbar-item{
+                    display: inline-flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 45px; 
+                    height: 45px; 
+                    cursor: pointer;
+                }
+        
+                .icon-navbar-item:hover{
+                    display: inline-flex;
+                    justify-content: center;
+                    align-items: center;
+                    background-color: v.$colorBlancoGris !important; 
+                    border-radius: 50%; 
+                    width: 45px; 
+                    height: 45px; 
+                    cursor: pointer;
+                }
+        
+                a {
+                    color: inherit; /* Toma el color del elemento padre o el color predeterminado */
+                    text-decoration: none; /* Opcional: elimina el subrayado */
+                }
+        
+        
+            }
+            .navbar-menu{
+                .navbar-end{
+                    .navbar-item{
+                        .img-profile{
+                            .circle-letter{
+                                width: 30px;
+                                height: 30px;
+                                border-radius: 50%; 
+                                background-color: v.$colorPrimary; 
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                font-size: 18px; 
+                                font-weight: bold; 
+                                color: v.$colorBlanco; 
+                                cursor: pointer;
+                            }
+                        }
+                        .navbar-dropdown{
+                            .navbar-item{
+                                span{
+                                    font-size: 1.2rem;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    
+        
+    }
+    
+    .main.reduced {
+        margin-left: 90px; 
+        width: calc(100% - 90px);
+    }
 }
 
 

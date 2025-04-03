@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\Dog;
 use App\Models\Payment;
 use App\Models\DogPayment;
+use App\Models\UserProfile;
+
 class DogController extends Controller
 {
     /**
@@ -24,20 +26,37 @@ class DogController extends Controller
     public function index(Request $request)
     {
 
-        $dogs = Dog::whereIn('dogs.status', ['pending', 'completed']) // Especificar la tabla en la condición
-        ->leftJoin('dog_payments', 'dogs.dog_id', '=', 'dog_payments.dog_id')
-        ->leftJoin('payments', 'dog_payments.payment_id', '=', 'payments.payment_id')
-        ->select(
-            'dogs.dog_id',
-            'dogs.name',
-            'dogs.breed',
-            'dogs.sex',
-            'dogs.status',
-            DB::raw('COALESCE(SUM(payments.amount), 0) as total_paid'),
-            DB::raw('100 - COALESCE(SUM(payments.amount), 0) as amount_due')
-        )
-        ->groupBy('dogs.dog_id', 'dogs.name', 'dogs.sex', 'dogs.status')
-        ->get();
+        $user = auth()->user();
+        $profile_id = $user->profile_id;
+        $profile = $user->userprofile;
+
+        if ($user->role == 'admin' || $user->role =='customer') {
+
+            if ($profile_id == $profile->profile_id) {
+                $dogs = Dog::where('dogs.current_owner_id', $profile_id) // Filtrar por dueño
+                    ->whereIn('dogs.status', ['pending', 'completed']) // Filtrar por estado
+                    ->leftJoin('dog_payments', 'dogs.dog_id', '=', 'dog_payments.dog_id')
+                    ->leftJoin('payments', 'dog_payments.payment_id', '=', 'payments.payment_id')
+                    ->select(
+                        'dogs.dog_id',
+                        'dogs.name',
+                        'dogs.breed',
+                        'dogs.sex',
+                        'dogs.status',
+                        DB::raw('COALESCE(SUM(payments.amount), 0) as total_paid'),
+                        DB::raw('100 - COALESCE(SUM(payments.amount), 0) as amount_due')
+                    )
+                    ->groupBy('dogs.dog_id', 'dogs.name', 'dogs.breed', 'dogs.sex', 'dogs.status')
+                    ->get();
+                
+            }
+            
+
+        }
+
+
+
+ 
     
        
         return view('dogs.list-dogs',compact('dogs'));
@@ -250,6 +269,60 @@ class DogController extends Controller
             return response()->json(['success' => true]);
         }
         return response()->json(['success' => false], 400);
+        
+    }
+
+
+
+    public function showPedigree($id)
+    {
+        $dog = DB::table('dogs')->where('dog_id', $id)->first();
+
+        if (!$dog) {
+            return redirect()->back()->with('error', 'El perro no existe.');
+        }
+        
+        $pedigree = DB::select("
+            WITH RECURSIVE Pedigree AS (
+                SELECT 
+                    d.dog_id, 
+                    d.reg_no, 
+                    d.name, 
+                    d.breed, 
+                    d.color, 
+                    d.sex, 
+                    d.birthdate, 
+                    d.sire_id, 
+                    d.dam_id, 
+                    1 AS generation
+                FROM dogs d
+                WHERE d.dog_id = ?
+        
+                UNION ALL
+        
+                SELECT 
+                    p.dog_id, 
+                    p.reg_no, 
+                    p.name, 
+                    p.breed, 
+                    p.color, 
+                    p.sex, 
+                    p.birthdate, 
+                    p.sire_id, 
+                    p.dam_id, 
+                    Pedigree.generation + 1 AS generation
+                FROM dogs p
+                INNER JOIN Pedigree ON p.dog_id = Pedigree.sire_id OR p.dog_id = Pedigree.dam_id
+                WHERE Pedigree.generation < 4  -- Limita a 4 generaciones
+            )
+            SELECT * FROM Pedigree 
+            ORDER BY generation, 
+                     CASE WHEN sire_id IS NOT NULL THEN 0 ELSE 1 END,  -- Prioriza sire (padre) antes que dam (madre)
+                     sex
+        ", [$id]);
+        
+        return view('pedigree.show-pedigree', compact('dog', 'pedigree'));
+        
         
     }
 }

@@ -7,83 +7,91 @@ export  function dogs() {
 
         const dogFormContainer = document.getElementById('dog-form'); 
 
-        dogFormContainer.addEventListener('keydown', function (e) {
+        if (dogFormContainer) {
+
+            dogFormContainer.addEventListener('keydown', function (e) {
             
-            if (e.target.classList.contains('sire')) {
-                if (e.key === 'Enter') {
-                e.preventDefault(); 
-                searchSire(e.target, e.target.closest('form')); 
+                if (e.target.classList.contains('sire')) {
+                    if (e.key === 'Enter') {
+                    e.preventDefault(); 
+                    searchSire(e.target, e.target.closest('form')); 
+                    }
                 }
-            }
-
-            if (e.target.classList.contains('dam')) {
-                if (e.key === 'Enter') {
-                e.preventDefault(); 
-                searchDam(e.target, e.target.closest('form')); 
-                }
-            }
-        });
-
-        dogFormContainer.addEventListener('blur', function (e) {
-            
-            if (e.target.classList.contains('sire')) {
-                searchSire(e.target, e.target.closest('form')); 
-            }
-
-            if (e.target.classList.contains('dam')) {
-                searchDam(e.target, e.target.closest('form')); 
-            }
-
-        }, true); 
-
-        const saveBtn = document.querySelector(".saveDog");
-        saveBtn.addEventListener("click", function (e) {
-            e.preventDefault(); 
     
-            // let form = document.getElementById("dog-form");
-            // let formData = new FormData(form);
-    
-            // let data = {};
-            // formData.forEach((value, key) => {
-            //     data[key] = value;
-            // });
-
-            // objets.saveDog(e,form,data);
-
-            // let form = document.getElementById("dog-form");
-            // let formData = new FormData(form);
-        
-            // let data = {};
-        
-            // formData.forEach((value, key) => {
-            //     // Obtener el elemento del formulario por su nombre
-            //     let element = form.querySelector(`[name=${key}]`);
-        
-            //     // Verificar si el elemento no está oculto ni deshabilitado
-            //     if (element && element.offsetParent !== null && !element.disabled) {
-            //         data[key] = value;
-            //     }
-            // });
-        
-            // objets.saveDog(e, form, data);
-
-            let form = document.getElementById("dog-form");
-            let formData = new FormData(form);
-            
-            let data = {};
-            
-            formData.forEach((value, key) => {
-                let element = form.querySelector(`[name="${key}"]`);
-            
-                // Incluir los campos ocultos en los datos enviados
-                if (element && (!element.disabled || element.type === "hidden")) {
-                    data[key] = value;
+                if (e.target.classList.contains('dam')) {
+                    if (e.key === 'Enter') {
+                    e.preventDefault(); 
+                    searchDam(e.target, e.target.closest('form')); 
+                    }
                 }
             });
-            
-            objets.saveDog(e, form, data);
     
-        });
+            dogFormContainer.addEventListener('blur', function (e) {
+                
+                if (e.target.classList.contains('sire')) {
+                    searchSire(e.target, e.target.closest('form')); 
+                }
+    
+                if (e.target.classList.contains('dam')) {
+                    searchDam(e.target, e.target.closest('form')); 
+                }
+    
+            }, true); 
+        }
+
+
+        const saveBtn = document.querySelector(".saveDog");
+        if (saveBtn) {
+            
+            saveBtn.addEventListener("click", function (e) {
+                e.preventDefault(); 
+        
+                // let form = document.getElementById("dog-form");
+                // let formData = new FormData(form);
+        
+                // let data = {};
+                // formData.forEach((value, key) => {
+                //     data[key] = value;
+                // });
+    
+                // objets.saveDog(e,form,data);
+    
+                // let form = document.getElementById("dog-form");
+                // let formData = new FormData(form);
+            
+                // let data = {};
+            
+                // formData.forEach((value, key) => {
+                //     // Obtener el elemento del formulario por su nombre
+                //     let element = form.querySelector(`[name=${key}]`);
+            
+                //     // Verificar si el elemento no está oculto ni deshabilitado
+                //     if (element && element.offsetParent !== null && !element.disabled) {
+                //         data[key] = value;
+                //     }
+                // });
+            
+                // objets.saveDog(e, form, data);
+    
+                let form = document.getElementById("dog-form");
+                let formData = new FormData(form);
+                
+                let data = {};
+                
+                formData.forEach((value, key) => {
+                    let element = form.querySelector(`[name="${key}"]`);
+                
+                    // Incluir los campos ocultos en los datos enviados
+                    if (element && (!element.disabled || element.type === "hidden")) {
+                        data[key] = value;
+                    }
+                });
+                
+                objets.saveDog(e, form, data);
+        
+            });
+        }
+
 
     });
     
