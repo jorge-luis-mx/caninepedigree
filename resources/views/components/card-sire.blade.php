@@ -1,6 +1,6 @@
 <div class="column">
 
-<!-- Search sire dog -->
+   <!-- Search sire dog -->
    <div class="field searchSire">
       <label class="label" for="sire">Search Sire</label>
       <div class="control has-icons-left">
@@ -19,7 +19,6 @@
          </span>
       </div>
    </div>
-
    <!-- Contenedor para mostrar los resultados de la búsqueda -->
    <div id="sireResults" style="display: none;"></div>
 

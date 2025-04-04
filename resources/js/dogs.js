@@ -3,252 +3,111 @@ import { Utils } from './utils.js';
 export  function dogs() {
 
 
-    document.addEventListener("DOMContentLoaded", function () {
-
-        const dogFormContainer = document.getElementById('dog-form'); 
-
-        if (dogFormContainer) {
-
-            dogFormContainer.addEventListener('keydown', function (e) {
-            
-                if (e.target.classList.contains('sire')) {
-                    if (e.key === 'Enter') {
-                    e.preventDefault(); 
-                    searchSire(e.target, e.target.closest('form')); 
-                    }
-                }
+    document.addEventListener("DOMContentLoaded", () => {
+        const dogFormContainer = document.getElementById('dog-form');
     
-                if (e.target.classList.contains('dam')) {
-                    if (e.key === 'Enter') {
-                    e.preventDefault(); 
-                    searchDam(e.target, e.target.closest('form')); 
+        const handleSearch = (input, form, type) => {
+            const regNo = input.value.trim();
+            if (regNo.length < 3) return console.log("Debe tener al menos 3 caracteres.");
+    
+            fetch(`/dogs/search/${regNo}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 200) {
+                        type === 'sire' ? showResults(data.data, form, type) : showResults(data.data, form, type);
+                    } else {
+                        input.value = '';
+                        Swal.fire({
+                            title: 'No results found',
+                            text: 'Would you like to search in another way?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes',
+                            cancelButtonText: 'No',
+                            backdrop: true,
+                            allowOutsideClick: false
+                        }).then(result => {
+                            if (!result.isConfirmed) {
+                                
+                                form.querySelector(`.${type}Mail`).classList.remove('is-hidden');
+                                form.querySelector(`.search${capitalize(type)}`).classList.add('is-hidden');
+                            }
+                        });
                     }
+                })
+                .catch(err => console.error(`Error al buscar ${type}:`, err));
+        };
+    
+        const showResults = (dogs, form, type) => {
+            const container = document.getElementById(`${type}Results`);
+            container.innerHTML = '';
+            if (!Array.isArray(dogs)) dogs = [dogs];
+            if (!dogs.length) {
+                container.innerHTML = '<div class="no-results">No dogs found.</div>';
+                container.style.display = 'block';
+                return;
+            }
+    
+            dogs.forEach(dog => {
+                const item = document.createElement('div');
+                item.className = 'result-item';
+                item.textContent = dog.name;
+                item.dataset.dogId = dog.dog_id;
+                item.addEventListener('click', () => selectDog(dog.dog_id, dog.name, form, type));
+                container.appendChild(item);
+            });
+    
+            container.style.display = 'block';
+        };
+    
+        const selectDog = (id, name, form, type) => {
+            form.querySelector(`input[name="${type}"]`).value = name;
+            form.querySelector(`input[name="${type}_id"]`).value = id;
+            document.getElementById(`${type}Results`).style.display = 'none';
+        };
+    
+        const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
+    
+        if (dogFormContainer) {
+            dogFormContainer.addEventListener('keydown', e => {
+                const target = e.target;
+                if (['sire', 'dam'].some(cls => target.classList.contains(cls)) && e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSearch(target, target.closest('form'), target.classList.contains('sire') ? 'sire' : 'dam');
                 }
             });
     
-            dogFormContainer.addEventListener('blur', function (e) {
-                
-                if (e.target.classList.contains('sire')) {
-                    searchSire(e.target, e.target.closest('form')); 
+            dogFormContainer.addEventListener('blur', e => {
+                const target = e.target;
+                if (target.classList.contains('sire') || target.classList.contains('dam')) {
+                    handleSearch(target, target.closest('form'), target.classList.contains('sire') ? 'sire' : 'dam');
                 }
-    
-                if (e.target.classList.contains('dam')) {
-                    searchDam(e.target, e.target.closest('form')); 
-                }
-    
-            }, true); 
+            }, true);
         }
-
-
+    
         const saveBtn = document.querySelector(".saveDog");
         if (saveBtn) {
-            
-            saveBtn.addEventListener("click", function (e) {
-                e.preventDefault(); 
-        
-                // let form = document.getElementById("dog-form");
-                // let formData = new FormData(form);
-        
-                // let data = {};
-                // formData.forEach((value, key) => {
-                //     data[key] = value;
-                // });
+            saveBtn.addEventListener("click", e => {
+                e.preventDefault();
     
-                // objets.saveDog(e,form,data);
+                const form = document.getElementById("dog-form");
+                const formData = new FormData(form);
+                const data = {};
     
-                // let form = document.getElementById("dog-form");
-                // let formData = new FormData(form);
-            
-                // let data = {};
-            
-                // formData.forEach((value, key) => {
-                //     // Obtener el elemento del formulario por su nombre
-                //     let element = form.querySelector(`[name=${key}]`);
-            
-                //     // Verificar si el elemento no está oculto ni deshabilitado
-                //     if (element && element.offsetParent !== null && !element.disabled) {
-                //         data[key] = value;
-                //     }
-                // });
-            
-                // objets.saveDog(e, form, data);
-    
-                let form = document.getElementById("dog-form");
-                let formData = new FormData(form);
-                
-                let data = {};
-                
                 formData.forEach((value, key) => {
-                    let element = form.querySelector(`[name="${key}"]`);
-                
-                    // Incluir los campos ocultos en los datos enviados
-                    if (element && (!element.disabled || element.type === "hidden")) {
+                    const el = form.querySelector(`[name="${key}"]`);
+                    if (el && (!el.disabled || el.type === "hidden")) {
                         data[key] = value;
                     }
                 });
-                
+    
                 objets.saveDog(e, form, data);
-        
             });
         }
-
-
     });
     
-   function searchSire(input, form) {
-
-      const regNo = input.value.trim();
-    
-        // Validación para asegurarse de que hay al menos 3 caracteres
-        if (regNo.length < 3) {
-            console.log("El término de búsqueda debe tener al menos 3 caracteres.");
-            return;
-        }
-    
-        // Realizar la solicitud fetch para buscar el Sire
-        fetch(`/dogs/search/${regNo}`)
-            .then(response => response.json())
-            .then(data => {
-                
-                if (data.status === 200) {
-
-                    showDamResults(data.data, form);
-                } else {
-                    Swal.fire({
-                        title: 'No results found',
-                        text: 'Would you like to search in another way?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Yes',
-                        cancelButtonText: 'No',
-                        backdrop: true,
-                        allowOutsideClick: false
-                      }).then((result) => {
-                        if (!result.isConfirmed) {
-                            form.querySelector('.sireMail').classList.remove('is-hidden'); 
-                            form.querySelector('.searchSire').classList.add('is-hidden');
-                          
-                        }
-                    });
-
-                }
-            })
-            .catch(error => {
-                console.log("Error al buscar Sire:", error);
-            });
-   }
-    
-   function searchDam(input, form) {
-      const regNo = input.value.trim();
-    
-        // Validación para asegurarse de que hay al menos 3 caracteres
-        if (regNo.length < 3) {
-            console.log("El término de búsqueda debe tener al menos 3 caracteres.");
-            return;
-        }
-    
-        // Realizar la solicitud fetch para buscar el Dam
-        fetch(`/dogs/search/${regNo}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 200) {
-                    showDamResults(data.data, form);
-                    // Aquí puedes mostrar el resultado en el formulario, por ejemplo:
-                    // form.querySelector('.dam_name').textContent = data.name;
-                    // form.querySelector('.dam_id').value = data.dog_id;
-                } else {
-
-                    Swal.fire({
-                        title: 'No results found',
-                        text: 'Would you like to search in another way?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Yes',
-                        cancelButtonText: 'No',
-                        backdrop: true,
-                        allowOutsideClick: false
-                      }).then((result) => {
-                        if (!result.isConfirmed) {
-                            
-                            form.querySelector('.damMail').classList.remove('is-hidden'); 
-                            form.querySelector('.searchDam').classList.add('is-hidden');
-                          
-                        }
-                    });
-
-                }
-            })
-            .catch(error => {
-                console.log("Error al buscar Dam:", error);
-            });
-   }
-    
-
-function showDamResults(dogs, form) {
-    const resultsContainer = document.getElementById('sireResults');
-    resultsContainer.innerHTML = '';  // Limpiar resultados previos
-
-    // Convertir dogs en un array si no lo es
-    if (!Array.isArray(dogs)) {
-        dogs = [dogs];  // Si no es un array, lo convertimos en uno (asumiendo que solo hay un perro)
-    }
-
-    // Verificar si hay perros
-    if (dogs.length === 0) {
-        resultsContainer.innerHTML = '<div class="no-results">No dogs found.</div>';
-        resultsContainer.style.display = 'block';
-        return;
-    }
-
-    // Crear la lista de resultados
-    dogs.forEach(dog => {
-        const dogItem = document.createElement('div');
-        dogItem.classList.add('result-item');
-        dogItem.textContent = dog.name;  // Nombre del perro
-        dogItem.setAttribute('data-dog-id', dog.dog_id);  // Guardamos el dog_id
-
-        // Asignar un evento de clic para seleccionar un perro
-        dogItem.addEventListener('click', function () {
-            selectSire(dog.dog_id, dog.name, form);
-        });
-
-        // Asignar un evento de clic para seleccionar un perro
-        dogItem.addEventListener('click', function () {
-            selectDam(dog.dog_id, dog.name, form);
-        });
-
-        resultsContainer.appendChild(dogItem);  // Agregar el item al contenedor
-    });
-
-    resultsContainer.style.display = 'block';  // Mostrar el contenedor con los resultados
-}
-
-
-function selectSire(dogId, dogName, form) {
-    // Actualiza el campo de entrada con el nombre del perro seleccionado
-    form.querySelector('input[name="sire"]').value = dogName; 
-    form.querySelector('input[name="sire_id"]').value = dogId;
-    // Ocultar el contenedor de resultados después de seleccionar un perro
-    document.getElementById('sireResults').style.display = 'none';
-}
-
-// Función para seleccionar un Dam
-function selectDam(dogId, dogName, form) {
-    // Actualiza el campo de entrada con el nombre del perro seleccionado
-    form.querySelector('input[name="dam"]').value = dogName; 
-    form.querySelector('input[name="dam_id"]').value = dogId;
-    // Ocultar el contenedor de resultados después de seleccionar un perro
-    document.getElementById('damResults').style.display = 'none';
-}
-
-
     const objets = {
-
-        
-        saveDog: function(e,form,data) {
-            e.preventDefault();
-
-            
+        saveDog(e, form, data) {
             fetch(form.action, {
                 method: form.method.toUpperCase(),
                 headers: {
@@ -257,26 +116,70 @@ function selectDam(dogId, dogName, form) {
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => response.json())
+            .then(res => res.json())
             .then(result => {
+            // Limpiar errores previos
+            clearErrors(form);
 
-                if (result.status ===200) {
-                    
-                    let id = result.data.dog_id_md;
-                    const editUrl = `/payments/pay/${id}`; 
-                    window.location.href = editUrl;
-        
-                }
-                
+            if (result.status === 200) {
+                let id = result.data.dog_id_md;
+                const editUrl = `/payments/pay/${id}`;
+                window.location.href = editUrl;
+            } else if (result.errors) {
+                // Si hay errores, mostrarlos en los inputs correspondientes
+                showErrors(form, result.errors);
+            }
 
             })
-            .catch(error => {
-                console.error("Error al enviar el formulario:", error);
+            .catch(err => {
+                console.error("Error al enviar el formulario:", err);
                 alert("An error occurred. Please try again.");
             });
-
         }
+    };
+    
 
+
+    // Función para mostrar errores en los inputs
+function showErrors(form, errors) {
+    Object.keys(errors).forEach(field => {
+        let input = form.querySelector(`[name="${field}"]`);
+        if (input) {
+            input.classList.add("error"); // Agregar borde rojo
+
+            // Verificar si ya existe un mensaje de error
+            let errorMessage = input.nextElementSibling;
+            if (!errorMessage || !errorMessage.classList.contains("error-message")) {
+                errorMessage = document.createElement("div");
+                errorMessage.classList.add("error-message");
+                input.after(errorMessage);
+            }
+
+            errorMessage.textContent = errors[field][0]; // Mostrar el primer mensaje de error
+        }
+    });
+}
+
+// Función para limpiar errores cuando el usuario escribe
+function clearErrors(form) {
+    form.querySelectorAll(".error").forEach(input => {
+        input.classList.remove("error");
+    });
+
+    form.querySelectorAll(".error-message").forEach(msg => {
+        msg.remove();
+    });
+}
+
+// Agregar eventos a los inputs para limpiar errores cuando el usuario escribe
+document.addEventListener("input", function(e) {
+    if (e.target.classList.contains("error")) {
+        e.target.classList.remove("error");
+        let errorMessage = e.target.nextElementSibling;
+        if (errorMessage && errorMessage.classList.contains("error-message")) {
+            errorMessage.remove();
+        }
     }
+});
 
 }

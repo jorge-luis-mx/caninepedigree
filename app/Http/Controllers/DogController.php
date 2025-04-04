@@ -71,11 +71,11 @@ class DogController extends Controller
     }
 
 
-    public function searchDog($reg_no)
+    public function search($reg_no)
     {
 
         $data = [
-            'status' => 400,
+            'status' => null,
             'message' => 'Failed to insert the airport. Please check the data and try again',
             'data'=>[],
             'errors' => null,
@@ -85,8 +85,6 @@ class DogController extends Controller
 
         // Buscar el perro por número de registro
         $dog = Dog::where('reg_no', $reg_no)->first();
-        
-        $data = ['status' => 400, 'data' => null]; // Valor por defecto
         
         if ($dog) {
             $data['status'] = 200;
@@ -98,6 +96,8 @@ class DogController extends Controller
             if ($dogs->isNotEmpty()) {
                 $data['status'] = 200;
                 $data['data'] = $dogs;
+            }else{
+                $data['status'] = 204;
             }
         }
         
@@ -118,7 +118,7 @@ class DogController extends Controller
         $validator = DogsValidations::validate($request->all());
     
         $data = [
-            'status' => 400,
+            'status' => null,
             'message' => 'Failed to insert the airport. Please check the data and try again',
             'data'=>[],
             'errors' => null,
@@ -127,7 +127,7 @@ class DogController extends Controller
         if ($validator->fails()) {
 
             $data['errors'] = $validator->errors();
-            return response()->json($data, 400);
+            return response()->json($data, 422);
         }
         $validatedData = $validator->validated();
         
@@ -141,9 +141,9 @@ class DogController extends Controller
             
         }
 
-        $sire_id = (isset($dog->sire_id) && !empty($dog->sire_id) && $dog->sire_id != null) ? $dog->sire_id : null;
-        $dam_id = (isset($dog->dam_id) && !empty($dog->dam_id) && $dog->dam_id != null) ? $dog->dam_id : null;
-        
+        $sire_id = (isset($validatedData['sire_id']) && !empty($validatedData['sire_id']) && $validatedData['sire_id'] != null) ? $validatedData['sire_id'] : null;
+        $dam_id = (isset($validatedData['dam_id']) && !empty($validatedData['dam_id']) && $validatedData['dam_id'] != null) ? $validatedData['dam_id'] : null;
+      
         DB::beginTransaction();
 
         try {
