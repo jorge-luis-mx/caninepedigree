@@ -236,10 +236,11 @@ class DogController extends Controller
     public function show(string $id)
     {
         
+        $dog = Dog::with(['currentOwner', 'breeder'])->where('dog_id', $id)->first();
         
-        $dog = Dog::where('dog_id', $id)->first();
-        $birthdate = $dog->birthdate;
-        return view('dogs/show-dog',compact('dog','birthdate'));
+        // $dog = Dog::where('dog_id', $id)->first();
+        // $birthdate = $dog->birthdate;
+        return view('dogs/show-dog',compact('dog'));
     }
 
     /**

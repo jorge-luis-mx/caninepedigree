@@ -15,7 +15,10 @@ class Dog extends Model
     protected $table = 'dogs';
     protected $primaryKey = 'dog_id';
     public $incrementing = true; 
-    
+    protected $casts = [
+        'birthdate' => 'datetime',  // Esto convierte op_date a un objeto Carbon
+
+    ];
     protected $fillable = [
         'reg_no',
         'name',
