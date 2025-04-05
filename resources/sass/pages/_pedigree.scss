@@ -1,17 +1,108 @@
 @use '../base/variables' as v;
 @use '../base/mixins' as m;
 
+
+.container-details {
+  padding: .5rem;
+  box-shadow: none;
+
+  .container-imagen {
+    max-width: 100%;
+    flex: 1 1 100%;
+    img {
+      width: 100%;
+    }
+  }
+
+  .content-details {
+    flex: 1;
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        min-width: 120px;
+        span {
+          font-weight: bold;
+        }
+        small {
+          font-style: italic;
+          color: #b1b1b2;
+        }
+      }
+    }
+  }
+}
+
+@include m.tablet(){
+
+  .container-details {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center; 
+    gap: 20px; 
+    height: auto; 
+    flex-wrap: wrap; 
+    padding: .5rem;
+    box-shadow: none;
+  
+    .container-imagen {
+      flex: 0 0 30%;
+      max-width: 200px;
+      img {
+        -o-object-fit: cover;
+        object-fit: cover;
+        border: 3px solid #fdaa2d;
+        transition: transform 0.2s;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin: 0 auto 10px;
+        display: block;
+      }
+    }
+  
+    .content-details {
+      flex: 1;
+      ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+  
+        li {
+          min-width: 120px;
+          span {
+            font-weight: bold;
+          }
+          small {
+            font-style: italic;
+            color: #b1b1b2;
+          }
+        }
+      }
+    }
+  }
+
+}
+
+
+
 .container {
 
-   margin: auto;
- }
+  margin: auto;
+}
 
- h2 {
-   text-align: center;
-   font-size: 2rem;
-   color: #444;
-   margin-bottom: 30px;
- }
+h2 {
+  text-align: center;
+  font-size: 2rem;
+  color: #444;
+  margin-bottom: 30px;
+}
 
  .generation-label {
    text-align: center;
@@ -82,3 +173,16 @@
      width: 45%;
    }
  }
+
+
+.input.no-radius-right {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.button.orange.no-radius-left {
+  background-color: orange;
+  color: white;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}

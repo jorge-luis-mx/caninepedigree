@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // // routes/api.php
-Route::middleware(['access.token'])->get('/find/maps/{id}', [MapController::class, 'findMaps'])->name('map.findMaps');
+// Route::middleware(['access.token'])->get('/find/maps/{id}', [MapController::class, 'findMaps'])->name('map.findMaps');
 
 
 
