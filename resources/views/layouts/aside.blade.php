@@ -21,7 +21,7 @@
                             </button>
                         </a>
                     </div> -->
-                    <ul class="menu-list">
+                    <ul class="menu-list is-hidden">
                         <li class="nav-drop">
                             <a href="/dashboard" class="nav-link is-flex is-justify-content-space-between">
                                 <div class="is-flex is-justify-content-start is-align-items-center">
@@ -34,7 +34,7 @@
 
                     <div id="step_three">
 
-                        <ul class="menu-list">
+                        <ul class="menu-list is-hidden">
                             <li class="nav-drop">
                                 <a href="{{ route('profile.edit') }}" class="nav-link is-flex is-justify-content-space-between">
                                     <div class="is-flex is-justify-content-start is-align-items-center">
@@ -56,6 +56,27 @@
                             </li>
                         </ul>
 
+                        <ul class="menu-list">
+                            <li class="nav-drop">
+                                <a href="{{ route('breeding.create') }}" class="nav-link is-flex is-justify-content-space-between">
+                                    <div class="is-flex is-justify-content-start is-align-items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="custom-size-icon" viewBox="0 0 48 48"><path fill="none" stroke="#eab308" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m5 10l3 3l6-6M5 24l3 3l6-6M5 38l3 3l6-6m7-11h22M21 38h22M21 10h22"/></svg>
+                                        <span>{{ __('messages.side.breeding') }}</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <ul class="menu-list">
+                            <li class="nav-drop">
+                                <a href="{{ route('pediree.index') }}" class="nav-link is-flex is-justify-content-space-between">
+                                    <div class="is-flex is-justify-content-start is-align-items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="custom-size-icon" viewBox="0 0 48 48"><path fill="none" stroke="#eab308" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m5 10l3 3l6-6M5 24l3 3l6-6M5 38l3 3l6-6m7-11h22M21 38h22M21 10h22"/></svg>
+                                        <span>{{ __('messages.side.pedigree') }}</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
 
                 </div>

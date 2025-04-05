@@ -6,7 +6,9 @@ return [
     'side' => [
         'dashboard' => 'Bienvenido',
         'profile' => 'Perfil',
-        'dogs'=>'Mascotas'
+        'dogs'=>'Mascotas',
+        'breeding'=>'Solicitar Monta',
+        'pedigree'=>'Pedigrí'
     ],
     'nav' => [
         'dogs' => 'Mascotas',

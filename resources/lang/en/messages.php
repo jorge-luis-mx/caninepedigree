@@ -6,7 +6,9 @@ return [
     'side' => [
         'dashboard' => 'Dashboard',
         'profile' => 'Profile',
-        'dogs'=>'Dogs'
+        'dogs'=>'Dogs',
+        'breeding'=>'Request breeding',
+        'pedigree'=>'Pedigree'
     ],
     'nav' => [
         'dogs' => 'Dogs',

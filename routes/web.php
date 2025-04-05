@@ -25,6 +25,9 @@ use App\Http\Controllers\DogController;
 
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\BreedingController;
+use App\Http\Controllers\PedigreegController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -95,11 +98,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/payments/paypal/paid', [PaymentController::class,'completed']);
 
 
-    // Route::post('/breeding-request', [BreedingController::class, 'store'])->name('breeding.index');
-    // Route::post('/breeding-request', [BreedingController::class, 'store'])->name('breeding.store');
+    //Route::post('/breeding-request', [BreedingController::class, 'store'])->name('breeding.index');
+    Route::get('/breeding-request', [BreedingController::class, 'create'])->name('breeding.create');
 
-
+    Route::get('/pedigree', [PedigreegController::class, 'index'])->name('pediree.index');
     Route::get('/dogs/{id}/pedigree', [DogController::class, 'showPedigree'])->name('pediree.showPedigree');
+
 
 
 

@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class BreedingController extends Controller
+class PedigreegController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return view('pedigree/show-all-pedigree');
     }
 
     /**
@@ -19,8 +19,7 @@ class BreedingController extends Controller
      */
     public function create()
     {
-
-        return view('breeding.create-breeding');
+        //
     }
 
     /**
@@ -28,27 +27,7 @@ class BreedingController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $request->validate([
-            'female_id' => 'required|exists:dogs,id',
-            'male_id' => 'required|exists:dogs,id',
-            'owner_id' => 'required|exists:users,id',
-        ]);
-
-        // $breedingRequest = BreedingRequest::create([
-        //     'female_id' => $request->female_id,
-        //     'male_id' => $request->male_id,
-        //     'owner_id' => $request->owner_id,
-        //     'status' => 'pending', // Estado inicial
-        // ]);
-
-        // Notificar al dueño del macho
-        //Notification::send(User::find($request->owner_id), new BreedingRequestNotification($breedingRequest));
-
-        // return response()->json([
-        //     'message' => 'Solicitud de monta enviada con éxito.',
-        //     'data' => $breedingRequest,
-        // ], 201);
+        //
     }
 
     /**
