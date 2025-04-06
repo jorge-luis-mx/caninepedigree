@@ -48,6 +48,8 @@
                 </tbody>
             </table>
         </div>
+        <div id="pagination" class="mt-4 has-text-centered"></div>
+
         @else
 
         <div class="columns is-multiline">
@@ -67,12 +69,21 @@
 document.addEventListener("DOMContentLoaded", function() {
     let dogs = @json($dogs);
 
+    let currentPage = 1;
+    const dogsPerPage = 5;
+    let currentSearchTerm = '';
+    let previousPageBeforeFilter = 1;
+
     // Función para llenar la tabla
     function populateTable(dogsToDisplay) {
         const tableBody = document.getElementById('dogTableBody');
-        tableBody.innerHTML = ''; // Limpiar tabla antes de agregar datos
+        tableBody.innerHTML = '';
 
-        dogsToDisplay.forEach((dog) => {  // Eliminado el "index" porque no lo necesitamos
+        const start = (currentPage - 1) * dogsPerPage;
+        const end = start + dogsPerPage;
+        const paginatedDogs = dogsToDisplay.slice(start, end);
+
+        paginatedDogs.forEach((dog) => {
             let sex = dog.sex == 'M' ? 'Macho' : 'Hembra';
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -83,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 <td>
                     ${dog.status === 'completed' ? 
                     `<button class="button is-info is-small" onclick="viewDetails(${dog.dog_id})">Ver Detalles</button>` 
-                    :`<button class="button is-info is-small"  disabled>Ver Detalles</button>` 
+                    :`<button class="button is-info is-small" disabled>Ver Detalles</button>` 
                     }
                     <button class="button is-danger is-small" onclick="deleteDog(${dog.dog_id})">Eliminar</button>
                     ${dog.status === 'pending' ? 
@@ -93,14 +104,88 @@ document.addEventListener("DOMContentLoaded", function() {
             `;
             tableBody.appendChild(row);
         });
+
+        renderPagination(dogsToDisplay);
     }
 
-    // Función para filtrar perros por nombre
-    window.filterDogs = function() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const filteredDogs = dogs.filter(dog => dog.name.toLowerCase().includes(searchTerm));
-        populateTable(filteredDogs);
+    function renderPagination(dogsList) {
+        const paginationContainer = document.getElementById('pagination');
+        paginationContainer.innerHTML = '';
+
+        const totalPages = Math.ceil(dogsList.length / dogsPerPage);
+
+        if (totalPages <= 1) return; // No mostrar paginación si no es necesario
+
+        const prevBtn = document.createElement('button');
+        prevBtn.textContent = 'Anterior';
+        prevBtn.className = 'button is-small mx-1';
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.onclick = () => {
+            currentPage--;
+            populateTable(dogsList);
+        };
+        paginationContainer.appendChild(prevBtn);
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.textContent = i;
+            pageBtn.className = `button is-small mx-1 ${i === currentPage ? 'is-primary' : ''}`;
+            pageBtn.onclick = () => {
+                currentPage = i;
+                populateTable(dogsList);
+            };
+            paginationContainer.appendChild(pageBtn);
+        }
+
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = 'Siguiente';
+        nextBtn.className = 'button is-small mx-1';
+        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.onclick = () => {
+            currentPage++;
+            populateTable(dogsList);
+        };
+        paginationContainer.appendChild(nextBtn);
     }
+
+    window.filterDogs = function () {
+        const searchInput = document.getElementById('searchInput');
+        const newTerm = searchInput.value.toLowerCase();
+
+        // Si el usuario acaba de empezar a escribir, guardamos la página actual
+        if (currentSearchTerm === '' && newTerm !== '') {
+            previousPageBeforeFilter = currentPage;
+        }
+
+        currentSearchTerm = newTerm;
+
+        const filteredDogs = dogs.filter(dog =>
+            dog.name.toLowerCase().includes(currentSearchTerm)
+        );
+
+        const totalPages = Math.ceil(filteredDogs.length / dogsPerPage);
+
+        // Si estamos filtrando y la página actual no existe más, ajustar
+        if (currentPage > totalPages) {
+            currentPage = totalPages || 1;
+        }
+
+        // Si se borró el filtro, restaurar la página anterior
+        if (currentSearchTerm === '') {
+            currentPage = previousPageBeforeFilter;
+        }
+
+        populateTable(filteredDogs);
+    };
+
+
+
+    // Función para filtrar perros por nombre
+    // window.filterDogs = function() {
+    //     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    //     const filteredDogs = dogs.filter(dog => dog.name.toLowerCase().includes(searchTerm));
+    //     populateTable(filteredDogs);
+    // }
 
     // Funciones para manejar las acciones
     window.viewDetails = function(dogId) {
@@ -141,7 +226,12 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Llamada inicial a la función para llenar la tabla con todos los perros
-    populateTable(dogs);
+
+    //populateTable(dogs);
+    populateTable(dogs.filter(dog =>
+        dog.name.toLowerCase().includes(currentSearchTerm)
+    ));
+
 });
 
 
