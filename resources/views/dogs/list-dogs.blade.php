@@ -1,6 +1,6 @@
 <x-app-layout>
 
-   <h1 class="is-size-4">{{__('messages.main.dogs.title')}}</h1>
+   <!-- <h1 class="is-size-4">{{__('messages.main.dogs.title')}}</h1> -->
 
    <div class="columns is-multiline">
       <div class="column">
@@ -25,9 +25,9 @@
         @if(!empty($dogs))
         <!-- Campo de búsqueda -->
         <div class="field">
-            <label class="label">Buscar por Nombre</label>
+            <label class="label">{{__('messages.main.dogs.search')}}</label>
             <div class="control">
-                <input class="input" type="text" id="searchInput" placeholder="Buscar por nombre..." oninput="filterDogs()">
+                <input class="input" type="text" id="searchInput" placeholder="{{__('messages.main.dogs.placeholder')}}" oninput="filterDogs()">
             </div>
         </div>
         
@@ -36,11 +36,10 @@
             <table class="table is-fullwidth is-striped is-hoverable is-bordered">
                 <thead class="has-background-primary-light">
                     <tr class="has-text-weight-bold">
-                        <th>Nombre</th>
-                        <th>Raza</th>
-                        <th>Sexo</th>
-                        <th>Estado</th>
-                        <th>Acción</th>
+                        @foreach(__('messages.main.headerTable') as $index => $item)
+                            <th>{{ $item }}</th>
+                        @endforeach
+
                     </tr>
                 </thead>
                 <tbody id="dogTableBody">
@@ -84,11 +83,12 @@ document.addEventListener("DOMContentLoaded", function() {
         const paginatedDogs = dogsToDisplay.slice(start, end);
 
         paginatedDogs.forEach((dog) => {
-            let sex = dog.sex == 'M' ? 'Macho' : 'Hembra';
+            let sex = dog.sex == 'M' ? 'Male' : 'Female';
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${dog.name}</td>
                 <td>${dog.breed}</td>
+                <td>${dog.color}</td>
                 <td>${sex}</td>
                 <td>${dog.status}</td>
                 <td>

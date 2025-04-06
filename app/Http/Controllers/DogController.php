@@ -41,6 +41,7 @@ class DogController extends Controller
                         'dogs.dog_id',
                         'dogs.name',
                         'dogs.breed',
+                        'dogs.color',
                         'dogs.sex',
                         'dogs.status',
                         DB::raw('COALESCE(SUM(payments.amount), 0) as total_paid'),

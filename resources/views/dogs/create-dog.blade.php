@@ -14,7 +14,7 @@
                   <div class="card-content">
 
                      <div class="field mb-4">
-                        <label class="label" for="name">Name</label>
+                        <label class="label" for="name">{{__('messages.main.formDog.name')}}</label>
                         <div class="control">
                            <input
                               class="input"
@@ -26,19 +26,19 @@
                      <div class="columns is-multiline">
                         <div class="column">
                            <div class="field mb-4">
-                              <label class="label" for="breed">Breed</label>
+                              <label class="label" for="breed">{{__('messages.main.formDog.breed')}}</label>
                               <div class="control">
                                  <input
                                     class="input"
                                     type="text"
                                     name="breed"
-                                    value="">
+                                    value="Pit Bull Terrier" readonly>
                               </div>
                            </div>
                         </div>
                         <div class="column">
                            <div class="field">
-                              <label class="label" for="phone">Color</label>
+                              <label class="label" for="phone">{{__('messages.main.formDog.color')}}</label>
                               <div class="control">
                                  <input
                                     class="input"
@@ -50,12 +50,12 @@
                         </div>
                         <div class="column">
                            <div class="field" >
-                              <label class="label" for="sex">Sex</label>
+                              <label class="label" for="sex">{{__('messages.main.formDog.sex')}}</label>
                               <div class="control">
                                  <div class="select is-fullwidth">
                                     <select name="sex" id="sex">
-                                       <option value="M">Macho</option>
-                                       <option value="H">Hembra</option>
+                                       <option value="M">{{__('messages.main.formDog.selectedMale')}}</option>
+                                       <option value="H">{{__('messages.main.formDog.slectedFemale')}}</option>
                                     </select>
                                  </div>
                               </div>
@@ -65,7 +65,7 @@
                      <div class="columns is-multiline">
                         <div class="column is-one-fifth">
                            <div class="field">
-                              <label class="label" for="birthdate">Date of Birth</label>
+                              <label class="label" for="birthdate">{{__('messages.main.formDog.date')}}</label>
                               <div class="control">
                                  <input
                                     class="input"
@@ -95,7 +95,7 @@
                               <circle cx="30" cy="6" r="5" fill="#fff" class="clr-i-outline--badged clr-i-outline-path-4--badged clr-i-badge" />
                               <path fill="none" d="M0 0h36v36H0z" />
                            </svg>
-                           <span class="ml-1">{{ __('Save Dog') }}</span>
+                           <span class="ml-1">{{__('messages.main.formDog.btnSaveDog')}}</span>
                         </button>
                      </div>
                   </div>

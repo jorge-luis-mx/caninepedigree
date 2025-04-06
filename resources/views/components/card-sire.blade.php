@@ -2,14 +2,14 @@
 
    <!-- Search sire dog -->
    <div class="field searchSire">
-      <label class="label" for="sire">Search Sire</label>
+      <label class="label" for="sire">{{__('messages.main.formDog.sire')}}</label>
       <div class="control has-icons-left">
          <input
             class="input sire"
             type="text"
             name="sire"
             id="sire"
-            placeholder="Search sire...">
+            placeholder="">
          <!-- Campo oculto para el dog_id -->
          <input type="hidden" class="sire_id" name="sire_id">
          <span class="icon is-small is-left">
@@ -26,14 +26,14 @@
    <div class="is-hidden sireMail">
       <!-- Email sire dog -->
       <div class="field">
-         <label class="label" for="sire_email">Sire Email</label>
+         <label class="label" for="sire_email">{{__('messages.main.formDog.sireEmail')}}</label>
          <div class="control has-icons-left">
             <input
                class="input"
                type="email"
                name="sire_email"
                id="sire_email"
-               placeholder="Enter Sire's email">
+               placeholder="{{__('messages.main.formDog.placeholderSireEmail')}}">
             <span class="icon is-small is-left">
                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
                   <path fill="currentColor" d="M2 4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4zm2 0v1.6l8 4.8l8-4.8V4H4zm16 2.4l-8 4.8l-8-4.8V18h16V6.4z" />
@@ -43,13 +43,13 @@
       </div>
 
       <div class="field">
-         <label class="label" for="description">Additional Notes</label>
+         <label class="label" for="description">{{__('messages.main.formDog.noteSire')}}</label>
          <div class="control">
             <textarea
                class="textarea"
                name="descriptionSire"
                id="descriptionSire"
-               placeholder="Enter additional details..."></textarea>
+               placeholder="{{__('messages.main.formDog.noteSirePlaceholder')}}"></textarea>
          </div>
       </div>
       

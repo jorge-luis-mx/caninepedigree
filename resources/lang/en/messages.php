@@ -20,6 +20,46 @@ return [
     ],
     'main'=>[
         'dashboard' => 'Dashboard',
+
+        'dogs'=>[
+            'title'=>'',
+            'btn'=>'Add a Dog',
+            'search'=>'Search by registration number or name',
+            'placeholder'=>'Search by registration number or name...'
+            
+        ],
+
+        'headerTable'=>[
+            'Name',
+            'Breed',
+            'Color',
+            'Sex',
+            'Status',
+            'Action'
+        ],
+
+        'formDog'=>[
+            'title'=>'Register your dog',
+            'name'=>'Name',
+            'breed'=>'Breed',
+            'color'=>'Color',
+            'sex'=>'Sex',
+            'selectedMale'=>'Male',
+            'slectedFemale'=>'Female',
+            'date'=>'Date of Birth',
+            'sire'=>'Search Sire',
+            'dam'=>'Serch Dam',
+            'sireEmail'=>'Sire Email',
+            'placeholderSireEmail'=>'Enter Sire Email',
+            'noteSire'=>'Additional Notes',
+            'noteSirePlaceholder'=>'Enter additional details...',
+            'damEmail'=>'Dam Email',
+            'placeholderDamEmail'=>'Enter Dam Email',
+            'noteDam'=>'Additional Notes',
+            'noteDamPlaceholder'=>'Enter additional details...',
+            'btnSaveDog'=>'Save Dog'
+        ],
+
         'profile' => [
             'title'=>'Profile',
             'subtitle'=>'Edit Profile',
@@ -30,10 +70,7 @@ return [
             'country'=>'Country'
         ],
 
-        'dogs'=>[
-            'title'=>'Register a New Dog',
-            'btn'=>'Add a Dog',
-        ],
+
 
         'detailsDogs'=>[
             'title'=>'Register a New Dog',

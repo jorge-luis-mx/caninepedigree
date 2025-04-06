@@ -20,6 +20,45 @@ return [
     ],
     'main'=>[
         'dashboard' => 'Bienvenido',
+
+        'dogs'=>[
+            'title'=>'',
+            'btn'=>'Agregar un perro',
+            'search'=>'Buscar por número de registro o nombre',
+            'placeholder'=>'Buscar por número de registro o nombre...'
+        ],
+
+        'headerTable'=>[
+            'Nombre',
+            'Raza',
+            'Color',
+            'Sexo',
+            'Estado',
+            'Accion'
+        ],
+        'formDog'=>[
+            'title' => 'Registrar tu perro',
+            'name' => 'Nombre',
+            'breed' => 'Raza',
+            'color' => 'Color',
+            'sex' => 'Sexo',
+            'selectedMale'=>'Macho',
+            'slectedFemale'=>'Hembra',
+            'date' => 'Fecha de nacimiento',
+            'sire' => 'Buscar padre',
+            'dam' => 'Buscar madre',
+            'sireEmail' => 'Correo electrónico del padre',
+            'placeholderSireEmail' => 'Ingresa el correo electrónico del padre',
+            'noteSire' => 'Notas adicionales',
+            'noteSirePlaceholder' => 'Ingresa detalles adicionales...',
+            'damEmail' => 'Correo electrónico de la madre',
+            'placeholderDamEmail' => 'Ingresa el correo electrónico de la madre',
+            'noteDam' => 'Notas adicionales',
+            'noteDamPlaceholder' => 'Ingresa detalles adicionales...',
+            'btnSaveDog'=>'Guardar Perro'
+        ],
+
+
         'profile' => [
             'title'=>'Perfil',
             'subtitle'=>'Editar Perfil',

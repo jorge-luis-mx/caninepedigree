@@ -1,14 +1,14 @@
 <div class="column">
    <!-- Serch dam dog -->
    <div class="field searchDam">
-      <label class="label" for="dam">Serch Dam</label>
+      <label class="label" for="dam">{{__('messages.main.formDog.dam')}}</label>
       <div class="control has-icons-left">
          <input
             class="input dam"
             type="text"
             name="dam"
             id="dam"
-            placeholder="Search dam...">
+            placeholder="">
          <!-- Campo oculto para el dog_id -->
          <input type="hidden" class="dam_id" name="dam_id">
          <span class="icon is-small is-left">
@@ -24,14 +24,14 @@
    <div class="is-hidden damMail">
       <!-- Email dam dog -->
       <div class="field">
-         <label class="label" for="dam_email">Dam Email</label>
+         <label class="label" for="dam_email">{{__('messages.main.formDog.damEmail')}}</label>
          <div class="control has-icons-left">
             <input
                class="input"
                type="email"
                name="dam_email"
                id="dam_email"
-               placeholder="Enter Dam's email">
+               placeholder="{{__('messages.main.formDog.placeholderDamEmail')}}">
             <span class="icon is-small is-left">
                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
                   <path fill="currentColor" d="M2 4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4zm2 0v1.6l8 4.8l8-4.8V4H4zm16 2.4l-8 4.8l-8-4.8V18h16V6.4z" />
@@ -41,13 +41,13 @@
       </div>
 
       <div class="field">
-         <label class="label" for="description">Additional Notes</label>
+         <label class="label" for="description">{{__('messages.main.formDog.noteDam')}}</label>
          <div class="control">
             <textarea
                class="textarea"
                name="descriptionDam"
                id="descriptionDam"
-               placeholder="Enter additional details..."></textarea>
+               placeholder="{{__('messages.main.formDog.noteDamPlaceholder')}}"></textarea>
          </div>
       </div>
       
