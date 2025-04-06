@@ -4,7 +4,6 @@
    <div class="container">
       <div class="columns is-multiline">
          <div class="column is-two-thirds">
-
                <!-- Primary option -->
                <b>Pay with Credit and Debid cards</b>
                <div class="mt-2" id="card-button-container"></div>
@@ -13,39 +12,24 @@
                <b>Pay with a Paypal account</b>
                <div class="mt-2" id="paypal-button-container"></div>
                <input type="" id="invoice" value="{{$dog->invoice}}" hidden>
-
-
          </div>
+
         <!-- SUMARY -->
         <div class="column">
             <section class="card">
                <div class="card-content">
-                  <p class="title">Summary</p>
+                  <p class="title">Service</p>
                   <div class="field">
-                     <label class="label">Service</label>
-                     <p></p>
+                     <p>{{$dog->payment[0]->type}}</p>
                   </div>
-                  <div class="field" id="typeService" data-typeService ="">
-                     <label class="label">Type of service</label>
-                     <p></p>
-                  </div>
-                  <div class="field">
-                     <label class="label">From</label>
-                     <p></p>
-                  </div>
-                  <div class="field">
-                     <label class="label">To</label>
-                     <p></p>
-                  </div>
-                  <div class="field">
-                     <label class="label">Number of Passengers</label>
-                     <p></p>
+                  <div class="field mt-4">
+                     <label class="label">{{$dog->name}}</label>
                   </div>
                </div>
                <section class="hero is-link p-2">
                   <div class="pl-3 pr-3 is-flex  is-justify-content-space-between">
-                        <div> Total</div>
-                        <div> USD</div>
+                        <div>Total</div>
+                        <div>{{$dog->payment[0]->amount}} MXN</div>
                   </div>
                </section>
             </section>

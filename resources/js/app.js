@@ -8,6 +8,7 @@ import { pricing } from './pricing.js';
 import { operations } from './operations.js';
 import { profile } from './profile.js';
 import { dogs } from './dogs.js';
+import { pedigree } from './pedigree.js';
 
 
 window.Alpine = Alpine;
@@ -45,6 +46,8 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 dogs();
+pedigree();
+
 mainFunction();
 airport();
 map();

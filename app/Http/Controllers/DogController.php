@@ -76,7 +76,7 @@ class DogController extends Controller
 
         $data = [
             'status' => null,
-            'message' => 'Failed to insert the airport. Please check the data and try again',
+            'message' => '',
             'data'=>[],
             'errors' => null,
         ];
@@ -85,14 +85,13 @@ class DogController extends Controller
 
         // Buscar el perro por número de registro
         $dog = Dog::where('reg_no', $reg_no)->first();
-        
+
         if ($dog) {
             $data['status'] = 200;
             $data['data'] = $dog;
         } else {
             // Buscar por nombre si no se encontró por número de registro
             $dogs = Dog::where('name', 'LIKE', "%$reg_no%")->get();
-            
             if ($dogs->isNotEmpty()) {
                 $data['status'] = 200;
                 $data['data'] = $dogs;
@@ -171,7 +170,7 @@ class DogController extends Controller
                 'amount' => 100.00, // Monto del pago (puedes ajustarlo según corresponda)
                 'type' => 'registration', // Tipo de pago (registro del perro)
                 'status' => 'pending', // Estado del pago (aún no completado)
-                'payment_method' => 'card' // Método de pago (ajústalo según la lógica de pago)
+                'payment_method' => null // Método de pago (ajústalo según la lógica de pago)
             ]);
 
             // Registrar la relación en dog_payments
