@@ -112,51 +112,51 @@ Route::middleware('auth')->group(function () {
 
 
     //airport
-    Route::get('/airport', [AirportController::class, 'index'])->name('airport.index');
-    Route::get('/airport/create', [AirportController::class, 'create'])->name('airport.create');
-    Route::post('/airport/store', [AirportController::class, 'store'])->name('airport.store');
-    Route::post('/airport/update-status/{id}', [AirportController::class, 'updateStatus'])->name('airport.updateStatus');
-    Route::get('/airport/edit/{id}', [AirportController::class, 'edit'])->name('airport.edit');
-    Route::put('/airport/update/{id}', [AirportController::class, 'update'])->name('airport.update');
-    Route::delete('/airport/{id}', [AirportController::class, 'destroy'])->name('airport.destroy');
-    //map 
-    Route::get('/map', [MapController::class, 'index'])->name('map.index');
-    Route::get('/map/create/{id?}', [MapController::class, 'create'])->name('map.create');
-    Route::post('/map/store', [MapController::class, 'store'])->name('map.store');
-    Route::get('/map/edit/{id}', [MapController::class, 'edit'])->name('map.edit');
-    Route::put('/map/update/{id}', [MapController::class, 'update'])->name('map.update');
-    Route::delete('/map/destroy/{id}', [MapController::class, 'destroy'])->name('map.destroy');
-    Route::post('/map/update-status/{id}', [MapController::class, 'updateStatus'])->name('map.updateStatus');
-    //map update alias
-    Route::post('/map/update-alias/{id}', [MapController::class, 'updateAlias'])->name('map.updateAlias');
-    Route::put('/map/update/area/{id}', [MapController::class, 'updateArea'])->name('map.updateArea');
-    //service
-    Route::post('/service/store', [ServiceController::class, 'store'])->name('service.store');
+    // Route::get('/airport', [AirportController::class, 'index'])->name('airport.index');
+    // Route::get('/airport/create', [AirportController::class, 'create'])->name('airport.create');
+    // Route::post('/airport/store', [AirportController::class, 'store'])->name('airport.store');
+    // Route::post('/airport/update-status/{id}', [AirportController::class, 'updateStatus'])->name('airport.updateStatus');
+    // Route::get('/airport/edit/{id}', [AirportController::class, 'edit'])->name('airport.edit');
+    // Route::put('/airport/update/{id}', [AirportController::class, 'update'])->name('airport.update');
+    // Route::delete('/airport/{id}', [AirportController::class, 'destroy'])->name('airport.destroy');
+    // //map 
+    // Route::get('/map', [MapController::class, 'index'])->name('map.index');
+    // Route::get('/map/create/{id?}', [MapController::class, 'create'])->name('map.create');
+    // Route::post('/map/store', [MapController::class, 'store'])->name('map.store');
+    // Route::get('/map/edit/{id}', [MapController::class, 'edit'])->name('map.edit');
+    // Route::put('/map/update/{id}', [MapController::class, 'update'])->name('map.update');
+    // Route::delete('/map/destroy/{id}', [MapController::class, 'destroy'])->name('map.destroy');
+    // Route::post('/map/update-status/{id}', [MapController::class, 'updateStatus'])->name('map.updateStatus');
+    // //map update alias
+    // Route::post('/map/update-alias/{id}', [MapController::class, 'updateAlias'])->name('map.updateAlias');
+    // Route::put('/map/update/area/{id}', [MapController::class, 'updateArea'])->name('map.updateArea');
+    // //service
+    // Route::post('/service/store', [ServiceController::class, 'store'])->name('service.store');
 
-    //serviceType
-    Route::get('/service/type', [ServiceTypeController::class, 'index'])->name('serviceType.index');
+    // //serviceType
+    // Route::get('/service/type', [ServiceTypeController::class, 'index'])->name('serviceType.index');
 
-    //Pricing
-    Route::get('/pricing', [PricingController::class, 'index'])->name('pricing.index');
-    Route::get('/prices', [PricingController::class, 'rates'])->name('pricing.rates');
-    Route::post('/pricing/store', [PricingController::class, 'store'])->name('pricing.store');
+    // //Pricing
+    // Route::get('/pricing', [PricingController::class, 'index'])->name('pricing.index');
+    // Route::get('/prices', [PricingController::class, 'rates'])->name('pricing.rates');
+    // Route::post('/pricing/store', [PricingController::class, 'store'])->name('pricing.store');
 
-    //operations
-    Route::get('/operation/{date?}', [OperationController::class, 'index'])->name('operation.index');
-    Route::post('/operations/search', [OperationController::class, 'search'])->name('operations.search');
-    Route::get('/operations/show/{id}', [OperationController::class, 'show'])->name('operations.show');
+    // //operations
+    // Route::get('/operation/{date?}', [OperationController::class, 'index'])->name('operation.index');
+    // Route::post('/operations/search', [OperationController::class, 'search'])->name('operations.search');
+    // Route::get('/operations/show/{id}', [OperationController::class, 'show'])->name('operations.show');
 
-    //sales
-    Route::get('/sales/{date?}', [SalesController::class, 'index'])->name('sales.index');
-    Route::post('/sales/search', [SalesController::class, 'search'])->name('sales.search');
-    Route::get('/sales/view/{id}', [SalesController::class, 'show'])->name('sales.show');
+    // //sales
+    // Route::get('/sales/{date?}', [SalesController::class, 'index'])->name('sales.index');
+    // Route::post('/sales/search', [SalesController::class, 'search'])->name('sales.search');
+    // Route::get('/sales/view/{id}', [SalesController::class, 'show'])->name('sales.show');
     
-    //Progress
-    Route::get('/progress', [ProgressController::class, 'index'])->name('progress.index');
-    Route::get('/progress/serch', [ProgressController::class, 'search'])->name('progress.search');
+    // //Progress
+    // Route::get('/progress', [ProgressController::class, 'index'])->name('progress.index');
+    // Route::get('/progress/serch', [ProgressController::class, 'search'])->name('progress.search');
 
-    //guide user
-    Route::get('/user-guide', [UserGuideController::class, 'index'])->name('guide.index');
+    // //guide user
+    // Route::get('/user-guide', [UserGuideController::class, 'index'])->name('guide.index');
 
 });
 
