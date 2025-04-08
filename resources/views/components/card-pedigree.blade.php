@@ -15,6 +15,7 @@
     // Generación 3: Abuelos
     
     $fatherFather  = $pedigree['sire']['sire']['dog']?? null;
+    $fatherFatherUrl = $pedigree['sire']['sire']['dog']['id']?? null;
     $fatherMother = $pedigree['sire']['dam']['dog'] ?? null;
 
     $motherFather = $pedigree['dam']['sire']['dog']?? null;
@@ -38,7 +39,7 @@
    $bisabuela4 = $pedigree['dam']['dam']['dam']['dog'] ?? null;      // Bisabuela 4 (madre de abuela materna)
 
 
-    dd($bisabuela4);
+
    
 @endphp
 
@@ -58,19 +59,38 @@
       </div> -->
 
    <!-- 2ª Generación -->
-   <div class="generation-label">2ª Generación - Padres </div>
+   <div class="generation-label">2ª Generación - Padres</div>
    <div class="generation">
       <div class="animal">
-         <a href="{{ route('pediree.showPedigree', ['id' => $father['id']]) }}">
-            <img src="https://placedog.net/300/200?id=2" alt="Rocky" />
-         </a>
-         <p><strong>Padre:</strong> <a href="{{ route('pediree.showPedigree', ['id' => $father['id']]) }}"> {{ $father['name'] ?? 'No disponible' }} </a></p>
+         @if(isset($father['id']))
+            <a href="{{ route('pediree.showPedigree', ['id' => $father['id']]) }}">
+               <img src="https://placedog.net/300/200?id=2" alt="{{ $father['name'] ?? 'Padre' }}" />
+            </a>
+            <p><strong>Padre:</strong> 
+               <a href="{{ route('pediree.showPedigree', ['id' => $father['id']]) }}">
+                  {{ $father['name'] ?? 'No disponible' }}
+               </a>
+            </p>
+         @else
+            <img src="https://via.placeholder.com/300x200.png?text=Sin+imagen" alt="No disponible" />
+            <p><strong>Padre:</strong> No disponible</p>
+         @endif
       </div>
+
       <div class="animal">
-         <a href="{{ route('pediree.showPedigree', ['id' => $mother['id']]) }}">
-            <img src="https://placedog.net/300/200?id=3" alt="Luna" />
-         </a>
-         <p><strong>Madre:</strong> <a href="{{ route('pediree.showPedigree', ['id' => $mother['id']]) }}"> {{ $mother['name'] ?? 'No disponible' }} </a></p>
+         @if(isset($mother['id']))
+            <a href="{{ route('pediree.showPedigree', ['id' => $mother['id']]) }}">
+               <img src="https://placedog.net/300/200?id=3" alt="{{ $mother['name'] ?? 'Madre' }}" />
+            </a>
+            <p><strong>Madre:</strong> 
+               <a href="{{ route('pediree.showPedigree', ['id' => $mother['id']]) }}">
+                  {{ $mother['name'] ?? 'No disponible' }}
+               </a>
+            </p>
+         @else
+            <img src="https://via.placeholder.com/300x200.png?text=Sin+imagen" alt="No disponible" />
+            <p><strong>Madre:</strong> No disponible</p>
+         @endif
       </div>
    </div>
 
@@ -78,83 +98,203 @@
    <div class="generation-label">3ª Generación - Abuelos</div>
    <div class="generation">
       <div class="animal">
-         <a href="pedigree.html?nombre=Thor">
-            <img src="https://placedog.net/300/200?id=4" alt="Thor" />
-         </a>
-         <p><strong>Abuelo Paterno:</strong> <a href="pedigree.html?nombre=Thor">Thor</a></p>
+         @if(isset($fatherFather['id']))
+            <a href="{{ route('pediree.showPedigree', ['id' => $fatherFather['id']]) }}">
+               <img src="https://placedog.net/300/200?id=4" alt="{{ $fatherFather['name'] ?? 'Abuelo Paterno' }}" />
+            </a>
+            <p><strong>Abuelo Paterno:</strong> 
+               <a href="{{ route('pediree.showPedigree', ['id' => $fatherFather['id']]) }}">
+                  {{ $fatherFather['name'] ?? 'No disponible' }}
+               </a>
+            </p>
+         @else
+            <img src="https://via.placeholder.com/300x200.png?text=Sin+imagen" alt="No disponible" />
+            <p><strong>Abuelo Paterno:</strong> No disponible</p>
+         @endif
       </div>
+
       <div class="animal">
-         <a href="pedigree.html?nombre=Bella">
-            <img src="https://placedog.net/300/200?id=5" alt="Bella" />
-         </a>
-         <p><strong>Abuela Paterna:</strong> <a href="pedigree.html?nombre=Bella">Bella</a></p>
+         @if(isset($fatherMother['id']))
+            <a href="{{ route('pediree.showPedigree', ['id' => $fatherMother['id']]) }}">
+               <img src="https://placedog.net/300/200?id=5" alt="{{ $fatherMother['name'] ?? 'Abuela Paterna' }}" />
+            </a>
+            <p><strong>Abuela Paterna:</strong> 
+               <a href="{{ route('pediree.showPedigree', ['id' => $fatherMother['id']]) }}">
+                  {{ $fatherMother['name'] ?? 'No disponible' }}
+               </a>
+            </p>
+         @else
+            <img src="https://via.placeholder.com/300x200.png?text=Sin+imagen" alt="No disponible" />
+            <p><strong>Abuela Paterna:</strong> No disponible</p>
+         @endif
       </div>
+
       <div class="animal">
-         <a href="pedigree.html?nombre=Simba">
-            <img src="https://placedog.net/300/200?id=6" alt="Simba" />
-         </a>
-         <p><strong>Abuelo Materno:</strong> <a href="pedigree.html?nombre=Simba">Simba</a></p>
+         @if(isset($motherFather['id']))
+            <a href="{{ route('pediree.showPedigree', ['id' => $motherFather['id']]) }}">
+               <img src="https://placedog.net/300/200?id=6" alt="{{ $motherFather['name'] ?? 'Abuelo Materno' }}" />
+            </a>
+            <p><strong>Abuelo Materno:</strong> 
+               <a href="{{ route('pediree.showPedigree', ['id' => $motherFather['id']]) }}">
+                  {{ $motherFather['name'] ?? 'No disponible' }}
+               </a>
+            </p>
+         @else
+            <img src="https://via.placeholder.com/300x200.png?text=Sin+imagen" alt="No disponible" />
+            <p><strong>Abuelo Materno:</strong> No disponible</p>
+         @endif
       </div>
+
       <div class="animal">
-         <a href="pedigree.html?nombre=Lucy">
-            <img src="https://placedog.net/300/200?id=7" alt="Lucy" />
-         </a>
-         <p><strong>Abuela Materna:</strong> <a href="pedigree.html?nombre=Lucy">Lucy</a></p>
+         @if(isset($motherMother['id']))
+            <a href="{{ route('pediree.showPedigree', ['id' => $motherMother['id']]) }}">
+               <img src="https://placedog.net/300/200?id=7" alt="{{ $motherMother['name'] ?? 'Abuela Materna' }}" />
+            </a>
+            <p><strong>Abuela Materna:</strong> 
+               <a href="{{ route('pediree.showPedigree', ['id' => $motherMother['id']]) }}">
+                  {{ $motherMother['name'] ?? 'No disponible' }}
+               </a>
+            </p>
+         @else
+            <img src="https://via.placeholder.com/300x200.png?text=Sin+imagen" alt="No disponible" />
+            <p><strong>Abuela Materna:</strong> No disponible</p>
+         @endif
       </div>
    </div>
 
-   <!-- 4ª Generación -->
-   <div class="generation-label">4ª Generación - Bisabuelos</div>
-   <div class="generation">
-      <div class="animal">
-         <a href="pedigree.html?nombre=Zeus">
-            <img src="https://placedog.net/300/200?id=8" alt="Zeus" />
+
+<!-- 4ª Generación -->
+<div class="generation-label">4ª Generación - Bisabuelos</div>
+<div class="generation">
+   <div class="animal">
+      @if(isset($bisabuelo1['id']))
+         <a href="{{ route('pediree.showPedigree', ['id' => $bisabuelo1['id']]) }}">
+            <img src="https://placedog.net/300/200?id=8" alt="{{ $bisabuelo1['name'] ?? 'Bisabuelo Paterno 1' }}" />
          </a>
-         <p><strong>Bisabuelo Paterno 1:</strong> <a href="pedigree.html?nombre=Zeus">Zeus</a></p>
-      </div>
-      <div class="animal">
-         <a href="pedigree.html?nombre=Nina">
-            <img src="https://placedog.net/300/200?id=9" alt="Nina" />
-         </a>
-         <p><strong>Bisabuela Paterna 1:</strong> <a href="pedigree.html?nombre=Nina">Nina</a></p>
-      </div>
-      <div class="animal">
-         <a href="pedigree.html?nombre=Bruno">
-            <img src="https://placedog.net/300/200?id=10" alt="Bruno" />
-         </a>
-         <p><strong>Bisabuelo Paterno 2:</strong> <a href="pedigree.html?nombre=Bruno">Bruno</a></p>
-      </div>
-      <div class="animal">
-         <a href="pedigree.html?nombre=Lola">
-            <img src="https://placedog.net/300/200?id=11" alt="Lola" />
-         </a>
-         <p><strong>Bisabuela Paterna 2:</strong> <a href="pedigree.html?nombre=Lola">Lola</a></p>
-      </div>
-      <div class="animal">
-         <a href="pedigree.html?nombre=Rex">
-            <img src="https://placedog.net/300/200?id=12" alt="Rex" />
-         </a>
-         <p><strong>Bisabuelo Materno 1:</strong> <a href="pedigree.html?nombre=Rex">Rex</a></p>
-      </div>
-      <div class="animal">
-         <a href="pedigree.html?nombre=Canela">
-            <img src="https://placedog.net/300/200?id=13" alt="Canela" />
-         </a>
-         <p><strong>Bisabuela Materna 1:</strong> <a href="pedigree.html?nombre=Canela">Canela</a></p>
-      </div>
-      <div class="animal">
-         <a href="pedigree.html?nombre=Bobby">
-            <img src="https://placedog.net/300/200?id=14" alt="Bobby" />
-         </a>
-         <p><strong>Bisabuelo Materno 2:</strong> <a href="pedigree.html?nombre=Bobby">Bobby</a></p>
-      </div>
-      <div class="animal">
-         <a href="pedigree.html?nombre=Daisy">
-            <img src="https://placedog.net/300/200?id=15" alt="Daisy" />
-         </a>
-         <p><strong>Bisabuela Materna 2:</strong> <a href="pedigree.html?nombre=Daisy">Daisy</a></p>
-      </div>
+         <p><strong>Bisabuelo Paterno 1:</strong> 
+            <a href="{{ route('pediree.showPedigree', ['id' => $bisabuelo1['id']]) }}">
+               {{ $bisabuelo1['name'] ?? 'No disponible' }}
+            </a>
+         </p>
+      @else
+         <img src="https://via.placeholder.com/300x200.png?text=Sin+imagen" alt="No disponible" />
+         <p><strong>Bisabuelo Paterno 1:</strong> No disponible</p>
+      @endif
    </div>
+
+   <div class="animal">
+      @if(isset($bisabuela1['id']))
+         <a href="{{ route('pediree.showPedigree', ['id' => $bisabuela1['id']]) }}">
+            <img src="https://placedog.net/300/200?id=9" alt="{{ $bisabuela1['name'] ?? 'Bisabuela Paterna 1' }}" />
+         </a>
+         <p><strong>Bisabuela Paterna 1:</strong> 
+            <a href="{{ route('pediree.showPedigree', ['id' => $bisabuela1['id']]) }}">
+               {{ $bisabuela1['name'] ?? 'No disponible' }}
+            </a>
+         </p>
+      @else
+         <img src="https://via.placeholder.com/300x200.png?text=Sin+imagen" alt="No disponible" />
+         <p><strong>Bisabuela Paterna 1:</strong> No disponible</p>
+      @endif
+   </div>
+
+   <div class="animal">
+      @if(isset($bisabuelo2['id']))
+         <a href="{{ route('pediree.showPedigree', ['id' => $bisabuelo2['id']]) }}">
+            <img src="https://placedog.net/300/200?id=10" alt="{{ $bisabuelo2['name'] ?? 'Bisabuelo Paterno 2' }}" />
+         </a>
+         <p><strong>Bisabuelo Paterno 2:</strong> 
+            <a href="{{ route('pediree.showPedigree', ['id' => $bisabuelo2['id']]) }}">
+               {{ $bisabuelo2['name'] ?? 'No disponible' }}
+            </a>
+         </p>
+      @else
+         <img src="https://via.placeholder.com/300x200.png?text=Sin+imagen" alt="No disponible" />
+         <p><strong>Bisabuelo Paterno 2:</strong> No disponible</p>
+      @endif
+   </div>
+
+   <div class="animal">
+      @if(isset($bisabuela2['id']))
+         <a href="{{ route('pediree.showPedigree', ['id' => $bisabuela2['id']]) }}">
+            <img src="https://placedog.net/300/200?id=11" alt="{{ $bisabuela2['name'] ?? 'Bisabuela Paterna 2' }}" />
+         </a>
+         <p><strong>Bisabuela Paterna 2:</strong> 
+            <a href="{{ route('pediree.showPedigree', ['id' => $bisabuela2['id']]) }}">
+               {{ $bisabuela2['name'] ?? 'No disponible' }}
+            </a>
+         </p>
+      @else
+         <img src="https://via.placeholder.com/300x200.png?text=Sin+imagen" alt="No disponible" />
+         <p><strong>Bisabuela Paterna 2:</strong> No disponible</p>
+      @endif
+   </div>
+
+   <div class="animal">
+      @if(isset($bisabuelo3['id']))
+         <a href="{{ route('pediree.showPedigree', ['id' => $bisabuelo3['id']]) }}">
+            <img src="https://placedog.net/300/200?id=12" alt="{{ $bisabuelo3['name'] ?? 'Bisabuelo Materno 1' }}" />
+         </a>
+         <p><strong>Bisabuelo Materno 1:</strong> 
+            <a href="{{ route('pediree.showPedigree', ['id' => $bisabuelo3['id']]) }}">
+               {{ $bisabuelo3['name'] ?? 'No disponible' }}
+            </a>
+         </p>
+      @else
+         <img src="https://via.placeholder.com/300x200.png?text=Sin+imagen" alt="No disponible" />
+         <p><strong>Bisabuelo Materno 1:</strong> No disponible</p>
+      @endif
+   </div>
+
+   <div class="animal">
+      @if(isset($bisabuela3['id']))
+         <a href="{{ route('pediree.showPedigree', ['id' => $bisabuela3['id']]) }}">
+            <img src="https://placedog.net/300/200?id=13" alt="{{ $bisabuela3['name'] ?? 'Bisabuela Materna 1' }}" />
+         </a>
+         <p><strong>Bisabuela Materna 1:</strong> 
+            <a href="{{ route('pediree.showPedigree', ['id' => $bisabuela3['id']]) }}">
+               {{ $bisabuela3['name'] ?? 'No disponible' }}
+            </a>
+         </p>
+      @else
+         <img src="https://via.placeholder.com/300x200.png?text=Sin+imagen" alt="No disponible" />
+         <p><strong>Bisabuela Materna 1:</strong> No disponible</p>
+      @endif
+   </div>
+
+   <div class="animal">
+      @if(isset($bisabuelo4['id']))
+         <a href="{{ route('pediree.showPedigree', ['id' => $bisabuelo4['id']]) }}">
+            <img src="https://placedog.net/300/200?id=14" alt="{{ $bisabuelo4['name'] ?? 'Bisabuelo Materno 2' }}" />
+         </a>
+         <p><strong>Bisabuelo Materno 2:</strong> 
+            <a href="{{ route('pediree.showPedigree', ['id' => $bisabuelo4['id']]) }}">
+               {{ $bisabuelo4['name'] ?? 'No disponible' }}
+            </a>
+         </p>
+      @else
+         <img src="https://via.placeholder.com/300x200.png?text=Sin+imagen" alt="No disponible" />
+         <p><strong>Bisabuelo Materno 2:</strong> No disponible</p>
+      @endif
+   </div>
+
+   <div class="animal">
+      @if(isset($bisabuela4['id']))
+         <a href="{{ route('pediree.showPedigree', ['id' => $bisabuela4['id']]) }}">
+            <img src="https://placedog.net/300/200?id=15" alt="{{ $bisabuela4['name'] ?? 'Bisabuela Materna 2' }}" />
+         </a>
+         <p><strong>Bisabuela Materna 2:</strong> 
+            <a href="{{ route('pediree.showPedigree', ['id' => $bisabuela4['id']]) }}">
+               {{ $bisabuela4['name'] ?? 'No disponible' }}
+            </a>
+         </p>
+      @else
+         <img src="https://via.placeholder.com/300x200.png?text=Sin+imagen" alt="No disponible" />
+         <p><strong>Bisabuela Materna 2:</strong> No disponible</p>
+      @endif
+   </div>
+</div>
+
 </div>
 
 @endif

@@ -109,16 +109,22 @@ class DogController extends Controller
 
         // Buscar el perro por número de registro
         $dog = Dog::where('reg_no', $reg_no)->first();
-
+        
         if ($dog) {
+            $dog->dog_hash = md5($dog->dog_id);
             $data['status'] = 200;
             $data['data'] = $dog;
         } else {
             // Buscar por nombre si no se encontró por número de registro
             $dogs = Dog::where('name', 'LIKE', "%$reg_no%")->get();
+           
             if ($dogs->isNotEmpty()) {
+                foreach ($dogs as $dog) {
+                    $dog->dog_hash = md5($dog->dog_id);
+                }
                 $data['status'] = 200;
                 $data['data'] = $dogs;
+
             }else{
                 $data['status'] = 204;
             }
@@ -323,6 +329,8 @@ class DogController extends Controller
             ->firstOrFail();
 
         $pedigree = $this->findPedigree($dog);
+
+
 
         // dd($pedigree);  
         // return response()->json($pedigree);
