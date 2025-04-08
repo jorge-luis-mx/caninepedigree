@@ -52,7 +52,7 @@ class PaymentController extends Controller
 
             $sale = [];
             $sale['keyReservation'] = $dog->reg_no;
-            $sale['cye'] = 'USD';
+            $sale['cye'] = 'MXN';
             $sale['total'] = 100;
             
                 $item = 'Dog Registration with Payment ';
