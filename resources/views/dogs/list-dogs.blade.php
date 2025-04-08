@@ -68,6 +68,7 @@
 document.addEventListener("DOMContentLoaded", function() {
 
     let dogs = @json($dogs);
+    const rol = @json($rol);
 
     let currentPage = 1;
     const dogsPerPage = 5;
@@ -93,12 +94,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 <td>${sex}</td>
                 <td>${dog.status}</td>
                 <td>
-                    ${dog.status === 'completed' ? 
+                    ${dog.status === 'completed'? 
                     `<button class="button is-info is-small" onclick="viewDetails('${encodeURIComponent(dog.dog_hash)}')">Ver Detalles</button>` 
                     :`<button class="button is-info is-small" disabled>Ver Detalles</button>` 
                     }
                     <button class="button is-danger is-small" onclick="deleteDog('${encodeURIComponent(dog.dog_hash)}')">Eliminar</button>
-                    ${dog.status === 'pending' ? 
+                    ${dog.status === 'pending'  && rol =='customer' ? 
                         `<button class="button is-success is-small" onclick="makePayment('${encodeURIComponent(dog.dog_hash)}')">Pagar</button>` : 
                         ''}
                 </td>

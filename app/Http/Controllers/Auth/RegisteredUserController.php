@@ -63,6 +63,7 @@ class RegisteredUserController extends Controller
             'username' => $username,
             'password' => Hash::make($request->password),
             'profile_id' => $userProfile['profile_id'],  // Relacionar con `user_profile`
+            'role'=>'customer',
             'status' => 1, 
         ]);
     

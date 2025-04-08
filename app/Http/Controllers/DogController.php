@@ -36,7 +36,7 @@ class DogController extends Controller
         $user = auth()->user();
         $profile_id = $user->profile_id;
         $profile = $user->userprofile;
-
+        $rol = $user->role;
         if ($user->role == 'admin' || $user->role =='customer') {
 
             if ($profile_id == $profile->profile_id) {
@@ -58,32 +58,14 @@ class DogController extends Controller
                 )
                 ->groupBy('dogs.dog_id', 'dogs.name', 'dogs.breed', 'dogs.color', 'dogs.sex', 'dogs.status')
                 ->get();
-            
 
-                // $dogs = Dog::where('dogs.current_owner_id', $profile_id) // Filtrar por dueño
-                //     ->whereIn('dogs.status', ['pending', 'completed']) // Filtrar por estado
-                //     ->leftJoin('dog_payments', 'dogs.dog_id', '=', 'dog_payments.dog_id')
-                //     ->leftJoin('payments', 'dog_payments.payment_id', '=', 'payments.payment_id')
-                //     ->select(
-                //         'dogs.dog_id',
-                //         'dogs.name',
-                //         'dogs.breed',
-                //         'dogs.color',
-                //         'dogs.sex',
-                //         'dogs.status',
-                //         DB::raw('COALESCE(SUM(payments.amount), 0) as total_paid'),
-                //         DB::raw('100 - COALESCE(SUM(payments.amount), 0) as amount_due')
-                //     )
-                //     ->groupBy('dogs.dog_id', 'dogs.name', 'dogs.breed', 'dogs.sex', 'dogs.status')
-                //     ->get();
                 
             }
             
-
         }
-    
+  
        
-        return view('dogs.list-dogs',compact('dogs'));
+        return view('dogs.list-dogs',compact('dogs','rol'));
     }
 
     /**
