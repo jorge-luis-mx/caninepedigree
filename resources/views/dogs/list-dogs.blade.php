@@ -66,6 +66,7 @@
 
 
 document.addEventListener("DOMContentLoaded", function() {
+
     let dogs = @json($dogs);
 
     let currentPage = 1;
@@ -93,12 +94,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 <td>${dog.status}</td>
                 <td>
                     ${dog.status === 'completed' ? 
-                    `<button class="button is-info is-small" onclick="viewDetails(${dog.dog_id})">Ver Detalles</button>` 
+                    `<button class="button is-info is-small" onclick="viewDetails('${encodeURIComponent(dog.dog_hash)}')">Ver Detalles</button>` 
                     :`<button class="button is-info is-small" disabled>Ver Detalles</button>` 
                     }
-                    <button class="button is-danger is-small" onclick="deleteDog(${dog.dog_id})">Eliminar</button>
+                    <button class="button is-danger is-small" onclick="deleteDog('${encodeURIComponent(dog.dog_hash)}')">Eliminar</button>
                     ${dog.status === 'pending' ? 
-                        `<button class="button is-success is-small" onclick="makePayment(${dog.dog_id})">Pagar</button>` : 
+                        `<button class="button is-success is-small" onclick="makePayment('${encodeURIComponent(dog.dog_hash)}')">Pagar</button>` : 
                         ''}
                 </td>
             `;
@@ -190,7 +191,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Funciones para manejar las acciones
     window.viewDetails = function(dogId) {
         
-        window.location.href = `/dogs/${dogId}/show`;
+        window.location.href = `/dogs/show/${dogId}`;
     }
 
     window.deleteDog = function(dogId) {
@@ -237,7 +238,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     </script>
 
-    </script>
    @endpush
 
 </x-app-layout>

@@ -18,8 +18,15 @@ use App\Models\Payment;
 use App\Models\DogPayment;
 use App\Models\UserProfile;
 
+use App\Traits\Pedigree;
+
+
 class DogController extends Controller
 {
+
+    use Pedigree;
+
+
     /**
      * Display a listing of the resource.
      */
@@ -33,31 +40,47 @@ class DogController extends Controller
         if ($user->role == 'admin' || $user->role =='customer') {
 
             if ($profile_id == $profile->profile_id) {
-                $dogs = Dog::where('dogs.current_owner_id', $profile_id) // Filtrar por dueño
-                    ->whereIn('dogs.status', ['pending', 'completed']) // Filtrar por estado
-                    ->leftJoin('dog_payments', 'dogs.dog_id', '=', 'dog_payments.dog_id')
-                    ->leftJoin('payments', 'dog_payments.payment_id', '=', 'payments.payment_id')
-                    ->select(
-                        'dogs.dog_id',
-                        'dogs.name',
-                        'dogs.breed',
-                        'dogs.color',
-                        'dogs.sex',
-                        'dogs.status',
-                        DB::raw('COALESCE(SUM(payments.amount), 0) as total_paid'),
-                        DB::raw('100 - COALESCE(SUM(payments.amount), 0) as amount_due')
-                    )
-                    ->groupBy('dogs.dog_id', 'dogs.name', 'dogs.breed', 'dogs.sex', 'dogs.status')
-                    ->get();
+
+                $dogs = Dog::where('dogs.current_owner_id', $profile_id)
+                ->whereIn('dogs.status', ['pending', 'completed'])
+                ->leftJoin('dog_payments', 'dogs.dog_id', '=', 'dog_payments.dog_id')
+                ->leftJoin('payments', 'dog_payments.payment_id', '=', 'payments.payment_id')
+                ->select(
+                    'dogs.dog_id',
+                    DB::raw('MD5(dogs.dog_id) as dog_hash'),
+                    'dogs.name',
+                    'dogs.breed',
+                    'dogs.color',
+                    'dogs.sex',
+                    'dogs.status',
+                    DB::raw('COALESCE(SUM(payments.amount), 0) as total_paid'),
+                    DB::raw('100 - COALESCE(SUM(payments.amount), 0) as amount_due')
+                )
+                ->groupBy('dogs.dog_id', 'dogs.name', 'dogs.breed', 'dogs.color', 'dogs.sex', 'dogs.status')
+                ->get();
+            
+
+                // $dogs = Dog::where('dogs.current_owner_id', $profile_id) // Filtrar por dueño
+                //     ->whereIn('dogs.status', ['pending', 'completed']) // Filtrar por estado
+                //     ->leftJoin('dog_payments', 'dogs.dog_id', '=', 'dog_payments.dog_id')
+                //     ->leftJoin('payments', 'dog_payments.payment_id', '=', 'payments.payment_id')
+                //     ->select(
+                //         'dogs.dog_id',
+                //         'dogs.name',
+                //         'dogs.breed',
+                //         'dogs.color',
+                //         'dogs.sex',
+                //         'dogs.status',
+                //         DB::raw('COALESCE(SUM(payments.amount), 0) as total_paid'),
+                //         DB::raw('100 - COALESCE(SUM(payments.amount), 0) as amount_due')
+                //     )
+                //     ->groupBy('dogs.dog_id', 'dogs.name', 'dogs.breed', 'dogs.sex', 'dogs.status')
+                //     ->get();
                 
             }
             
 
         }
-
-
-
- 
     
        
         return view('dogs.list-dogs',compact('dogs'));
@@ -236,10 +259,16 @@ class DogController extends Controller
     public function show(string $id)
     {
         
-        $dog = Dog::with(['currentOwner', 'breeder'])->where('dog_id', $id)->first();
-        
+        $dog = Dog::with(['currentOwner', 'breeder'])->whereRaw('MD5(dog_id) = ?', $id)->firstOrFail();
+        $dog->dog_hash = md5($dog->dog_id);
+        $dog = ['dog'=>$dog];
+
+
+        // $airport = Dog::whereRaw('MD5(dog_id) = ?', $id)->firstOrFail();
         // $dog = Dog::where('dog_id', $id)->first();
         // $birthdate = $dog->birthdate;
+
+        //$dog = Dog::with(['currentOwner', 'breeder'])->where('dog_id', $id)->first();
         return view('dogs/show-dog',compact('dog'));
     }
 
@@ -264,7 +293,9 @@ class DogController extends Controller
      */
     public function destroy(string $id)
     {
-        $dog = Dog::find($id);
+
+        $dog = Dog::whereRaw('MD5(dog_id) = ?', $id)->firstOrFail();
+
         if ($dog) {
             $dog->delete();
             return response()->json(['success' => true]);
@@ -277,52 +308,33 @@ class DogController extends Controller
 
     public function showPedigree($id)
     {
-        $dog = DB::table('dogs')->where('dog_id', $id)->first();
+       
+        
+        $dog = Dog::whereRaw('MD5(dog_id) = ?', [$id])
+            ->with([
+                'sire', 'dam',
+                'sire.sire', 'sire.dam',
+                'dam.sire', 'dam.dam',
+                'sire.sire.sire', 'sire.sire.dam',
+                'sire.dam.sire', 'sire.dam.dam',
+                'dam.sire.sire', 'dam.sire.dam',
+                'dam.dam.sire', 'dam.dam.dam',
+            ])
+            ->firstOrFail();
 
-        if (!$dog) {
-            return redirect()->back()->with('error', 'El perro no existe.');
-        }
-        
-        $pedigree = DB::select("
-            WITH RECURSIVE Pedigree AS (
-                SELECT 
-                    d.dog_id, 
-                    d.reg_no, 
-                    d.name, 
-                    d.breed, 
-                    d.color, 
-                    d.sex, 
-                    d.birthdate, 
-                    d.sire_id, 
-                    d.dam_id, 
-                    1 AS generation
-                FROM dogs d
-                WHERE d.dog_id = ?
-        
-                UNION ALL
-        
-                SELECT 
-                    p.dog_id, 
-                    p.reg_no, 
-                    p.name, 
-                    p.breed, 
-                    p.color, 
-                    p.sex, 
-                    p.birthdate, 
-                    p.sire_id, 
-                    p.dam_id, 
-                    Pedigree.generation + 1 AS generation
-                FROM dogs p
-                INNER JOIN Pedigree ON p.dog_id = Pedigree.sire_id OR p.dog_id = Pedigree.dam_id
-                WHERE Pedigree.generation < 4  -- Limita a 4 generaciones
-            )
-            SELECT * FROM Pedigree 
-            ORDER BY generation, 
-                     CASE WHEN sire_id IS NOT NULL THEN 0 ELSE 1 END,  -- Prioriza sire (padre) antes que dam (madre)
-                     sex
-        ", [$id]);
-        
-        return view('pedigree.show-pedigree', compact('dog', 'pedigree'));
+        $pedigree = $this->findPedigree($dog);
+
+        // dd($pedigree);  
+        // return response()->json($pedigree);
+
+        // $dog = Dog::whereRaw('MD5(dog_id) = ?', [$id])
+        //     ->firstOrFail();  
+
+        // Llamar al método findPedigree() para obtener el pedigree
+        // $pedigree = $this->findPedigree($dog);
+
+        return view('pedigree.show-pedigree', compact('pedigree'));
+        // return response()->json($pedigree);
         
         
     }

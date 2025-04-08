@@ -1,5 +1,46 @@
 
+@props(['pedigree'])
 
+@if(isset($pedigree) && !empty($pedigree))
+
+
+@php
+
+    // Acceder al árbol genealógico completo desde el array
+    $dog = $pedigree['dog'];
+
+    $father = $pedigree['sire']['dog'] ?? null;  // Verifica si el padre existe
+    $mother = $pedigree['dam']['dog'] ?? null;   // Verifica si la madre existe
+    
+    // Generación 3: Abuelos
+    
+    $fatherFather  = $pedigree['sire']['sire']['dog']?? null;
+    $fatherMother = $pedigree['sire']['dam']['dog'] ?? null;
+
+    $motherFather = $pedigree['dam']['sire']['dog']?? null;
+    $motherMother = $pedigree['dam']['dam']['dog']?? null;
+
+
+    // Generación 4: Bisabuelos (8 nodos)
+
+    // Del lado paterno:
+   $bisabuelo1 = $pedigree['sire']['sire']['sire']['dog'] ?? null;   // Bisabuelo 1 (padre de abuelo paterno)
+   $bisabuela1 = $pedigree['sire']['sire']['dam']['dog'] ?? null;    // Bisabuela 1 (madre de abuelo paterno)
+
+   $bisabuelo2 = $pedigree['sire']['dam']['sire']['dog'] ?? null;    // Bisabuelo 2 (padre de abuela paterna)
+   $bisabuela2 = $pedigree['sire']['dam']['dam']['dog'] ?? null;     // Bisabuela 2 (madre de abuela paterna)
+
+   // Del lado materno:
+   $bisabuelo3 = $pedigree['dam']['sire']['sire']['dog'] ?? null;    // Bisabuelo 3 (padre de abuelo materno)
+   $bisabuela3 = $pedigree['dam']['sire']['dam']['dog'] ?? null;     // Bisabuela 3 (madre de abuelo materno)
+
+   $bisabuelo4 = $pedigree['dam']['dam']['sire']['dog'] ?? null;     // Bisabuelo 4 (padre de abuela materna)
+   $bisabuela4 = $pedigree['dam']['dam']['dam']['dog'] ?? null;      // Bisabuela 4 (madre de abuela materna)
+
+
+    dd($bisabuela4);
+   
+@endphp
 
 <div class="container">
 
@@ -17,19 +58,19 @@
       </div> -->
 
    <!-- 2ª Generación -->
-   <div class="generation-label">2ª Generación - Padres</div>
+   <div class="generation-label">2ª Generación - Padres </div>
    <div class="generation">
       <div class="animal">
-         <a href="pedigree.html?nombre=Rocky">
+         <a href="{{ route('pediree.showPedigree', ['id' => $father['id']]) }}">
             <img src="https://placedog.net/300/200?id=2" alt="Rocky" />
          </a>
-         <p><strong>Padre:</strong> <a href="pedigree.html?nombre=Rocky">Rocky</a></p>
+         <p><strong>Padre:</strong> <a href="{{ route('pediree.showPedigree', ['id' => $father['id']]) }}"> {{ $father['name'] ?? 'No disponible' }} </a></p>
       </div>
       <div class="animal">
-         <a href="pedigree.html?nombre=Luna">
+         <a href="{{ route('pediree.showPedigree', ['id' => $mother['id']]) }}">
             <img src="https://placedog.net/300/200?id=3" alt="Luna" />
          </a>
-         <p><strong>Madre:</strong> <a href="pedigree.html?nombre=Luna">Luna</a></p>
+         <p><strong>Madre:</strong> <a href="{{ route('pediree.showPedigree', ['id' => $mother['id']]) }}"> {{ $mother['name'] ?? 'No disponible' }} </a></p>
       </div>
    </div>
 
@@ -116,3 +157,4 @@
    </div>
 </div>
 
+@endif

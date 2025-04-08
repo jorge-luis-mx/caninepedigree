@@ -7,7 +7,7 @@
    
 </div>
 
-<x-card-details-dog :dogDetails="$dog"/>
-<x-card-pedigree/>
+<x-card-details-dog :dogDetails="$pedigree"/>
+<x-card-pedigree :pedigree="$pedigree"/>
 
 </x-app-layout>

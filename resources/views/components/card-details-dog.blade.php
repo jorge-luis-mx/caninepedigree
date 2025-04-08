@@ -2,19 +2,28 @@
 @props(['dogDetails'])
 
 @if(isset($dogDetails) && !empty($dogDetails))
+
+   @php
+
+
+   $dog = $dogDetails['dog'];
+ 
+
+   @endphp
+
 <div class="container-details card">
    <div class="container-imagen">
       <img src="https://placedog.net/400/400?id=1" />
    </div>
    <div class="content-details">
-      <p class="title is-3 mt-2">{{ $dogDetails->name}}</p>
+      <p class="title is-3 mt-2">{{ $dog['name']}}</p>
       <ul class="is-flex is-align-items-center mb-3">
          <li>
             <span>Jorge Luis</span><br>
             <small>Owner</small>
          </li>
          <li>
-            <span>{{$dogDetails->reg_no}}</span><br>
+            <span></span><br>
             <small>Reg.No</small>
          </li>
       </ul>

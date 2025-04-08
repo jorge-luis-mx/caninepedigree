@@ -83,7 +83,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/dogs', [DogController::class, 'store'])->name('dogs.store');
     // Route::get('/dogs/{dog}/edit', [DogController::class, 'edit'])->name('dogs.edit'); 
     // Route::put('/dogs/{dog}', [DogController::class, 'update'])->name('dogs.update'); 
-    Route::get('/dogs/{dog}/show', [DogController::class, 'show'])->name('dogs.show');
+    Route::get('/dogs/show/{dog}', [DogController::class, 'show'])->name('dogs.show');
     Route::delete('/dogs/{dog}', [DogController::class, 'destroy'])->name('dogs.destroy');
     
     //serch
@@ -102,7 +102,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/breeding-request', [BreedingController::class, 'create'])->name('breeding.create');
 
     Route::get('/pedigree', [PedigreegController::class, 'index'])->name('pediree.index');
-    Route::get('/dogs/{id}/pedigree', [DogController::class, 'showPedigree'])->name('pediree.showPedigree');
+    Route::get('/dogs/pedigree/{id}', [DogController::class, 'showPedigree'])->name('pediree.showPedigree');
 
 
 
