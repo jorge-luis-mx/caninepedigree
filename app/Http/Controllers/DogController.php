@@ -49,9 +49,6 @@ class DogController extends Controller
                     'dogs.dog_id',
                     DB::raw('MD5(dogs.dog_id) as dog_hash'),
                     'dogs.name',
-                    'dogs.breed',
-                    'dogs.color',
-                    'dogs.sex',
                     'dogs.status',
                     DB::raw('COALESCE(SUM(payments.amount), 0) as total_paid'),
                     DB::raw('100 - COALESCE(SUM(payments.amount), 0) as amount_due')
@@ -157,10 +154,13 @@ class DogController extends Controller
       
         DB::beginTransaction();
 
+        $regnum = $this->generarCodigoRegistro();
+        
         try {
             
             // Crea el registro sin reg_no
             $dog = Dog::create([
+                'reg_no'=>$regnum,
                 'name' => $validatedData['name'],
                 'breed' => $validatedData['breed'],
                 'color' => $validatedData['color'],
@@ -173,7 +173,7 @@ class DogController extends Controller
                 'status' => 1
             ]);
             // Asigna reg_no después de la creación
-            $dog->reg_no = "DOG-" . str_pad($dog->dog_id, 5, '0', STR_PAD_LEFT);
+            // $dog->reg_no = "DOG-" . str_pad($dog->dog_id, 5, '0', STR_PAD_LEFT);
             $dog->save();
 
             // Crear el pago
@@ -221,7 +221,7 @@ class DogController extends Controller
                 Mail::to($damEmail)->send(new sendEmailDogs($datos));
             }
             $dog->dog_id_md = md5($dog->dog_id);
-
+            $dog->rol =$user->role;
 
            
             $data['message'] = 'Pricing inserted successfully';
@@ -240,6 +240,28 @@ class DogController extends Controller
         
         return response()->json($data);
     }
+
+
+    public function generarCodigoRegistro() {
+        $letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        $numeros = "0123456789";
+    
+        $codigo = 'REG-';
+    
+        // Letras (3 caracteres)
+        for ($i = 0; $i < 3; $i++) {
+            $codigo .= $letras[random_int(0, strlen($letras) - 1)];
+        }
+    
+        // Números (6 dígitos)
+        for ($i = 0; $i < 6; $i++) {
+            $codigo .= $numeros[random_int(0, strlen($numeros) - 1)];
+        }
+    
+        return $codigo;
+    }
+    
+
 
     /**
      * Display the specified resource.
@@ -312,20 +334,7 @@ class DogController extends Controller
 
         $pedigree = $this->findPedigree($dog);
 
-
-
-        // dd($pedigree);  
-        // return response()->json($pedigree);
-
-        // $dog = Dog::whereRaw('MD5(dog_id) = ?', [$id])
-        //     ->firstOrFail();  
-
-        // Llamar al método findPedigree() para obtener el pedigree
-        // $pedigree = $this->findPedigree($dog);
-
         return view('pedigree.show-pedigree', compact('pedigree'));
-        // return response()->json($pedigree);
-        
-        
+       
     }
 }

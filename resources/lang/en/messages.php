@@ -31,11 +31,9 @@ return [
 
         'headerTable'=>[
             'Name',
-            'Breed',
-            'Color',
-            'Sex',
+
             'Status',
-            'Action'
+
         ],
 
         'formDog'=>[

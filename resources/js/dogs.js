@@ -122,9 +122,15 @@ export  function dogs() {
             clearErrors(form);
 
             if (result.status === 200) {
-                let id = result.data.dog_id_md;
-                const editUrl = `/payments/pay/${id}`;
-                window.location.href = editUrl;
+                if (result.data.rol=='admin') {
+                    window.location.href = '/dogs';
+                }else{
+                    let id = result.data.dog_id_md;
+                    const editUrl = `/payments/pay/${id}`;
+                    window.location.href = editUrl;
+                }
+                
+
             } else if (result.errors) {
                 // Si hay errores, mostrarlos en los inputs correspondientes
                 showErrors(form, result.errors);

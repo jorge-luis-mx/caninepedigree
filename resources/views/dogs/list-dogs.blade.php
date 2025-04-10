@@ -88,21 +88,9 @@ document.addEventListener("DOMContentLoaded", function() {
             let sex = dog.sex == 'M' ? 'Male' : 'Female';
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${dog.name}</td>
-                <td>${dog.breed}</td>
-                <td>${dog.color}</td>
-                <td>${sex}</td>
+                <td><a href="/dogs/show/${dog.dog_hash}">${dog.name}</a> </td>
                 <td>${dog.status}</td>
-                <td>
-                    ${dog.status === 'completed'? 
-                    `<button class="button is-info is-small" onclick="viewDetails('${encodeURIComponent(dog.dog_hash)}')">Ver Detalles</button>` 
-                    :`<button class="button is-info is-small" disabled>Ver Detalles</button>` 
-                    }
-                    <button class="button is-danger is-small" onclick="deleteDog('${encodeURIComponent(dog.dog_hash)}')">Eliminar</button>
-                    ${dog.status === 'pending'  && rol =='customer' ? 
-                        `<button class="button is-success is-small" onclick="makePayment('${encodeURIComponent(dog.dog_hash)}')">Pagar</button>` : 
-                        ''}
-                </td>
+
             `;
             tableBody.appendChild(row);
         });

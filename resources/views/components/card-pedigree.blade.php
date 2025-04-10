@@ -43,20 +43,121 @@
    
 @endphp
 
-<div class="container">
+<div class="table-container table is-bordered is-striped is-narrow is-hoverable ">
+   <table class="table">
+      <tr>
+         <td colspan="4">
+               <div class="dog-info">
+                  <img src="https://placedog.net/400/400?id=1" alt="Dog Image">
+                  <div class="dog-details">
+                     <p><label>Name:</label> <span>EK'S MACHOBUCK</span></p>
+                     <p><label>Owner:</label> <span>Jorge luis</span></p>
+                     <p><label>Reg. No:</label> <span>REG-XZU691629</span></p>
+                     <p><label>Breed:</label> <span>Pit Bull</span></p>
+                     <p><label>Color:</label> <span>Red</span></p>
+                     <p><label>Sex:</label> <span>Male</span></p>
+                     <p><label>Date of Birth:</label> <span>March 26, 2025</span></p>
+                     <p><label>Registered On:</label> <span>March 30, 2025</span></p>
+                  </div>
+               </div>
+         </td>
+      </tr>
+      <tr>
+         <td rowspan="4" ><b>(Sire)
+            @if(isset($father['id']))
+               <a href="{{ route('pediree.showPedigree', ['id' => $father['id']]) }}">{{ $father['name'] ?? 'UNKNOWN' }}</a>
+            @else
+               <span>UNKNOWN</span>
+            @endif
+            </b>
+         </td>
+         <td rowspan="2"><b>
+            @if(isset($fatherFather['id']))
+               <a href="{{ route('pediree.showPedigree', ['id' => $fatherFather['id']]) }}">{{ $fatherFather['name'] ?? 'No disponible' }}</a>
+            @else
+               <span>UNKNOWN</span>
+            @endif
+            </b>
+         </td>
+         <td>
+            <a href="modules.php?name=Public&file=printPedigree&dog_id=306">PATRICK'S LITTLE TATER</a>
+         </td>
+      </tr>
+      <tr>
+         <td>
+            <a href="modules.php?name=Public&file=printPedigree&dog_id=69411">PATRICKS RED LADY</a>
+         </td>
+      </tr>
+      <tr>
+         <td rowspan="2"><b>
+            @if(isset($fatherMother['id']))
+               <a href="{{ route('pediree.showPedigree', ['id' => $fatherMother['id']]) }}">{{ $fatherMother['name'] ?? 'No disponible' }}</a>
+            @else
+               <span>UNKNOWN</span>
+            @endif
+            </b>
+         </td>
+         <td>
+            <a href="modules.php?name=Public&file=printPedigree&dog_id=756">ONELLO'S SHERMAN THE TANK</a>
+         </td>
+      </tr>
+      <tr>
+         <td>
+            <a href="modules.php?name=Public&file=printPedigree&dog_id=757">ONELLO'S TWISTED SISTER</a>
+         </td>
+      </tr>
 
-   <!-- 1ª Generación -->
-   <!-- <div class="generation-label">1ª Generación</div>
-      <div class="generation">
-         <div class="main-animal">
-            <img src="https://placedog.net/400/400?id=1" alt="Max" />
-            <p><strong>Nombre:</strong> Max</p>
-            <p><strong>Raza:</strong> Labrador</p>
-            <p><strong>Color:</strong> Dorado</p>
-            <p><strong>Fecha de nacimiento:</strong> 01/01/2020</p>
-            <p><strong>Sexo:</strong> Macho</p>
-         </div>
-      </div> -->
+      <!-- dam -->
+      <tr>
+         <td rowspan="4"><b>(Dam) 
+            @if(isset($mother['id']))
+               <a href="{{ route('pediree.showPedigree', ['id' => $mother['id']]) }}">{{ $mother['name'] ?? 'UNKNOWN' }}</a>
+            @else
+               <span>UNKNOWN</span>
+            @endif
+            </b>
+         </td>
+         <td rowspan="2"><b>
+            @if(isset($motherFather['id']))
+               <a href="{{ route('pediree.showPedigree', ['id' => $motherFather['id']]) }}">{{ $motherFather['name'] ?? 'UNKNOWN' }}</a>
+            @else
+            <span>UNKNOWN</span>
+            @endif
+            </b>
+         </td>
+         <td>
+            <a href="modules.php?name=Public&file=printPedigree&dog_id=388">CH CHAVIS' YELLOW JOHN (4XW) ROM</a>
+         </td>
+      </tr>
+
+      <tr>
+         <td>
+            <a href="modules.php?name=Public&file=printPedigree&dog_id=396">TANT'S MISS JOCKO (2XW) ROM</a>
+         </td>
+      </tr>
+      <tr>
+         <td rowspan="2"><b>
+         @if(isset($motherMother['id']))
+            <a href="{{ route('pediree.showPedigree', ['id' => $motherMother['id']]) }}">{{ $motherMother['name'] ?? 'UNKNOWN' }}</a>
+         @else
+         <span>UNKNOWN</span>
+         @endif
+         </b>
+      </td>
+         <td>
+            <a href="modules.php?name=Public&file=printPedigree&dog_id=559">BROWNING'S YAZOO CODY</a>
+         </td>
+      </tr>
+      <tr>
+         <td>
+            <a href="modules.php?name=Public&file=printPedigree&dog_id=14">PATRICK'S LADY IN RED</a>
+         </td>
+      </tr>
+   </table>
+</div>
+
+
+<div class="container">
 
    <!-- 2ª Generación -->
    <div class="generation-label">2ª Generación - Padres</div>
