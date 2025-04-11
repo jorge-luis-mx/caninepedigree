@@ -102,29 +102,36 @@
   <div class="certificado">
     <div class="titulo">Pedigree Certificate</div>
     <div class="subtitulo">Asociación Nacional de Criadores</div>
+    @if(isset($pedigree) && !empty($pedigree))
+        @php
 
+            // Acceder al árbol genealógico completo desde el array
+            $dog = $pedigree['dog'];
+
+        @endphp
+    @endif
     <table class="info-table">
       <tr>
         <td><strong>Name:</strong></td>
-        <td>Club Booger 'Samo'</td>
+        <td>{{$dog['name']}}</td>
         <td><strong>Breed:</strong></td>
-        <td>American Pit Bull Terrier</td>
+        <td>{{$dog['breed']}}</td>
       </tr>
       <tr>
         <td><strong>Sex:</strong></td>
-        <td>Male</td>
+        <td>{{$dog['sex']=='M'?'Male':'Female' }}</td>
         <td><strong>Color:</strong></td>
-        <td>Buckskin</td>
+        <td>{{$dog['color']}}</td>
       </tr>
       <tr>
         <td><strong>Born:</strong></td>
-        <td>January 10, 2020</td>
+        <td>{{ \Carbon\Carbon::parse($dog['birthdate'])->format('F d, Y') }}</td>
         <td><strong>Breeder:</strong></td>
         <td>Luis Hernández</td>
       </tr>
       <tr>
         <td><strong>Owner:</strong></td>
-        <td>Jorge Luis Gomez</td>
+        <td>{{$dog['owner']['name']}}</td>
         <td><strong>Country:</strong></td>
         <td>Mexico</td>
       </tr>

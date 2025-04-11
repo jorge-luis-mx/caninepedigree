@@ -42,7 +42,7 @@ class DogController extends Controller
             if ($profile_id == $profile->profile_id) {
 
                 $dogs = Dog::where('dogs.current_owner_id', $profile_id)
-                ->whereIn('dogs.status', ['pending', 'completed'])
+                ->whereIn('dogs.status', ['completed'])
                 ->leftJoin('dog_payments', 'dogs.dog_id', '=', 'dog_payments.dog_id')
                 ->leftJoin('payments', 'dog_payments.payment_id', '=', 'payments.payment_id')
                 ->select(
