@@ -34,14 +34,7 @@
         
         <div class="table-container mt-5">
             <table class="table is-fullwidth is-striped is-hoverable is-bordered">
-                <thead class="has-background-primary-light">
-                    <tr class="has-text-weight-bold">
-                        @foreach(__('messages.main.headerTable') as $index => $item)
-                            <th>{{ $item }}</th>
-                        @endforeach
 
-                    </tr>
-                </thead>
                 <tbody id="dogTableBody">
                     <!-- Aquí se insertarán las filas dinámicamente -->
                 </tbody>
@@ -71,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const rol = @json($rol);
 
     let currentPage = 1;
-    const dogsPerPage = 5;
+    const dogsPerPage = 10;
     let currentSearchTerm = '';
     let previousPageBeforeFilter = 1;
 
@@ -87,13 +80,35 @@ document.addEventListener("DOMContentLoaded", function() {
         paginatedDogs.forEach((dog) => {
             let sex = dog.sex == 'M' ? 'Male' : 'Female';
             const row = document.createElement('tr');
-            row.innerHTML = `
-                <td><a href="/dogs/show/${dog.dog_hash}">${dog.name}</a> </td>
-                <td>${dog.status}</td>
 
-            `;
+            // Crear el td con data-href
+            const td = document.createElement('td');
+            td.textContent = dog.name;
+            td.dataset.href = `/dogs/show/${dog.dog_hash}`;
+            td.style.cursor = 'pointer'; // Para que se vea como un link
+            td.classList.add('clickable-td');
+
+            // Evento para redirección al hacer clic
+            td.addEventListener('click', () => {
+                window.location.href = td.dataset.href;
+            });
+
+            // Agregar el td a la fila
+            row.appendChild(td);
             tableBody.appendChild(row);
+            
         });
+
+        // paginatedDogs.forEach((dog) => {
+        //     let sex = dog.sex == 'M' ? 'Male' : 'Female';
+        //     const row = document.createElement('tr');
+        //     row.innerHTML = `
+        //         <td><a href="/dogs/show/${dog.dog_hash}">${dog.name}</a> </td>
+                
+
+        //     `;
+        //     tableBody.appendChild(row);
+        // });
 
         renderPagination(dogsToDisplay);
     }

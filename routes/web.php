@@ -106,6 +106,7 @@ Route::middleware('auth')->group(function () {
 
 
 
+    Route::get('/generate-pdf/{id}/{type}', [PedigreegController::class, 'generatePDF'])->name('pediree.generatePDF');
 
 
 

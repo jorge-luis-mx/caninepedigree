@@ -30,11 +30,7 @@ return [
 
         'headerTable'=>[
             'Nombre',
-            'Raza',
-            'Color',
-            'Sexo',
-            'Estado',
-            'Accion'
+
         ],
         'formDog'=>[
             'title' => 'Registrar tu perro',

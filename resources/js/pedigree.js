@@ -54,16 +54,29 @@ export  function pedigree() {
                     return;
                   }
                 
+                  // dogs.forEach(dog => {
+                  //   const li = document.createElement('li');
+                
+                  //   const link = document.createElement('a');
+                  //   link.href = `/dogs/pedigree/${dog.dog_hash}`;  
+                  //   link.textContent = dog.name;
+                
+                  //   li.appendChild(link);
+                  //   container.appendChild(li);
+                  // });
                   dogs.forEach(dog => {
-                    const li = document.createElement('li');
-                
-                    const link = document.createElement('a');
-                    link.href = `/dogs/pedigree/${dog.dog_hash}`;  // ruta dinámica con el ID
-                    link.textContent = dog.name;        // nombre del perro
-                
-                    li.appendChild(link);
-                    container.appendChild(li);
-                  });
+                     const li = document.createElement('li');
+                     li.classList.add('dog-item'); // esta clase la usaremos para estilo
+                   
+                     // Hacemos todo el <li> clickeable
+                     li.addEventListener('click', () => {
+                       window.location.href = `/dogs/pedigree/${dog.dog_hash}`;
+                     });
+                   
+                     li.textContent = dog.name; // Texto directamente en el li
+                     container.appendChild(li);
+                   });
+                   
                 
                   container.style.display = 'block';
                }

@@ -218,8 +218,14 @@ h2 {
 }
 
 .dog-details label {
-  font-weight: bold;
-  color: #555;
+  font-weight: normal;
+  color: #8d8b8b;
+
+}
+.dog-details  span{
+  font-weight: 600 !important;
+  color: black;
+  font-size: 16px;
 }
 
 .table a {
@@ -238,3 +244,35 @@ table td[rowspan="4"] {
   text-align: center; /* Centra horizontalmente */
 }
 
+.clickable-td {
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.clickable-td:hover {
+  color: blue;
+}
+
+
+//serch list 
+#list-dogs {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.dog-item {
+  border: 1px solid #ccc;
+  padding: 6px 11px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+
+.dog-item:hover {
+  background-color: #e6f0ff;
+  color: #0056b3;
+}
