@@ -23,11 +23,13 @@ trait Pedigree
         return [
             'dog' => [
                 'id' => md5($dog->dog_id),
+                'number'=>$dog->reg_no,
                 'name' => $dog->name,
                 'breed' => $dog->breed,
                 'color' => $dog->color,
                 'sex' => $dog->sex,
-                'date' => $dog->birthdate,
+                'birthdate' => $dog->birthdate,
+                'date' => $dog->created_at,
                 'status' => $dog->status,
                 // Información del dueño (propietario)
                 'owner' => $dog->currentOwner ? [

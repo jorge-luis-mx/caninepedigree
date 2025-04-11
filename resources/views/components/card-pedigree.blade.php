@@ -50,14 +50,18 @@
                <div class="dog-info">
                   <img src="https://placedog.net/400/400?id=1" alt="Dog Image">
                   <div class="dog-details">
-                     <p><label>Name:</label> <span>EK'S MACHOBUCK</span></p>
-                     <p><label>Owner:</label> <span>Jorge luis</span></p>
-                     <p><label>Reg. No:</label> <span>REG-XZU691629</span></p>
-                     <p><label>Breed:</label> <span>Pit Bull</span></p>
-                     <p><label>Color:</label> <span>Red</span></p>
-                     <p><label>Sex:</label> <span>Male</span></p>
-                     <p><label>Date of Birth:</label> <span>March 26, 2025</span></p>
-                     <p><label>Registered On:</label> <span>March 30, 2025</span></p>
+                     <p><label>Name:</label> <span>{{$dog['name']}}</span></p>
+                     <p><label>Owner:</label> <span>{{$dog['owner']['name']}}</span></p>
+                     <p><label>Reg. No:</label> <span>{{$dog['number']}}</span></p>
+                     <p><label>Breed:</label> <span>{{$dog['breed']}}</span></p>
+                     <p><label>Color:</label> <span>{{$dog['color']}}</span></p>
+                     <p><label>Sex:</label> <span>{{$dog['sex']=='M'?'Male':'Female' }}</span></p>
+                     <p><label>Date of Birth:</label> 
+                        <span>{{ \Carbon\Carbon::parse($dog['birthdate'])->format('F d, Y') }}</span>
+                     </p>
+                     <p><label>Registered On:</label> 
+                        <span>{{ \Carbon\Carbon::parse($dog['date'])->format('F d, Y') }}</span>
+                     </p>
                   </div>
                </div>
          </td>
