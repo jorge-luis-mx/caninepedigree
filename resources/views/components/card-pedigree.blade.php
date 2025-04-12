@@ -15,7 +15,6 @@
     // Generación 3: Abuelos
     
     $fatherFather  = $pedigree['sire']['sire']['dog']?? null;
-    $fatherFatherUrl = $pedigree['sire']['sire']['dog']['id']?? null;
     $fatherMother = $pedigree['sire']['dam']['dog'] ?? null;
 
     $motherFather = $pedigree['dam']['sire']['dog']?? null;
