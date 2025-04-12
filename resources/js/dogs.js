@@ -120,9 +120,9 @@ export  function dogs() {
             .then(result => {
             // Limpiar errores previos
             clearErrors(form);
-
+            const saveBtn = document.querySelector(".saveDog");
             if (result.status === 200) {
-                const saveBtn = document.querySelector(".saveDog");
+                
                 saveBtn.disabled = false;
                 if (result.data.rol=='admin') {
                     window.location.href = '/dogs';
@@ -134,6 +134,7 @@ export  function dogs() {
                 
 
             } else if (result.errors) {
+                saveBtn.disabled = false;
                 // Si hay errores, mostrarlos en los inputs correspondientes
                 showErrors(form, result.errors);
             }
