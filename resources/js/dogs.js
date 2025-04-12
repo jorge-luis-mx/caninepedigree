@@ -93,7 +93,7 @@ export  function dogs() {
                 const form = document.getElementById("dog-form");
                 const formData = new FormData(form);
                 const data = {};
-    
+                saveBtn.disabled = true;
                 formData.forEach((value, key) => {
                     const el = form.querySelector(`[name="${key}"]`);
                     if (el && (!el.disabled || el.type === "hidden")) {
@@ -122,6 +122,8 @@ export  function dogs() {
             clearErrors(form);
 
             if (result.status === 200) {
+                const saveBtn = document.querySelector(".saveDog");
+                saveBtn.disabled = false;
                 if (result.data.rol=='admin') {
                     window.location.href = '/dogs';
                 }else{

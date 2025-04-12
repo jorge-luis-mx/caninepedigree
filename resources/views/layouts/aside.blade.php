@@ -67,7 +67,7 @@
                             </li>
                         </ul>
                         
-                        <ul class="menu-list">
+                        <ul class="menu-list is-hidden">
                             <li class="nav-drop">
                                 <a href="{{ route('breeding.create') }}" class="nav-link is-flex is-justify-content-space-between">
                                     <div class="is-flex is-justify-content-start is-align-items-center">

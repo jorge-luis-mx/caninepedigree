@@ -119,7 +119,7 @@ class DogController extends Controller
      */
     public function store(Request $request)
     {
-        
+       
         // Limpiar todos los campos antes de la validación
         $cleanedData = array_map('trim', $request->all());
         $request->merge($cleanedData); // Volver a fusionar los datos limpios 
