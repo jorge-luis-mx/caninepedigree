@@ -40,7 +40,7 @@
 														<tr>
 															<td class="pad" style="border-bottom:solid #eaeaea 2px ;border-top:solid #eaeaea 2px ;padding-bottom:10px;padding-left:30px;padding-right:20px;padding-top:10px;">
 																<div style="color:#101112;direction:ltr;font-family:'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:13.2px;">
-																	<p style="margin: 0;">Email: <strong>info@airporttransportation.com</strong></p>
+																	<p style="margin: 0;">Email: <strong>info@.com</strong></p>
 																</div>
 															</td>
 														</tr>
@@ -51,7 +51,7 @@
 														<tr>
 															<td class="pad" style="border-bottom:solid #eaeaea 2px ;border-top:solid #eaeaea 2px ;padding-bottom:10px;padding-left:0px;padding-right:30px;padding-top:10px;">
 																<div style="color:#101112;direction:ltr;font-family:'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:right;mso-line-height-alt:13.2px;">
-																	<p style="margin: 0;">Customer sopport: <strong>1 855 557 9836</strong></p>
+																	<p style="margin: 0;">Customer sopport: <strong>1 855 557 9837</strong></p>
 																</div>
 															</td>
 														</tr>
@@ -76,7 +76,7 @@
 														<tr>
 															<td class="pad" style="padding-bottom:10px;padding-left:30px;padding-right:20px;padding-top:10px;">
 																<div style="color:#101112;direction:ltr;font-family:'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:center;mso-line-height-alt:13.2px;">
-																	<p style="margin: 0;color:#818181;">© 2024 Airport Transportation. All rights reserved.</p>
+																	<p style="margin: 0;color:#818181;">© 2025 All rights reserved.</p>
 																</div>
 															</td>
 														</tr>

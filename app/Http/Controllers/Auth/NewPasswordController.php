@@ -14,6 +14,7 @@ use Illuminate\View\View;
 
 use App\Models\Provider;
 use App\Models\PasswordReset;
+use App\Models\UserProfile;
 class NewPasswordController extends Controller
 {
     /**
@@ -47,20 +48,20 @@ class NewPasswordController extends Controller
         }
 
         // Encontramos al usuario basado en su email
-        $provider = Provider::where('pvr_email', $record->email)->where('pvr_status', 1)
+        $userProfile = UserProfile::where('email', $record->email)->where('status', 1)
         ->first();
 
-        if (!$provider) {
+        if (!$userProfile) {
             // Si el usuario no existe, retornamos con un error
             return back()->withErrors(['email' => 'A user with this email could not be found.']);
         }
 
-        $prv_auth = $provider->auth()->first();
+        $prv_auth = $userProfile->user()->first();
 
         //Actualizamos la contraseña del usuario
         $prv_auth->forceFill([
-            'pvr_auth_password' => Hash::make($request->password),
-            'pvr_auth_token' => Str::random(60), // Generamos un nuevo token de recordatorio
+            'password' => Hash::make($request->password),
+            'auth_token' => Str::random(60), // Generamos un nuevo token de recordatorio
         ])->save();
 
 

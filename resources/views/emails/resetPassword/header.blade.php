@@ -10,7 +10,7 @@
 														<tr>
 															<td class="pad" style="width:100%;padding-right:0px;padding-left:0px;">
 																<div class="alignment" align="center" style="line-height:10px">
-																	<div style="max-width: 240px;"><img src="https://site.airporttransportation.com/public/img/cropped-airport-transportation-1.webp" style="display: block; height: auto; border: 0; width: 100%;" width="240" alt title height="auto"></div>
+																	<div style="max-width: 240px;"><img src="" style="display: block; height: auto; border: 0; width: 100%;" width="240" alt title height="auto">Logo</div>
 																</div>
 															</td>
 														</tr>
@@ -44,7 +44,7 @@
 														<tr>
 															<td class="pad" style="padding-left:10px;padding-right:10px;">
 																<div style="color:#101112;direction:ltr;font-family:'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:18px;font-weight:800;letter-spacing:0px;line-height:120%;text-align:center;mso-line-height-alt:18px;">
-																	<p style="margin: 0;"><strong>Cancun Transportation</strong></p>
+																	<p style="margin: 0;"><strong>Canine</strong></p>
 																</div>
 															</td>
 														</tr>
