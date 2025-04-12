@@ -157,11 +157,11 @@ class DogController extends Controller
         $regnum = $this->generarCodigoRegistro();
         
         try {
-            
+            $text = preg_split('/\s+/', $profile->lastName);
             // Crea el registro sin reg_no
             $dog = Dog::create([
                 'reg_no'=>$regnum,
-                'name' => $validatedData['name'],
+                'name' => $text.' '.$validatedData['name'],
                 'breed' => $validatedData['breed'],
                 'color' => $validatedData['color'],
                 'sex' => $validatedData['sex'],
