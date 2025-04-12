@@ -127,7 +127,7 @@
         <td><strong>Born:</strong></td>
         <td>{{ \Carbon\Carbon::parse($dog['birthdate'])->format('F d, Y') }}</td>
         <td><strong>Breeder:</strong></td>
-        <td>Luis Hernández</td>
+        <td></td>
       </tr>
       <tr>
         <td><strong>Owner:</strong></td>
@@ -155,8 +155,8 @@
           <div style="text-align: center; width: 80%;">Signed</div>
         </td>
         <td style="width: 50%; text-align: right;">
-          Register Number: DOG-00055<br>
-          Date: January 2, 2025
+          Register Number: {{$dog['number']}}<br>
+          Date: {{ \Carbon\Carbon::parse($dog['date'])->format('F d, Y') }}
         </td>
       </tr>
     </table>

@@ -6,8 +6,8 @@
                     <div class="container-box-logo">
                         <!-- <img id="logo-normal" class="" src="{{ asset('assets/img/cropped-airport-transportation-1.webp') }}" alt="logo">
                         <img id="logo-reduced" class="is-hidden" src="{{ asset('assets/img/logo.webp') }}" alt="logo">        -->
-                        <img id="logo-normal" class="" src="https://www.devscun.com/assets/img/logo-devscun.webp" alt="logo">
-                        <img id="logo-reduced" class="is-hidden" src="{{ asset('assets/img/logo.webp') }}" alt="logo">  
+                        <img id="logo-normal" class="" src="{{ asset('assets/img/logo-canine.webp') }}" alt="logo">
+                        <img id="logo-reduced" class="is-hidden" src="{{ asset('assets/img/logo-canine.webp') }}" alt="logo">  
                        
                     </div>
                 </div>
@@ -49,7 +49,8 @@
                             <li class="nav-drop">
                                 <a href="{{ route('dogs.index') }}" class="nav-link is-flex is-justify-content-space-between">
                                     <div class="is-flex is-justify-content-start is-align-items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="custom-size-icon" viewBox="0 0 48 48"><path fill="none" stroke="#eab308" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m5 10l3 3l6-6M5 24l3 3l6-6M5 38l3 3l6-6m7-11h22M21 38h22M21 10h22"/></svg>
+                                        <!-- <svg xmlns="http://www.w3.org/2000/svg" class="custom-size-icon" viewBox="0 0 48 48"><path fill="none" stroke="#eab308" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m5 10l3 3l6-6M5 24l3 3l6-6M5 38l3 3l6-6m7-11h22M21 38h22M21 10h22"/></svg> -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="custom-size-icon" viewBox="0 0 512 512"><path fill="#eab308" d="m231.6 16.18l16.7 120.02l73.8 20.5c37.3-11.2 78.5-18.2 102.3-43.6c9.7-10.3 17.2-24.78 9.1-37.92l-75.3 2.22l-14.6-31.79h-74.7c-7.7-11.71-22.8-20.46-37.3-29.43m5.7 145.22c-46.9 19.8-110.1 146.3-111.8 276.5c-34.02-58.1-24.9-122.6-2.9-202.6C55.31 287 4.732 448.4 133.1 486.9H346s-6.3-21.5-14.1-28.9c-12.7-12-48.2-20.2-48.2-20.2c27.8-39.2 33.5-71.7 38.6-103.9c4.5 59.8 40.7 126.8 57.4 153h76.5s4.6-15.9.2-21.5c-10.9-13.8-51.3-11.9-51.3-11.9c-31.1-107.2-46.3-260.2-90-273.2c-21.7-6.5-54.3-14.1-77.8-18.9"/></svg>
                                         <span>{{ __('messages.side.dogs') }}</span>
                                     </div>
                                 </a>
@@ -60,7 +61,8 @@
                             <li class="nav-drop">
                                 <a href="{{ route('pediree.index') }}" class="nav-link is-flex is-justify-content-space-between">
                                     <div class="is-flex is-justify-content-start is-align-items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="custom-size-icon" viewBox="0 0 48 48"><path fill="none" stroke="#eab308" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m5 10l3 3l6-6M5 24l3 3l6-6M5 38l3 3l6-6m7-11h22M21 38h22M21 10h22"/></svg>
+                                        <!-- <svg xmlns="http://www.w3.org/2000/svg" class="custom-size-icon" viewBox="0 0 48 48"><path fill="none" stroke="#eab308" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m5 10l3 3l6-6M5 24l3 3l6-6M5 38l3 3l6-6m7-11h22M21 38h22M21 10h22"/></svg> -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="custom-size-icon" viewBox="0 0 24 24"><path fill="#eab308" d="M15.5 21.5v-2.308L8.116 15.5H3.5v-5h4.03l2.97-3.408V2.5h5v5h-4.03L8.5 10.908v3.65l7 3.5V16.5h5v5z"/></svg>
                                         <span>{{ __('messages.side.pedigree') }}</span>
                                     </div>
                                 </a>

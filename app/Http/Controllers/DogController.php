@@ -161,7 +161,7 @@ class DogController extends Controller
             // Crea el registro sin reg_no
             $dog = Dog::create([
                 'reg_no'=>$regnum,
-                'name' => $text.' '.$validatedData['name'],
+                'name' => $text[0].' '.$validatedData['name'],
                 'breed' => $validatedData['breed'],
                 'color' => $validatedData['color'],
                 'sex' => $validatedData['sex'],
@@ -269,16 +269,26 @@ class DogController extends Controller
     public function show(string $id)
     {
         
-        $dog = Dog::with(['currentOwner', 'breeder'])->whereRaw('MD5(dog_id) = ?', $id)->firstOrFail();
-        $dog->dog_hash = md5($dog->dog_id);
-        $dog = ['dog'=>$dog];
+//         $dog = Dog::with(['currentOwner', 'breeder'])->whereRaw('MD5(dog_id) = ?', $id)->firstOrFail();
+//         $dog->dog_hash = md5($dog->dog_id);
+//         $dog = ['dog'=>$dog];
+// dd($dog);
+
+        $dog = Dog::whereRaw('MD5(dog_id) = ?', [$id])
+        ->with([
+            'sire', 'dam',
+            'sire.sire', 'sire.dam',
+            'dam.sire', 'dam.dam',
+            'sire.sire.sire', 'sire.sire.dam',
+            'sire.dam.sire', 'sire.dam.dam',
+            'dam.sire.sire', 'dam.sire.dam',
+            'dam.dam.sire', 'dam.dam.dam',
+        ])
+        ->firstOrFail();
+        $pedigree = $this->findPedigree($dog);
+        $dog = $pedigree['dog'];
 
 
-        // $airport = Dog::whereRaw('MD5(dog_id) = ?', $id)->firstOrFail();
-        // $dog = Dog::where('dog_id', $id)->first();
-        // $birthdate = $dog->birthdate;
-
-        //$dog = Dog::with(['currentOwner', 'breeder'])->where('dog_id', $id)->first();
         return view('dogs/show-dog',compact('dog'));
     }
 

@@ -79,6 +79,17 @@ export  function pedigree() {
                    
                 
                   container.style.display = 'block';
+               }else{
+
+                  inputField.value = '';
+                  Swal.fire({
+                     icon: 'warning',
+                     title: 'Oops!',
+                     text: 'No matches found for your search.',
+                     confirmButtonText: 'Got it'
+                   });
+                   
+
                }
                 
             })
