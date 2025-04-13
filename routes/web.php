@@ -24,7 +24,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DogController;
 
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\BreedingController;
+use App\Http\Controllers\BreedingRequestController;
 use App\Http\Controllers\PedigreegController;
 
 
@@ -98,18 +98,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/payments/paypal/paid', [PaymentController::class,'completed']);
 
 
-    //Route::post('/breeding-request', [BreedingController::class, 'store'])->name('breeding.index');
-    Route::get('/breeding-request', [BreedingController::class, 'create'])->name('breeding.create');
+
 
     Route::get('/pedigree', [PedigreegController::class, 'index'])->name('pediree.index');
     Route::get('/dogs/pedigree/{id}', [DogController::class, 'showPedigree'])->name('pediree.showPedigree');
-
-
 
     Route::get('/generate-pdf/{id}/{type}', [PedigreegController::class, 'generatePDF'])->name('pediree.generatePDF');
 
 
 
+    //Route::post('/breeding-request', [BreedingController::class, 'store'])->name('breeding.index');
+    Route::get('/breeding/request', [BreedingRequestController::class, 'create'])->name('breeding.create');
+    Route::post('/breeding/request', [BreedingRequestController::class, 'store'])->name('breeding.store');
 
 
     //airport

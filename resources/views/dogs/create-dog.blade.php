@@ -55,7 +55,7 @@
                                  <div class="select is-fullwidth">
                                     <select name="sex" id="sex">
                                        <option value="M">{{__('messages.main.formDog.selectedMale')}}</option>
-                                       <option value="H">{{__('messages.main.formDog.slectedFemale')}}</option>
+                                       <option value="F">{{__('messages.main.formDog.slectedFemale')}}</option>
                                     </select>
                                  </div>
                               </div>

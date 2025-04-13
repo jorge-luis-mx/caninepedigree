@@ -10,6 +10,16 @@ class BreedingRequest extends Model
     use HasFactory;
 
     protected $table = 'breeding_requests';
+    protected $primaryKey = 'request_id';
+    public $incrementing = true; 
+    
+    protected $fillable = [
+        'female_dog_id', 
+        'male_dog_id',
+        'requester_id', 
+        'owner_id',
+        'status'
+    ];
 
     public function femaleDog()
     {

@@ -12,22 +12,40 @@
                     <div class="card-content">
 
                         <div class="columns is-multiline">
-                            <div class="column">
-                                <div class="field mb-4">
-                                    <label class="label" for="female_dog_id">ID de la hembra</label>
-                                    <div class="control">
-                                        <input class="input" type="text" id="female_dog_id" name="female_dog_id" placeholder="Ej: HMBR12345" required>
+
+                        <div class="column">
+                            <div class="field mb-4">
+                                <label class="label" for="my_dog_id">Tu perro</label>
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        <select name="my_dog_id" id="my_dog_id" required>
+                                            @foreach($dogs as $dog)
+                                                <option value="{{ $dog->dog_id }}">{{ $dog->name }} ({{ $dog['sex'] == 'M' ? 'Male' : 'Female' }})</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                             </div>
-                            <div class="column">
-                                <div class="field">
-                                    <label class="label" for="male_dog_id">ID del macho</label>
-                                    <div class="control">
-                                        <input class="input" type="text" id="male_dog_id" name="male_dog_id" placeholder="Ej: MACH12345" required>
-                                    </div>
+                        </div>
+
+                        <div class="column">
+                            <div class="field mb-4">
+                                <label class="label" for="other_dog_name">Nombre del otro perro</label>
+                                <div class="control">
+                                    <input class="input" type="text" name="other_dog_name" id="other_dog_name" required>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="column">
+                            <div class="field mb-4">
+                                <label class="label" for="other_owner_email">Email del dueño del otro perro</label>
+                                <div class="control">
+                                    <input class="input" type="email" name="other_owner_email" id="other_owner_email" required>
+                                </div>
+                            </div>
+                        </div>
+
                         </div>
                         <div class="columns is-multiline">
                             <div class="column">
