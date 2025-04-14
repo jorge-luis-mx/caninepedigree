@@ -2,6 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Validator;
+use App\Validations\BreedingRequestRule;
+
+
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\DogInvitationMail;
@@ -11,7 +17,7 @@ use Illuminate\Support\Str;
 use App\Models\Dog;
 use App\Models\UserProfile;
 use App\Models\DogParentRequest;
-
+use App\Models\BreedingRequest;
 //traits
 use App\Traits\Pedigree;
 
@@ -40,52 +46,131 @@ class BreedingRequestController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'my_dog_id' => 'required|exists:dogs,dog_id',
-            'other_dog_name' => 'required|string',
-            'other_owner_email' => 'required|email',
-        ]);
+        try {
 
-        $myDog = Dog::findOrFail($request->my_dog_id);
+            // Limpiar todos los campos antes de la validación
+            $cleanedData = array_map('trim', $request->all());
+            $request->merge($cleanedData); // Volver a fusionar los datos limpios 
+            $validator = BreedingRequestRule::validate($request->all());
+        
+            $data = [
+                'status' => 'success',
+                'message' => 'Failed to insert the breeding. Please check the data and try again',
+                'data'=>[],
+                'errors' => null,
+            ];
+            
+            if ($validator->fails()) {
 
-        $myOwner = auth()->user()->userprofile;
+                $data['errors'] = $validator->errors();
+                return response()->json($data, 422);
+            }
+            $validatedData = $validator->validated();
 
-        $isMyDogFemale = $myDog->sex === 'M';
 
-        if ($isMyDogFemale) {
-            // Caso 1: Tengo una perra y busco un perro
-            $otherType = 'sire'; // padre
-        } else {
-            // Caso 2: Tengo un perro y propongo cruza a una perra
-            $otherType = 'dam'; // madre
+            $myDog = Dog::findOrFail($request->my_dog_id);
+            $myOwner = auth()->user()->userprofile;
+            $isMyDogFemale = $myDog->sex === 'M';
+
+            $otherType = $isMyDogFemale ? 'sire' : 'dam';
+            $token = Str::uuid();
+
+            // Verificamos si el otro dueño ya tiene cuenta
+            $otherOwner = UserProfile::where('email', $request->other_owner_email)->first();
+            $otherDog = null;
+
+            if ($otherOwner) {
+                // Buscamos el perro del otro dueño por nombre, si lo proporciona
+                $otherDog = Dog::where('current_owner_id', $otherOwner->profile_id)
+                            ->where('name', 'LIKE', '%' . $request->other_dog_name . '%')
+                            ->first();
+            }
+
+            // Validamos que no sean del mismo sexo
+            if ($otherDog && $otherDog->sex === $myDog->sex) {
+                
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No se puede realizar una cruza entre perros del mismo sexo.',
+                    'data'=>[],
+                    'errors' => null,
+                ], 422);
+            }
+
+            if ($otherOwner && $otherDog) {
+                //Escenario 1: Ambos dueños tienen cuenta y ambos perros están registrados
+                BreedingRequest::create([
+                    'female_dog_id' => $myDog->sex === 'F' ? $myDog->dog_id : $otherDog->dog_id,
+                    'male_dog_id' => $myDog->sex === 'M' ? $myDog->dog_id : $otherDog->dog_id,
+                    'requester_id'=>$otherOwner->profile_id,
+                    'owner_id'=> $otherOwner->profile_id,
+                    'status' => 'pending',
+                ]);
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Solicitud de cruza enviada correctamente.',
+                    'data'=>[],
+                    'errors' => null,
+                ],200);
+            }
+
+            if ($otherOwner && !$otherDog) {
+                // Escenario 2: El dueño ya tiene cuenta pero no ha registrado (o mal escrito) su perro
+                DogParentRequest::firstOrCreate([
+                    'dog_id' => $myDog->dog_id,
+                    'parent_type' => $otherType,
+                    'email' => $request->other_owner_email,
+                    'token' => $token,
+                ]);
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'El dueño del otro perro ya tiene cuenta. Se notificará para que registre su mascota.',
+                    'data'=>[],
+                    'errors' => null,
+                ],200);
+            }
+
+            // Crear solicitud de registro del otro perro si no existe aún
+            DogParentRequest::create([
+                'dog_id' => $myDog->dog_id,
+                'parent_type' => $otherType,
+                'email' => $request->other_owner_email,
+                'token' => $token,
+            ]);
+
+            //send mails
+            $data = [
+                'from'=>'jorge06g92@gmail.com',
+                'subject' => '',
+                'url'=>'http://www.caninepedigree-dev.com/register',
+                'data'=>[
+                    'dogName'=>$myDog->name,
+                    'other_dog_name'=>$request->other_dog_name,
+                    'otherType'=>$otherType,
+                    'token'=>$token,
+                    'owner'=>$myOwner->name.' '.$myOwner->lastName
+                ]
+            ];
+
+            Mail::to($request->other_owner_email)->send(new DogInvitationMail($data));
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Solicitud enviada. El dueño del otro perro debe registrar su mascota para continuar.',
+                'data'=>[],
+                'errors' => null,
+            ],200);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Server error. Please try again later.',
+                'data' => [],
+                'errors' => [$e->getMessage()]
+            ], 500);
         }
-
-        // Crear solicitud de registro del otro perro si no existe aún
-        $token = Str::uuid();
-        DogParentRequest::create([
-            'dog_id' => $myDog->dog_id,
-            'parent_type' => $otherType,
-            'email' => $request->other_owner_email,
-            'token' => $token,
-        ]);
-
-        //send mails
-        $data = [
-            'from'=>'jorge06g92@gmail.com',
-            'subject' => '',
-            'url'=>'http://www.caninepedigree-dev.com/register',
-            'data'=>[
-                'dogName'=>$myDog->name,
-                'other_dog_name'=>$request->other_dog_name,
-                'otherType'=>$otherType,
-                'token'=>$token,
-                'owner'=>$myOwner->name.' '.$myOwner->lastName
-            ]
-        ];
-
-        Mail::to($request->other_owner_email)->send(new DogInvitationMail($data));
-
-        return redirect()->back()->with('success', 'Solicitud enviada. El dueño del otro perro debe registrar su mascota para continuar.');
     }
 
     /**

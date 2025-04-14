@@ -9,6 +9,7 @@ import { operations } from './operations.js';
 import { profile } from './profile.js';
 import { dogs } from './dogs.js';
 import { pedigree } from './pedigree.js';
+import { breedingRequest } from './breeding_request.js';
 
 
 window.Alpine = Alpine;
@@ -47,6 +48,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 dogs();
 pedigree();
+breedingRequest();
+
 
 mainFunction();
 airport();

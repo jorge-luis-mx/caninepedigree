@@ -12,14 +12,17 @@ use Yajra\DataTables\Facades\DataTables;
 use App\Mail\sendEmailDogs;
 use Illuminate\Support\Facades\Mail;
 
+
 //model
 use App\Models\Dog;
 use App\Models\Payment;
 use App\Models\DogPayment;
 use App\Models\UserProfile;
+use App\Models\DogParentRequest;
+use App\Models\BreedingRequest;
 
+//Traits
 use App\Traits\Pedigree;
-
 
 class DogController extends Controller
 {
@@ -206,6 +209,7 @@ class DogController extends Controller
                 Mail::to($sireEmail)->send(new sendEmailDogs($datos));
     
             }
+
             if ($dam_id == null ) {
 
                 $damEmail = $validatedData['dam_email'];
@@ -220,8 +224,32 @@ class DogController extends Controller
                 ];
                 Mail::to($damEmail)->send(new sendEmailDogs($datos));
             }
+
             $dog->dog_id_md = md5($dog->dog_id);
-            $dog->rol =$user->role;
+            $dog->rol = $user->role;
+
+            // Verificamos si hay una solicitud de cruza pendiente para este usuario
+            $parentRequest = DogParentRequest::where('email', $profile->email)
+                            ->where('parent_type', $request->sex === 'M' ? 'sire' : 'dam')
+                            ->first();
+
+            if ($parentRequest) {
+                // Crear la solicitud de cruza automáticamente
+                BreedingRequest::create([
+                    'female_dog_id' => $request->sex === 'F' ? $dog->dog_id : $parentRequest->dog_id,
+                    'male_dog_id' => $request->sex === 'M' ? $dog->dog_id : $parentRequest->dog_id,
+                    'requester_id'=>$profile->profile_id,
+                    'owner_id'=>$profile->profile_id,
+                    'status' => 'pending',
+                ]);
+
+                // Eliminar solicitud previa
+                $parentRequest->delete();
+
+                // (Opcional) Notificar al solicitante original
+                // $requestingUser = Dog::find($parentRequest->dog_id)->user;
+                // Mail::to($requestingUser->email)->send(new BreedingConfirmedMail($dog));
+            }
 
            
             $data['message'] = 'Pricing inserted successfully';

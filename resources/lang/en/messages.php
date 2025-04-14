@@ -7,7 +7,7 @@ return [
         'dashboard' => 'Dashboard',
         'profile' => 'Profile',
         'dogs'=>'Dogs',
-        'breeding'=>'Request breeding',
+        'breeding'=>'Breeding request',
         'pedigree'=>'Pedigree'
     ],
     'nav' => [
