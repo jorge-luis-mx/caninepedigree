@@ -76,15 +76,15 @@ aside {
                     }
                     
                     .custom-icon-chevron {
-                        transition: transform 0.3s ease, translate 0.3s ease;
-                        transform-origin: center center; /* Asegura que la rotación se realice desde el centro */
+                        // transition: transform 0.3s ease, translate 0.3s ease;
+                        transform-origin: center center; 
                         margin-top: 12px;
                         height: 30px;
                     }
                     
                     /* Rotación y ajuste de desplazamiento */
                     .custom-icon-chevron.rotate {
-                        transform: rotate(-180deg) translateY(12px); /* La rotación y el desplazamiento */
+                        transform: rotate(180deg) translateY(15px);  /* La rotación y el desplazamiento */
                     }
                 }
         
@@ -184,15 +184,15 @@ aside {
                         }
                         
                         .custom-icon-chevron {
-                            transition: transform 0.3s ease, translate 0.3s ease;
-                            transform-origin: center center; /* Asegura que la rotación se realice desde el centro */
+                            // transition: transform 0.3s ease, translate 0.3s ease;
+                            transform-origin: center center; 
                             margin-top: 12px;
                             height: 30px;
                         }
                         
                         /* Rotación y ajuste de desplazamiento */
                         .custom-icon-chevron.rotate {
-                            transform: rotate(-180deg) translateY(12px); /* La rotación y el desplazamiento */
+                            transform: rotate(180deg) translateY(15px); /* La rotación y el desplazamiento */
                         }
                     }
             

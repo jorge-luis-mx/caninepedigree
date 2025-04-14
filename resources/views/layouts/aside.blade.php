@@ -32,7 +32,7 @@
                         </li>
                     </ul>
 
-                    <div id="step_three">
+                    
 
                         <ul class="menu-list is-hidden">
                             <li class="nav-drop">
@@ -68,7 +68,7 @@
                             </li>
                         </ul>
                         
-                        <ul class="menu-list">
+                        <!-- <ul class="menu-list">
                             <li class="nav-drop">
                                 <a href="{{ route('breeding.create') }}" class="nav-link is-flex is-justify-content-space-between">
                                     <div class="is-flex is-justify-content-start is-align-items-center">
@@ -77,9 +77,47 @@
                                     </div>
                                 </a>
                             </li>
-                        </ul>
+                        </ul> -->
 
-                    </div>
+                        <ul class="menu-list">
+                            <li class="nav-drop">
+                                <a class="nav-link is-flex is-justify-content-space-between">
+                                    <div class="is-flex is-justify-content-start is-align-items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="custom-size-icon" viewBox="0 0 48 48"><path fill="none" stroke="#eab308" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m5 10l3 3l6-6M5 24l3 3l6-6M5 38l3 3l6-6m7-11h22M21 38h22M21 10h22"/></svg>
+                                        <span>Breeding</span>
+                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="custom-icon-chevron" viewBox="0 0 32 32"><path fill="currentColor" d="m16 4l7 7l-1.4 1.4L16 6.8l-5.6 5.6L9 11z"/></svg>
+                                </a>
+                                <ul class="submenu">
+                                    <li>
+                                        <a href="{{ route('breeding.create') }}" class="is-flex is-flex is-align-items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="custom-size-icon-list" viewBox="0 0 256 256"><path fill="currentColor" d="M128 20a108 108 0 1 0 108 108A108.12 108.12 0 0 0 128 20m0 192a84 84 0 1 1 84-84a84.09 84.09 0 0 1-84 84"/></svg> 
+                                            <span>New Request</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="is-flex is-flex is-align-items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="custom-size-icon-list" viewBox="0 0 256 256"><path fill="currentColor" d="M128 20a108 108 0 1 0 108 108A108.12 108.12 0 0 0 128 20m0 192a84 84 0 1 1 84-84a84.09 84.09 0 0 1-84 84"/></svg> 
+                                            <span>Pending Requests</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="is-hidden">
+                                        <a href="" class="is-flex is-flex is-align-items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="custom-size-icon-list" viewBox="0 0 256 256"><path fill="currentColor" d="M128 20a108 108 0 1 0 108 108A108.12 108.12 0 0 0 128 20m0 192a84 84 0 1 1 84-84a84.09 84.09 0 0 1-84 84"/></svg> 
+                                            <span>Sent Requests</span>
+                                        </a>
+                                    </li>
+                                    <li class="is-hidden">
+                                        <a href="" class="is-flex is-flex is-align-items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="custom-size-icon-list" viewBox="0 0 256 256"><path fill="currentColor" d="M128 20a108 108 0 1 0 108 108A108.12 108.12 0 0 0 128 20m0 192a84 84 0 1 1 84-84a84.09 84.09 0 0 1-84 84"/></svg> 
+                                            <span>Received Requests</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    
 
                 </div>
             </div>
