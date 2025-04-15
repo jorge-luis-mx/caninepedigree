@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 
 use Illuminate\Mail\Mailables\Address;
 
-class DogInvitationMail extends Mailable
+class Breeding extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -43,7 +43,7 @@ class DogInvitationMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.'.$this->datos['view'],
+            view: 'emails.dog_invitation',
             with: ['datos' => $this->datos]
         );
     }

@@ -60,14 +60,12 @@ export  function breedingRequest() {
                 allowOutsideClick: false,
                 backdrop: true
             });
-
+            form.reset();
          } else if (result.errors) {
             
             showErrors(form, result.errors);
          }
-            // console.log("Success:", data);
-            // alert("Breeding request submitted successfully.");
-            // form.reset();
+
         })
         .catch(err => {
             console.error("Error al enviar el formulario:", err);

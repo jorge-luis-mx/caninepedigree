@@ -11,7 +11,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 use App\Mail\sendEmailDogs;
 use Illuminate\Support\Facades\Mail;
-
+use App\Mail\Breeding;
 
 //model
 use App\Models\Dog;
@@ -248,7 +248,7 @@ class DogController extends Controller
 
                 // (Opcional) Notificar al solicitante original
                 // $requestingUser = Dog::find($parentRequest->dog_id)->user;
-                // Mail::to($requestingUser->email)->send(new BreedingConfirmedMail($dog));
+                // Mail::to($requestingUser->email)->send(new Breeding($dog));
             }
 
            

@@ -46,6 +46,8 @@ class BreedingRequestController extends Controller
      */
     public function store(Request $request)
     {
+        $baseUrl = config('app.url');
+
         try {
 
             // Limpiar todos los campos antes de la validación
@@ -107,6 +109,20 @@ class BreedingRequestController extends Controller
                     'status' => 'pending',
                 ]);
 
+                $data = [
+                    'dogName'=>$myDog->name,
+                    'other_dog_name'=>$request->other_dog_name,
+                    'otherType'=>$otherType,
+                    'token'=>$token,
+                    'owner'=>$myOwner->name.' '.$myOwner->lastName,
+                    'subject'=>'Has recibido una solicitud de cruza para tu perro',
+                    'view'=>'dog_invitation_esc_one',
+                    'url'=>$baseUrl,
+                ];
+
+                $this->sendEmail($data,$validatedData);
+
+                // enviar el correo de invitacion para la otra persona 
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Solicitud de cruza enviada correctamente.',
@@ -124,6 +140,19 @@ class BreedingRequestController extends Controller
                     'token' => $token,
                 ]);
 
+                $data = [
+                    'dogName'=>$myDog->name,
+                    'other_dog_name'=>$request->other_dog_name,
+                    'otherType'=>$otherType,
+                    'token'=>$token,
+                    'owner'=>$myOwner->name.' '.$myOwner->lastName,
+                    'subject'=>'Alguien quiere cruzar su perro con el tuyo — Regístralo para continuar',
+                    'view'=>'dog_invitation_esc_two',
+                    'url'=>$baseUrl,
+                ];
+
+                // $this->sendEmail($data,$validatedData);
+                // enviar el correo de invitacion que registre su perro ya alguien le solicita cruza
                 return response()->json([
                     'status' => 'success',
                     'message' => 'El dueño del otro perro ya tiene cuenta. Se notificará para que registre su mascota.',
@@ -140,21 +169,34 @@ class BreedingRequestController extends Controller
                 'token' => $token,
             ]);
 
-            //send mails
             $data = [
-                'from'=>'jorge06g92@gmail.com',
-                'subject' => '',
-                'url'=>'http://www.caninepedigree-dev.com/register',
-                'data'=>[
-                    'dogName'=>$myDog->name,
-                    'other_dog_name'=>$request->other_dog_name,
-                    'otherType'=>$otherType,
-                    'token'=>$token,
-                    'owner'=>$myOwner->name.' '.$myOwner->lastName
-                ]
+                'dogName'=>$myDog->name,
+                'other_dog_name'=>$request->other_dog_name,
+                'otherType'=>$otherType,
+                'token'=>$token,
+                'owner'=>$myOwner->name.' '.$myOwner->lastName,
+                'subject'=>'Invitación para cruzar tu perro — Regístralo en nuestra plataforma',
+                'view'=>'dog_invitation_esc_three',
+                'url'=>$baseUrl.'register',
             ];
 
-            Mail::to($request->other_owner_email)->send(new DogInvitationMail($data));
+            $this->sendEmail($data,$validatedData);
+
+            //send mails
+            // $data = [
+            //     'from'=>'jorge06g92@gmail.com',
+            //     'subject' => '',
+            //     'url'=>'http://www.caninepedigree-dev.com/register',
+            //     'data'=>[
+            //         'dogName'=>$myDog->name,
+            //         'other_dog_name'=>$request->other_dog_name,
+            //         'otherType'=>$otherType,
+            //         'token'=>$token,
+            //         'owner'=>$myOwner->name.' '.$myOwner->lastName
+            //     ]
+            // ];
+
+            // Mail::to($request->other_owner_email)->send(new DogInvitationMail($data));
 
             return response()->json([
                 'status' => 'success',
@@ -171,6 +213,25 @@ class BreedingRequestController extends Controller
                 'errors' => [$e->getMessage()]
             ], 500);
         }
+    }
+
+    public function sendEmail($data,$validatedData){
+
+        $array = [
+                'from'=>'jorge06g92@gmail.com',
+                'subject' => $data['subject'],
+                'view'=>$data['view'],
+                'data'=>[
+                    'dogName'=>$data['dogName'],
+                    'other_dog_name'=>$data['other_dog_name'],
+                    'otherType'=>$data['otherType'],
+                    'token'=>$data['token'],
+                    'owner'=>$data['owner'],
+                    'url'=>$data['url'],
+                ],
+        ];
+
+        Mail::to($validatedData['other_owner_email'])->send(new DogInvitationMail($array));
     }
 
     /**
