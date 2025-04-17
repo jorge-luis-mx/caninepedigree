@@ -26,6 +26,7 @@ use App\Http\Controllers\DogController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\BreedingRequestController;
 use App\Http\Controllers\PedigreegController;
+use App\Http\Controllers\AdminDogsController;
 
 
 
@@ -62,6 +63,9 @@ Route::middleware('auth')->get('/lang/{locale}', function ($locale) {
 Route::get('/dashboard', [AdminController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+Route::get('/admin/dogs', [AdminDogsController::class, 'index'])->name('adminDogs.index');
+Route::post('/admin/dogs', [AdminDogsController::class, 'store'])->name('adminDogs.store');
 
 Route::middleware('auth')->group(function () {
 
@@ -111,6 +115,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/breeding/request', [BreedingRequestController::class, 'create'])->name('breeding.create');
     Route::post('/breeding/request', [BreedingRequestController::class, 'store'])->name('breeding.store');
 
+
+    // Route::get('/admin/dogs', [AdminDogsController::class, 'index'])->name('adminDogs.index');
 
     //airport
     // Route::get('/airport', [AirportController::class, 'index'])->name('airport.index');

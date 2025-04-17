@@ -44,9 +44,5 @@ class UserProfile extends Model
         return $this->hasMany(Dog::class, 'current_owner_id');
     }
 
-    // public function dogs():HasMany
-    // {
-    //     return $this->hasMany(Dog::class, 'breeder_id');
-    // }
-    
+
 }

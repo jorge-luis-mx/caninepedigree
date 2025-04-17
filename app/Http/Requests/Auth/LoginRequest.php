@@ -161,13 +161,22 @@ class LoginRequest extends FormRequest
         }
 
         //verify si no esta deslogueado
-        $user = Auth::user(); 
-        if ($user->status !== 1) { 
-            Auth::logout(); 
+        
+        $user = Auth::user();
+
+        if (!$user->userprofile || (int) $user->userprofile->status !== 1) {
+            Auth::logout();
             throw ValidationException::withMessages([
                 'login' => trans('inactive_account'),
             ]);
         }
+        
+        // if ($user->status !== 1) { 
+        //     Auth::logout(); 
+        //     throw ValidationException::withMessages([
+        //         'login' => trans('inactive_account'),
+        //     ]);
+        // }
         // Limpia los intentos de login fallidos si la autenticación es exitosa
         RateLimiter::clear($this->throttleKey());
     }
