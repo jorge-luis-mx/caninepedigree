@@ -36,11 +36,11 @@
     <!-- Other dog's name -->
     <div class="column">
         <div class="field mb-4">
-            <label class="label" for="other_dog_name">Name of the dog you want to breed with</label>
+            <label class="label" for="other_dog_name">Enter the IDDR or dog's name for breeding.</label>
             <div class="control">
                 <input class="input" type="text" name="other_dog_name" id="other_dog_name" placeholder="E.g., Rocky, Luna, etc." required>
             </div>
-            <p class="help">Enter the name of the other owner's dog.</p>
+            <p class="help">Enter the IDDR number or the dog's name from the other owner.</p>
         </div>
     </div>
 

@@ -77,6 +77,7 @@ class BreedingRequestController extends Controller
             $otherType = $isMyDogFemale ? 'sire' : 'dam';
             $token = Str::uuid();
 
+
             // Verificamos si el otro dueño ya tiene cuenta
             $otherOwner = UserProfile::where('email', $request->other_owner_email)->first();
             $otherDog = null;
@@ -84,8 +85,13 @@ class BreedingRequestController extends Controller
             if ($otherOwner) {
                 // Buscamos el perro del otro dueño por nombre, si lo proporciona
                 $otherDog = Dog::where('current_owner_id', $otherOwner->profile_id)
-                            ->where('name', 'LIKE', '%' . $request->other_dog_name . '%')
-                            ->first();
+                ->where(function ($query) use ($request) {
+                    $query->where('name', 'LIKE', '%' . $request->other_dog_name . '%')
+                          ->orWhere('reg_no', 'LIKE', '%' . $request->other_dog_name . '%');
+                })
+                ->first();
+            
+
             }
 
             // Validamos que no sean del mismo sexo
@@ -111,7 +117,7 @@ class BreedingRequestController extends Controller
 
                 $data = [
                     'dogName'=>$myDog->name,
-                    'other_dog_name'=>$request->other_dog_name,
+                    'other_dog_name'=>$otherDog->name,
                     'otherType'=>$otherType,
                     'token'=>$token,
                     'owner'=>$myOwner->name.' '.$myOwner->lastName,
@@ -151,7 +157,7 @@ class BreedingRequestController extends Controller
                     'url'=>$baseUrl,
                 ];
 
-                // $this->sendEmail($data,$validatedData);
+                $this->sendEmail($data,$validatedData);
                 // enviar el correo de invitacion que registre su perro ya alguien le solicita cruza
                 return response()->json([
                     'status' => 'success',
@@ -182,21 +188,6 @@ class BreedingRequestController extends Controller
 
             $this->sendEmail($data,$validatedData);
 
-            //send mails
-            // $data = [
-            //     'from'=>'jorge06g92@gmail.com',
-            //     'subject' => '',
-            //     'url'=>'http://www.caninepedigree-dev.com/register',
-            //     'data'=>[
-            //         'dogName'=>$myDog->name,
-            //         'other_dog_name'=>$request->other_dog_name,
-            //         'otherType'=>$otherType,
-            //         'token'=>$token,
-            //         'owner'=>$myOwner->name.' '.$myOwner->lastName
-            //     ]
-            // ];
-
-            // Mail::to($request->other_owner_email)->send(new DogInvitationMail($data));
 
             return response()->json([
                 'status' => 'success',
@@ -218,7 +209,7 @@ class BreedingRequestController extends Controller
     public function sendEmail($data,$validatedData){
 
         $array = [
-                'from'=>'jorge06g92@gmail.com',
+                'from'=>'canine@aquacaribbeantravel.com',
                 'subject' => $data['subject'],
                 'view'=>$data['view'],
                 'data'=>[

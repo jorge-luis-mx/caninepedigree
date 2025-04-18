@@ -30,9 +30,7 @@ class DogController extends Controller
     use Pedigree;
 
 
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index(Request $request)
     {
 
@@ -175,8 +173,7 @@ class DogController extends Controller
                 'current_owner_id' => $owner,
                 'status' => 1
             ]);
-            // Asigna reg_no después de la creación
-            // $dog->reg_no = "DOG-" . str_pad($dog->dog_id, 5, '0', STR_PAD_LEFT);
+
             $dog->save();
 
             // Crear el pago
@@ -201,8 +198,8 @@ class DogController extends Controller
 
                 //send mails
                 $datos = [
-                    'from'=>'jorge06g92@gmail.com',
-                    'subject' => 'Password change request | Airport Transportation',
+                    'from'=>'canine@aquacaribbeantravel.com',
+                    'subject' => 'Dog registration request',
                     'url'=>'http://www.caninepedigree-dev.com/register',
                     'dog'=>$dog
                 ];
@@ -217,8 +214,8 @@ class DogController extends Controller
 
                 //send mails
                 $datos = [
-                    'from'=>'jorge06g92@gmail.com',
-                    'subject' => 'Password change request | Airport Transportation',
+                    'from'=>'canine@aquacaribbeantravel.com',
+                    'subject' => 'Dog registration request',
                     'url'=>'http://www.caninepedigree-dev.com/register',
                     'dog'=>$dog
                 ];
@@ -297,10 +294,6 @@ class DogController extends Controller
     public function show(string $id)
     {
         
-//         $dog = Dog::with(['currentOwner', 'breeder'])->whereRaw('MD5(dog_id) = ?', $id)->firstOrFail();
-//         $dog->dog_hash = md5($dog->dog_id);
-//         $dog = ['dog'=>$dog];
-// dd($dog);
 
         $dog = Dog::whereRaw('MD5(dog_id) = ?', [$id])
         ->with([

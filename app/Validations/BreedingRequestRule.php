@@ -13,7 +13,7 @@ class BreedingRequestRule
          'my_dog_id' => 'required|numeric',
          'other_dog_name' => [
              'required',
-             'regex:/^[\pL0-9\sáéíóúÁÉÍÓÚñÑ]+$/u'
+             'regex:/^[\pL0-9\sáéíóúÁÉÍÓÚñÑ-]+$/u'
          ],
          'other_owner_email' => 'required|email',
          'comments' => [
