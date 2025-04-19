@@ -52,9 +52,9 @@ class User extends Authenticatable
 
     protected $fillable = [
         'profile_id',
-        'username',
+        'user_name',
         'password',
-        'role',
+        'role_id',
         'locale',
         'status',
     ];
@@ -74,4 +74,10 @@ class User extends Authenticatable
         return $this->belongsTo(UserProfile::class, 'profile_id', 'profile_id');
     }
 
+    // Relación con el rol
+    //Un usuario pertenece a un solo rol, pero un rol puede tener muchos usuarios.
+    public function role()
+    {
+        return $this->belongsTo(Role::class,'role_id','id');
+    }
 }

@@ -61,7 +61,7 @@
 document.addEventListener("DOMContentLoaded", function() {
 
     let dogs = @json($dogs);
-    const rol = @json($rol);
+    const rol = @json($role);
 
     let currentPage = 1;
     const dogsPerPage = 10;

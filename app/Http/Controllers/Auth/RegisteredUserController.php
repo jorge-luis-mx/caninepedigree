@@ -44,12 +44,14 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:user_profiles,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-    
+        $text = preg_split('/\s+/', $request->last_name);
+
+
         // 1️⃣ Insertar en la tabla `user_profile` y obtener el ID generado
         $userProfile = UserProfile::create([
-            'name' => $request->name,
+            'first_name' => $request->name,
+            'last_name'=>count($text)> 0 ? $text[0] : null,
             'email' => $request->email,
-            'lastName'=>$request->last_name,
             'status' => 1,
         ]);
  
@@ -58,10 +60,10 @@ class RegisteredUserController extends Controller
     
         // 3️⃣ Insertar en la tabla `users` usando el `user_profile_id`
         $user = User::create([
-            'username' => $username,
-            'password' => Hash::make($request->password),
             'profile_id' => $userProfile['profile_id'],  // Relacionar con `user_profile`
-            'role'=>'customer',
+            'user_name' => $username,
+            'password' => Hash::make($request->password),
+            'role_id'=>1,
             'status' => 1, 
         ]);
     
@@ -82,7 +84,7 @@ class RegisteredUserController extends Controller
         $username = $baseUsername;
         $count = 1;
 
-        while (User::where('username', $username)->exists()) {
+        while (User::where('user_name', $username)->exists()) {
             $username = $baseUsername . '_' . $count;
             $count++;
         }

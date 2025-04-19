@@ -37,8 +37,16 @@ class DogController extends Controller
         $user = auth()->user();
         $profile_id = $user->profile_id;
         $profile = $user->userprofile;
-        $rol = $user->role;
-        if ($user->role == 'admin' || $user->role =='customer') {
+
+        $role = $user->role;
+        $permissions = $role->permissions; 
+        
+
+        // $permissions = $user->role->permissions; // Permisos del rol del usuario
+        // $hasPermission = $permissions->contains('name', 'create_post');
+
+       
+        if ($role->name == 'admin' || $role->name =='customer') {
 
             if ($profile_id == $profile->profile_id) {
 
@@ -63,7 +71,7 @@ class DogController extends Controller
         }
   
        
-        return view('dogs.list-dogs',compact('dogs','rol'));
+        return view('dogs.list-dogs',compact('dogs','role'));
     }
 
     /**
