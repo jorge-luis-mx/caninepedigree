@@ -17,10 +17,11 @@ class Payment extends Model
     protected $fillable = [
         'user_id',
         'amount',
-        'type',
         'breeding_request_id',
+        'type',
         'payment_method',
-        'status'
+        'status',
+        
     ];
 
     const CREATED_AT = 'created_at';

@@ -30,7 +30,9 @@ class Dog extends Model
         'dam_id',
         'breeder_id',
         'current_owner_id',
-        'status'
+        'status',
+        'is_puppy',
+        'breeding_request_id'
     ];
 
     const CREATED_AT = 'created_at';

@@ -49,7 +49,7 @@ class DogController extends Controller
         if ($role->name == 'admin' || $role->name =='customer') {
 
             if ($profile_id == $profile->profile_id) {
-
+                
                 $dogs = Dog::where('dogs.current_owner_id', $profile_id)
                 ->whereIn('dogs.status', ['completed'])
                 ->leftJoin('dog_payments', 'dogs.dog_id', '=', 'dog_payments.dog_id')
@@ -151,8 +151,10 @@ class DogController extends Controller
     
         $user = auth()->user();
         $profile = $user->userprofile;
+        $role = $user->role;
+        $permissions = $role->permissions; 
 
-        if ($user->role == 'admin' || $user->role =='customer') {
+        if ($role->name == 'admin' || $role->name =='customer') {
 
             $owner = $user->profile_id == $profile->profile_id ? $profile->profile_id: null;
             
@@ -179,7 +181,7 @@ class DogController extends Controller
                 'dam_id' => $dam_id,
                 'breeder_id' => $owner,
                 'current_owner_id' => $owner,
-                'status' => 1
+                'status'=>$role->name == 'admin'? 'completed':'pending'
             ]);
 
             $dog->save();
@@ -231,7 +233,7 @@ class DogController extends Controller
             }
 
             $dog->dog_id_md = md5($dog->dog_id);
-            $dog->rol = $user->role;
+            $dog->rol = $role->name;
 
             // Verificamos si hay una solicitud de cruza pendiente para este usuario
             $parentRequest = DogParentRequest::where('email', $profile->email)
