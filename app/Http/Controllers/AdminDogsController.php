@@ -56,7 +56,9 @@ class AdminDogsController extends Controller
 
         $validatedData = $validator->validated();
 
-        $profile = UserProfile::where('profile_id',18)->first();
+        $profile_id = 3;
+
+        $profile = UserProfile::where('profile_id',$profile_id)->first();
         $user =  $profile->user->first();
         
 
@@ -76,8 +78,8 @@ class AdminDogsController extends Controller
                 'birthdate' => Carbon::now(),
                 'sire_id' => null,
                 'dam_id' => null,
-                'breeder_id' => 18,
-                'current_owner_id' => 18,
+                'breeder_id' => $profile_id,
+                'current_owner_id' => $profile_id,
                 'status' => 'completed'
             ]);
 
