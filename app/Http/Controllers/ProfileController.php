@@ -42,15 +42,15 @@ class ProfileController extends Controller
         $userProfile = $request->user()->UserProfile;
 
         if (!$userProfile) {
-            return redirect()->back()->withErrors(['error' => 'No associated provider found.']);
+            return redirect()->back()->withErrors(['error' => 'No matching profile found.']);
         }
 
         $data = [
             'status' => 'success',
-            'message' => 'Yeah! Your company information has been successfully updated.'
+            'message' => 'Your details have been successfully updated.'
         ];
-        
-        if ($userProfile->status===1) {
+
+        if ($userProfile->status==1) {
              // update provider
              $userProfile->fill([
                 'first_name' => $validatedData['first_name'] ?? $userProfile->first_name,
@@ -65,7 +65,7 @@ class ProfileController extends Controller
         }else{
             
             $data['status']  = 'error';
-            $data['message'] = 'Provider update failed';
+            $data['message'] = 'Profile update failed';
         }
         // Redirigir con un mensaje de éxito
         return redirect()->route('profile.edit')->with($data);

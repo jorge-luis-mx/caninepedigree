@@ -2,7 +2,7 @@
 
    <!-- <h1 class="is-size-4">{{__('messages.main.dogs.title')}}</h1> -->
 
-   <div class="columns is-multiline">
+   <div class="columns is-multiline is-hidden">
       <div class="column">
          <div class="menu-add">
             <a href="{{ route('dogs.create')}}">
