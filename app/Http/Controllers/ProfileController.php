@@ -25,7 +25,8 @@ class ProfileController extends Controller
         //acceso siempre con model user
         $user = auth()->user();
         $profileUser = UserProfile::where('profile_id',$user->profile_id)->first();
-  
+        $location = $profileUser->location;
+        
         return view('profile.edit', ['user' => $user,'profileUser'=>$profileUser,'countries'=>$countries]);
     }
 
@@ -39,7 +40,7 @@ class ProfileController extends Controller
         $validatedData = $request->validated();
 
         $userProfile = $request->user()->UserProfile;
-       
+
         if (!$userProfile) {
             return redirect()->back()->withErrors(['error' => 'No associated provider found.']);
         }
@@ -52,11 +53,11 @@ class ProfileController extends Controller
         if ($userProfile->status===1) {
              // update provider
              $userProfile->fill([
-                'name' => $validatedData['fullname'] ?? $userProfile->name,
+                'first_name' => $validatedData['first_name'] ?? $userProfile->first_name,
+                'last_name' => $validatedData['last_name'] ?? $userProfile->last_name,
+                'middle_name' => $validatedData['middle_name'] ?? $userProfile->middle_name,
                 'email' => $validatedData['email'] ?? $userProfile->email,
-                'phone' => $validatedData['phone'] ?? $userProfile->phone,
-                'address' => $validatedData['address'] ?? $userProfile->addres,
-                'country' => $validatedData['country'] ?? $userProfile->country,
+                'phone' => $validatedData['phone'] ?? $userProfile->phone
             ]);
     
             // Guardar los cambios en la base de datos

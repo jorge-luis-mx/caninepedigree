@@ -18,18 +18,51 @@
                         @csrf
                         @method('patch')
                         <!-- Campo: Company Name -->
-                        <div class="field mb-4">
-                            <label class="label" for="fullname">{{__('messages.main.profile.name')}}</label>
-                            <div class="control">
-                                <input
-                                    class="input"
-                                    type="text"
-                                    name="fullname"
-                                    value="{{$profileUser->name}}"
-                                    >
+                         <div class="columns is-multiline">
+                            <div class="column">
+                                <div class="field mb-4">
+                                    <label class="label" for="first_name">{{__('messages.main.profile.first_name')}}</label>
+                                    <div class="control">
+                                        <input
+                                            class="input"
+                                            type="text"
+                                            name="first_name"
+                                            value="{{$profileUser->first_name}}"
+                                            >
+                                    </div>
+                                    <x-input-error class="mt-2" :messages="$errors->get('name')" />
+                                </div>
                             </div>
-                            <x-input-error class="mt-2" :messages="$errors->get('name')" />
-                        </div>
+                            <div class="column">
+                                <div class="field mb-4">
+                                    <label class="label" for="last_name">{{__('messages.main.profile.last_name')}}</label>
+                                    <div class="control">
+                                        <input
+                                            class="input"
+                                            type="text"
+                                            name="last_name"
+                                            value="{{$profileUser->last_name}}"
+                                            >
+                                    </div>
+                                    <x-input-error class="mt-2" :messages="$errors->get('name')" />
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="field mb-4">
+                                    <label class="label" for="first_name">{{__('messages.main.profile.middle_name')}}</label>
+                                    <div class="control">
+                                        <input
+                                            class="input"
+                                            type="text"
+                                            name="middle_name"
+                                            value="{{$profileUser->middle_name}}"
+                                            >
+                                    </div>
+                                    <x-input-error class="mt-2" :messages="$errors->get('name')" />
+                                </div>
+                            </div>
+                         </div>
+
 
                        
                         <div class="columns is-multiline">
@@ -67,45 +100,7 @@
 
 
                         
-                        <div class="columns is-multiline">
 
-                            <div class="column">
-                                <div class="field">
-                                    <label class="label" for="email">{{__('messages.main.profile.address')}}</label>
-                                    <div class="control">
-                                        <input
-                                            class="input"
-                                            type="address"
-                                            name="address"
-                                            value="{{$profileUser->address}}"
-                                            >
-                                    </div>
-                                    <x-input-error class="mt-2" :messages="$errors->get('address')" />
-                                </div>
-                            </div>
-
-                            <div class="column">
-                                <!-- Campo: Select -->
-                                <div class="field ">
-                                    <label class="label" for="country">{{__('messages.main.profile.country')}}</label>
-                                    <div class="control">
-                                        <div class="select is-fullwidth">
-                                            <select id="country" name="country">
-
-                                                @foreach ($countries as $code => $name)
-                                                        <option value="{{ $code }}" {{ $code === $profileUser->country ? 'selected' : '' }}>
-                                                            {{ $name }}
-                                                        </option>
-                                                @endforeach
-
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <x-input-error class="mt-2" :messages="$errors->get('country')" />
-                                </div>
-                            </div>
-
-                        </div>
 
 
                         <div class="field mt-4">

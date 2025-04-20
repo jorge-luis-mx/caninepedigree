@@ -59,11 +59,12 @@ return [
         'profile' => [
             'title'=>'Profile',
             'subtitle'=>'Edit Profile',
-            'name'=>'Full Name',
+            'first_name'=>'First Name',
+            'last_name'=>'Last Name',
+            'middle_name'=>'Middle Name',
             'email'=>'Email',
             'phone'=>'Phone Number',
-            'address'=>'Address',
-            'country'=>'Country'
+
         ],
 
 

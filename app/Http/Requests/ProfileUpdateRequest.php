@@ -17,7 +17,9 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'fullname' => ['required', 'string', 'max:255','regex:/^[\pL\s&]+$/u'],
+            'first_name' => ['required', 'string', 'max:255','regex:/^[\pL\pN\s\-\.]+$/u'],
+            'last_name' => ['required', 'string', 'max:255','regex:/^[\pL\pN\s\-\.]+$/u'],
+            'middle_name' => ['required', 'string', 'max:255','regex:/^[\pL\pN\s\-\.]+$/u'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 
                 Rule::unique('user_profiles', 'email')->ignore(
                     $this->user()->UserProfile->profile_id, // Ignora el proveedor autenticado
@@ -29,13 +31,7 @@ class ProfileUpdateRequest extends FormRequest
                 'string',
                 'regex:/^\+?[0-9]{7,15}$/', // Acepta números de teléfono internacionales y locales (7-15 dígitos)
             ],
-            'address' => ['required', 'string', 'max:255', 'regex:/^[\pL0-9\s.,#-]+$/u'],
 
-            'country' => [
-                'required', 
-                'string',
-                'regex:/^[a-zA-Z0-9\s]+$/'
-            ],
         ];
     }
 

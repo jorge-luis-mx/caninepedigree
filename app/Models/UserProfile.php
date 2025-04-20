@@ -19,14 +19,17 @@ class UserProfile extends Model
     
     protected $fillable = [
         'name',
-        'firtsName',
-        'lastName',
+        'first_name',
+        'last_name',
+        'middle_name',
         'email',
         'phone',
         'address',
         'country',
-        'breeder_certificate',
-        'picture',
+        'birth_date',
+        'gender',
+        'location_id',
+        'profile_picture',
         'status'
     ];
 
@@ -42,6 +45,11 @@ class UserProfile extends Model
     public function dogs()
     {
         return $this->hasMany(Dog::class, 'current_owner_id');
+    }
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
     }
 
 

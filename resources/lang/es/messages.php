@@ -58,11 +58,11 @@ return [
         'profile' => [
             'title'=>'Perfil',
             'subtitle'=>'Editar Perfil',
-            'name'=>'Nombre Completo',
+            'first_name'=>'Nombre',
+            'last_name'=>'Apellido Paterno',
+            'middle_name'=>'Apellido Materno',
             'email'=>'Correo Electronico',
             'phone'=>'Numero de Telefono',
-            'address'=>'Direccion',
-            'country'=>'Pais'
         ],
 
         'dogs'=>[
