@@ -10,10 +10,11 @@ export  function dogs() {
         const handleSearch = (input, form, type) => {
             const regNo = input.value.trim();
             if (regNo.length < 3) return console.log("Debe tener al menos 3 caracteres.");
-    
+
             fetch(`/dogs/search/${regNo}`)
                 .then(res => res.json())
                 .then(data => {
+                    
                     if (data.status === 200) {
                         type === 'sire' ? showResults(data.data, form, type) : showResults(data.data, form, type);
                     } else {
@@ -80,39 +81,11 @@ export  function dogs() {
             document.getElementById(`${type}Results`).style.display = 'none';
         };
         
-
-        // const showResults = (dogs, form, type) => {
-        //     console.log(dogs);
-        //     const container = document.getElementById(`${type}Results`);
-        //     container.innerHTML = '';
-        //     if (!Array.isArray(dogs)) dogs = [dogs];
-        //     if (!dogs.length) {
-        //         container.innerHTML = '<div class="no-results">No dogs found.</div>';
-        //         container.style.display = 'block';
-        //         return;
-        //     }
-    
-        //     dogs.forEach(dog => {
-        //         const item = document.createElement('div');
-        //         item.className = 'result-item';
-        //         item.textContent = dog.name;
-        //         item.dataset.dogId = dog.dog_id;
-        //         item.addEventListener('click', () => selectDog(dog.dog_id, dog.name, form, type));
-        //         container.appendChild(item);
-        //     });
-    
-        //     container.style.display = 'block';
-        // };
-    
-        // const selectDog = (id, name, form, type) => {
-        //     form.querySelector(`input[name="${type}"]`).value = name;
-        //     form.querySelector(`input[name="${type}_id"]`).value = id;
-        //     document.getElementById(`${type}Results`).style.display = 'none';
-        // };
     
         const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
     
         if (dogFormContainer) {
+
             dogFormContainer.addEventListener('keydown', e => {
                 const target = e.target;
                 if (['sire', 'dam'].some(cls => target.classList.contains(cls)) && e.key === 'Enter') {
@@ -121,25 +94,44 @@ export  function dogs() {
                 }
             });
     
+
             // dogFormContainer.addEventListener('blur', e => {
             //     const target = e.target;
             //     if (target.classList.contains('sire') || target.classList.contains('dam')) {
+            //         if (selectingDog) {
+            //             selectingDog = false;
+            //             return;
+            //         }
             //         handleSearch(target, target.closest('form'), target.classList.contains('sire') ? 'sire' : 'dam');
             //     }
             // }, true);
 
-            dogFormContainer.addEventListener('blur', e => {
-                const target = e.target;
-                if (target.classList.contains('sire') || target.classList.contains('dam')) {
-                    if (selectingDog) {
-                        selectingDog = false;
-                        return;
+            // Agregar eventos click a los botones Search Sire y Search Dam
+            const btnSire = dogFormContainer.querySelector('.btn-search-sire');
+            const btnDam = dogFormContainer.querySelector('.btn-search-dam');
+
+            if (btnSire) {
+                btnSire.addEventListener('click', () => {
+                    selectingDog = true; // <- evita doble ejecución desde blur
+                    const inputSire = dogFormContainer.querySelector('input.sire');
+                    if (inputSire) {
+                        handleSearch(inputSire, inputSire.closest('form'), 'sire');
                     }
-                    handleSearch(target, target.closest('form'), target.classList.contains('sire') ? 'sire' : 'dam');
-                }
-            }, true);
+                });
+            }
             
+            if (btnDam) {
+                btnDam.addEventListener('click', () => {
+                    selectingDog = true; // <- evita doble ejecución desde blur
+                    const inputDam = dogFormContainer.querySelector('input.dam');
+                    if (inputDam) {
+                        handleSearch(inputDam, inputDam.closest('form'), 'dam');
+                    }
+                });
+            }
             
+
+
         }
     
         const saveBtn = document.querySelector(".saveDog");

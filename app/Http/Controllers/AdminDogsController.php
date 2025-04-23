@@ -56,30 +56,27 @@ class AdminDogsController extends Controller
 
         $validatedData = $validator->validated();
 
-        $profile_id = 3;
 
-        $profile = UserProfile::where('profile_id',$profile_id)->first();
+        $profile = UserProfile::where('profile_id',1)->first();
         $user =  $profile->user->first();
         
-
         DB::beginTransaction();
 
         $regnum = $this->generarCodigoRegistro();
         try {
 
-            $text = preg_split('/\s+/', $profile->lastName);
             // Crea el registro sin reg_no
             $dog = Dog::create([
                 'reg_no'=>$regnum,
-                'name' => $text[0].' '.$validatedData['name'],
+                'name' => $validatedData['name'],
                 'breed' => 'Pit Bull Terrier',
                 'color' => $validatedData['color'],
                 'sex' => $validatedData['sex'],
-                'birthdate' => Carbon::now(),
+                'birthdate' => Carbon::parse('2026-01-01'),
                 'sire_id' => null,
                 'dam_id' => null,
-                'breeder_id' => $profile_id,
-                'current_owner_id' => $profile_id,
+                'breeder_id' => $profile->profile_id,
+                'current_owner_id' => $profile->profile_id,
                 'status' => 'completed'
             ]);
 
@@ -93,7 +90,6 @@ class AdminDogsController extends Controller
                 'status' => 'completed', // Estado del pago (aún no completado)
                 'payment_method' => 'card' // Método de pago (ajústalo según la lógica de pago)
             ]);
-            
 
             // Registrar la relación en dog_payments
             DogPayment::create([

@@ -105,10 +105,12 @@ Route::middleware('auth')->group(function () {
 
 
     //Route::post('/breeding-request', [BreedingController::class, 'store'])->name('breeding.index');
-    Route::get('/breeding/request', [BreedingRequestController::class, 'create'])->name('breeding.create');
+    Route::get('/breeding/request', [BreedingRequestController::class, 'index'])->name('breeding.index');
+    Route::get('/breeding/request/create', [BreedingRequestController::class, 'create'])->name('breeding.create');
     Route::post('/breeding/request', [BreedingRequestController::class, 'store'])->name('breeding.store');
 
 
+    
 
 });
 

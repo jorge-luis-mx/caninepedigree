@@ -12,15 +12,20 @@ export  function pedigree() {
          let inputValue = inputField.value.trim(); // trim aquí sí tiene efecto si se reasigna
          objets.handleSearch(e, inputValue);
       }
+      if (searchBtn) {
+         searchBtn.addEventListener('click', handleSearchEvent);
+      }
        
-       searchBtn.addEventListener('click', handleSearchEvent);
+      if (inputField) {
+         inputField.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+              e.preventDefault(); // evita que se envíe el formulario si está dentro de uno
+              handleSearchEvent(e);
+            }
+         });
+      }
        
-      inputField.addEventListener('keydown', function (e) {
-         if (e.key === 'Enter') {
-           e.preventDefault(); // evita que se envíe el formulario si está dentro de uno
-           handleSearchEvent(e);
-         }
-      });
+
   
       // searchBtn.addEventListener('click', function (e) {
       //   let inputValue = inputField.value;

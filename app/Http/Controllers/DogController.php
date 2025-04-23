@@ -235,9 +235,11 @@ class DogController extends Controller
             $dog->dog_id_md = md5($dog->dog_id);
             $dog->rol = $role->name;
 
+            $parent_type = $request->sex === 'M' ? 'sire' : 'dam';
+
             // Verificamos si hay una solicitud de cruza pendiente para este usuario
             $parentRequest = DogParentRequest::where('email', $profile->email)
-                            ->where('parent_type', $request->sex === 'M' ? 'sire' : 'dam')
+                            ->where('parent_type',$parent_type)
                             ->first();
 
             if ($parentRequest) {

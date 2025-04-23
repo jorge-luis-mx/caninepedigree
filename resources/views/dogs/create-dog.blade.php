@@ -12,18 +12,19 @@
                
                
                   <div class="card-content">
-
-                     <div class="field mb-4">
-                        <label class="label" for="name">{{__('messages.main.formDog.name')}}</label>
-                        <div class="control">
-                           <input
-                              class="input"
-                              type="text"
-                              name="name"
-                              value="">
-                        </div>
-                     </div>
                      <div class="columns is-multiline">
+                        <div class="column">
+                           <div class="field mb-4">
+                              <label class="label" for="name">{{__('messages.main.formDog.name')}}</label>
+                              <div class="control">
+                                 <input
+                                    class="input"
+                                    type="text"
+                                    name="name"
+                                    value="">
+                              </div>
+                           </div>
+                        </div>
                         <div class="column">
                            <div class="field mb-4">
                               <label class="label" for="breed">{{__('messages.main.formDog.breed')}}</label>
@@ -36,6 +37,10 @@
                               </div>
                            </div>
                         </div>
+                     </div>
+
+                     <div class="columns is-multiline">
+
                         <div class="column">
                            <div class="field">
                               <label class="label" for="phone">{{__('messages.main.formDog.color')}}</label>
@@ -61,8 +66,6 @@
                               </div>
                            </div>
                         </div>
-                     </div>
-                     <div class="columns is-multiline">
                         <div class="column is-one-fifth">
                            <div class="field">
                               <label class="label" for="birthdate">{{__('messages.main.formDog.date')}}</label>
@@ -75,6 +78,9 @@
                               </div>
                            </div>
                         </div>
+                     </div>
+                     <div class="columns is-multiline">
+
                         <div class="column">
                            <div class="columns is-multiline">
                               @include('components.card-sire')

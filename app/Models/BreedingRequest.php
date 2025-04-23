@@ -18,6 +18,8 @@ class BreedingRequest extends Model
         'male_dog_id',
         'requester_id', 
         'owner_id',
+        'payment_required',
+        'payment_type',
         'status'
     ];
 

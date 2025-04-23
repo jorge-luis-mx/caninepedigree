@@ -28,7 +28,16 @@ class BreedingRequestController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth()->user();
+        $profile = $user->userprofile;
+
+        $breedings = BreedingRequest::where('requester_id', $profile->profile_id)
+        ->where('status', 'pending')
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+        return view('breeding.list-breeding',compact('breedings'));
+
     }
 
     /**
@@ -36,7 +45,11 @@ class BreedingRequestController extends Controller
      */
     public function create()
     {
-        $dogs = Dog::where('status','completed')->get();
+        $user = auth()->user();
+        $profile = $user->userprofile;
+
+        $dogs = Dog::where('current_owner_id', $profile->profile_id)->where('status','completed')->where('sex','F')->get();
+
 
         return view('breeding.create-breeding',compact('dogs'));
     }
@@ -72,9 +85,10 @@ class BreedingRequestController extends Controller
 
             $myDog = Dog::findOrFail($request->my_dog_id);
             $myOwner = auth()->user()->userprofile;
-            $isMyDogFemale = $myDog->sex === 'M';
-
-            $otherType = $isMyDogFemale ? 'sire' : 'dam';
+            
+            $isMyDogMale = $myDog->sex === 'M';
+            $otherType = $isMyDogMale ? 'dam' : 'sire';
+            
             $token = Str::uuid();
 
 
