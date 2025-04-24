@@ -5,7 +5,7 @@
 
 <div class="container-details card">
    <div class="container-imagen">
-      <img src="https://placedog.net/400/400?id=1" />
+      <img src="{{ asset('assets/img/dogs-image.jpg') }}" />
    </div>
    <div class="content-details">
       <p class="title is-3 mt-2">{{ $dog['name']}}</p>

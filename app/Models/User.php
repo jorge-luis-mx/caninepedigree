@@ -62,7 +62,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
     ];
-
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';
+    
     // Especifica que el campo de contraseña es `p_auth_password`
     public function getAuthPassword()
     {

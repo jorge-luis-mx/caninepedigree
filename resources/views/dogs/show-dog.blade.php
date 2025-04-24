@@ -7,8 +7,8 @@
 
 
    <div class="card is-flex is-flex-direction-row is-justify-content-flex-end mb-4" style="box-shadow: none;">
-      <a href="{{ route('pediree.generatePDF', ['id' => $dog['id'],'type'=>'registration']) }}"><button class="button has-text-white has-background-warning">Registration Certificate</button></a>
-      <a href="{{ route('pediree.generatePDF', ['id' => $dog['id'],'type'=>'pedigree']) }}"><button class="button has-text-white has-background-warning">Pedigree Certificate</button></a>
+      <a target="_blank" href="{{ route('pediree.generatePDF', ['id' => $dog['id'],'type'=>'registration']) }}"><button class="button has-text-white has-background-warning">Registration Certificate</button></a>
+      <a target="_blank" href="{{ route('pediree.generatePDF', ['id' => $dog['id'],'type'=>'pedigree']) }}"><button class="button has-text-white has-background-warning">Pedigree Certificate</button></a>
    </div>
    <x-card-details-dog :dog="$dog"/>
 

@@ -139,7 +139,7 @@ class LoginRequest extends FormRequest
         // Verifica si el login es un email
         $isEmail = filter_var($this->input('login'), FILTER_VALIDATE_EMAIL);
        
-        $findUser = $isEmail ? UserProfile::where('email', $this->input('login'))->first(): User::where('username', $this->input('login'))->first();
+        $findUser = $isEmail ? UserProfile::where('email', $this->input('login'))->first(): User::where('user_name', $this->input('login'))->first();
     
         if (!$findUser) {
             throw ValidationException::withMessages([
@@ -148,7 +148,7 @@ class LoginRequest extends FormRequest
         }
         
         // Autenticación estándar con username o email en provider_auth
-        $credentials = $isEmail ? ['profile_id' => $findUser->profile_id, 'password' => $this->input('password')] : ['username' => $this->input('login'), 'password' => $this->input('password')];
+        $credentials = $isEmail ? ['profile_id' => $findUser->profile_id, 'password' => $this->input('password')] : ['user_name' => $this->input('login'), 'password' => $this->input('password')];
        
         // Auth default de laravel lo define siempre el modelo User o que debe exister model user
         if (!Auth::attempt($credentials, $this->boolean('remember'))) {
