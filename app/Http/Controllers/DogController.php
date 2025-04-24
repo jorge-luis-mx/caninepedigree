@@ -249,7 +249,7 @@ class DogController extends Controller
                     'male_dog_id' => $request->sex === 'M' ? $dog->dog_id : $parentRequest->dog_id,
                     'requester_id'=>$profile->profile_id,
                     'owner_id'=>$profile->profile_id,
-                    'status' => 'pending',
+                    'status' =>$role->name == 'admin'? 'completed':'pending',
                 ]);
 
                 // Eliminar solicitud previa
