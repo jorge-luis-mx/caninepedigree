@@ -54,13 +54,17 @@
       flex: 0 0 30%;
       max-width: 200px;
       img {
-        -o-object-fit: cover;
-        object-fit: cover;
-        border: 1px solid #fdaa2d;
-        transition: transform 0.2s;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        margin: 0 auto 10px;
-        display: block;
+        // -o-object-fit: cover;
+        // object-fit: cover;
+        // border: 1px solid #fdaa2d;
+        // transition: transform 0.2s;
+        // box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        // margin: 0 auto 10px;
+        // display: block;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
       }
     }
   
@@ -197,7 +201,7 @@ h2 {
 }
 
 .dog-info img {
-  width: 200px;
+  width: 100%;
   height: auto;
   object-fit: contain;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
@@ -209,6 +213,7 @@ h2 {
   gap: 10px 30px;
   font-size: 14px;
   color: #333;
+  margin-top: 20px;
 }
 
 .dog-details div {

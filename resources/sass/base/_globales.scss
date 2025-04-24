@@ -111,6 +111,14 @@ body{
     background-color: v.$colorPrimary;
     color: v.$colorBlanco;
 }
+.btn-general[disabled] {
+    background-color: #fba53e ;
+    color: #fff;
+    border-color: #fba53e ;
+    opacity: 0.65; /* opcional si quieres que se note deshabilitado */
+    pointer-events: none; /* asegura que no se pueda hacer clic */
+}
+
 .icon-save{
     background-color: aliceblue;
     color: white;

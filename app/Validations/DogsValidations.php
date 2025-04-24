@@ -11,20 +11,20 @@ class DogsValidations
       
         $rules = [
             'name' => 'required|regex:/^[\pL0-9\s\'\(\)]+$/u',  // Requerido, solo letras y espacios (incluye acentos)
-            'breed' => 'required|regex:/^[\pL\s\-]+$/u',  // Requerido, letras, números y espacios (incluye acentos)
-            'color' => 'required|regex:/^[\pL\s]+$/u',  // Requerido, solo letras y espacios
+            'breed' => 'required|regex:/^[\pL0-9\s\'\(\)]+$/u',  // Requerido, letras, números y espacios (incluye acentos)
+            'color' => 'required|regex:/^[\pL\s\-]+$/u',  // Requerido, solo letras y espacios
             'sex' => 'required|regex:/^[\pL\s]+$/u',  // Requerido, solo letras y espacios
             'birthdate' => 'required|date',  // Requerido, debe ser una fecha válida
         
             'sire_id' => 'nullable|integer',  // Puede ser vacío o un número entero
-            'sire' => 'required_without_all:sire_email,sire_id|nullable|regex:/^[\pL\s]+$/u',  
+            'sire' => 'required_without_all:sire_email,sire_id|nullable|regex:/^[\pL0-9\s\'\(\)]+$/u',  
             'sire_email' => 'nullable|email',  
             'descriptionSire' => 'nullable|regex:/^[\pL0-9\s]+$/u',  
         
             'dam_id' => 'nullable|integer',  // Puede ser vacío o un número entero
-            'dam' => 'required_without_all:dam_email,dam_id|nullable|regex:/^[\pL\s]+$/u',  
+            'dam' => 'required_without_all:dam_email,dam_id|nullable|regex:/^[\pL0-9\s\'\(\)]+$/u',  
             'dam_email' => 'nullable|email',  
-            'descriptionDam' => 'nullable|regex:/^[\pL0-9\s]+$/u',  
+            'descriptionDam' => 'nullable|regex:/^[\pL0-9\s\'\(\)]+$/u',  
         ];
         
         $messages = [

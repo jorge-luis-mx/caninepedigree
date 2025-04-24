@@ -47,7 +47,9 @@
       <tr>
          <td colspan="4">
                <div class="dog-info">
-                  <img src="https://placedog.net/400/400?id=1" alt="Dog Image">
+                  <div class="container-imagen">
+                     <img src="{{ asset('assets/img/dogs-image.jpg') }}" />
+                  </div>
                   <div class="dog-details">
                      <p><label>Name:</label> <span>{{$dog['name']}}</span></p>
                      <p><label>Owner:</label> <span>{{$dog['owner']['name']}}</span></p>

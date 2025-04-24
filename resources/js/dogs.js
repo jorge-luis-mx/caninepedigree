@@ -9,7 +9,7 @@ export  function dogs() {
         
         const handleSearch = (input, form, type) => {
             const regNo = input.value.trim();
-            if (regNo.length < 3) return console.log("Debe tener al menos 3 caracteres.");
+            
 
             fetch(`/dogs/search/${regNo}`)
                 .then(res => res.json())
@@ -75,7 +75,7 @@ export  function dogs() {
         };
         
         const selectDog = (id, name, form, type) => {
-            console.log("gola")
+            
             form.querySelector(`input[name="${type}"]`).value = name;
             form.querySelector(`input[name="${type}_id"]`).value = id;
             document.getElementById(`${type}Results`).style.display = 'none';

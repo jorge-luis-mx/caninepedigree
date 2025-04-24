@@ -34,7 +34,11 @@ trait Pedigree
                 // Información del dueño (propietario)
                 'owner' => $dog->currentOwner ? [
                     'id' => $dog->currentOwner->profile_id,  // Asumimos que currentOwner es la relación al modelo UserProfile
-                    'name' => $dog->currentOwner->name,  // Nombre del propietario
+                    'name' => $dog->currentOwner->first_name,  // Nombre del propietario
+                    'last_name'=>$dog->currentOwner->last_name,
+                    'middle_name'=>$dog->currentOwner->middle_name,
+                    'phone'=>$dog->currentOwner->phone,
+                    'address'=>$dog->currentOwner->address,
                     'email' => $dog->currentOwner->email,  // Correo electrónico del propietario (o cualquier otro campo necesario)
                 ] : null,  // Si no existe un dueño, se retorna null
 
