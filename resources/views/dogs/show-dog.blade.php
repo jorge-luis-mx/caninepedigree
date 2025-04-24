@@ -1,6 +1,6 @@
 <x-app-layout>
 
-   <h1 class="is-size-4">Dog Details</h1>
+   <h1 class="is-size-4">{{__('messages.main.detailsDogs.title')}}</h1>
 
    @if(!empty($dog))
 

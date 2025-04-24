@@ -21,7 +21,7 @@
    </div>
 
    <div class="container">
-        
+  
         @if(!empty($dogs))
         <!-- Campo de búsqueda -->
         <div id="pagination" class="mt-4 has-text-right"></div>

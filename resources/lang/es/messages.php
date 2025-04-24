@@ -24,8 +24,8 @@ return [
         'dogs'=>[
             'title'=>'',
             'btn'=>'Agregar un perro',
-            'search'=>'Buscar por número de registro o nombre',
-            'placeholder'=>'Buscar por número de registro o nombre...'
+            'search'=>'Introduce el nombre del perro',
+            'placeholder'=>'Introduce el nombre del perro...'
         ],
 
         'headerTable'=>[
@@ -65,17 +65,13 @@ return [
             'phone'=>'Numero de Telefono',
         ],
 
-        'dogs'=>[
-            'title'=>'Registrar un Nuevo Mascota',
-            'btn'=>'Agregar Mascota',
-        ],
-
         'detailsDogs'=>[
-            'title'=>'Registrar un Nuevo Mascota',
-            'subtitle'=>'Registrar un Nuevo Perro',
-            'name'=>'nombre',
+            'title'=>'Información del perro',
         ],
 
+        'pedigree'=>[
+            'title'=>'Pedigrí',
+        ],
     ]
 ];
 

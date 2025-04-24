@@ -24,7 +24,7 @@ return [
         'dogs'=>[
             'title'=>'',
             'btn'=>'Add a Dog',
-            'search'=>'Search by registration number or name',
+            'search'=>"Enter the Dog's Name",
             'placeholder'=>'Search by registration number or name...'
             
         ],
@@ -67,12 +67,11 @@ return [
 
         ],
 
-
-
         'detailsDogs'=>[
-            'title'=>'Register a New Dog',
-            'subtitle'=>'Register a New Dog',
-            'name'=>'name',
+            'title'=>'Dog Information',
+        ],
+        'pedigree'=>[
+            'title'=>'Pedidree',
         ],
 
     ]

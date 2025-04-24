@@ -1,5 +1,5 @@
 <x-app-layout>
-   <h1 class="is-size-4">Pedigree</h1>
+   <h1 class="is-size-4">{{__('messages.main.pedigree.title')}}</h1>
 
    <div class="container-search mt-5">
       <div class="field has-addons is-align-items-center">
