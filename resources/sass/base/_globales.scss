@@ -133,3 +133,23 @@ body{
     font-size: 12px;
     margin-top: 5px;
 }
+
+.input-error {
+    border: 1px solid red;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.85em;
+    margin-top: 2px;
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+select.input-error,
+textarea.input-error {
+    border: 1px solid red;
+}

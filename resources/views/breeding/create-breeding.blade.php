@@ -5,122 +5,103 @@
 
         <div class="column">
             <div class="card" style="box-shadow: none;">
-                <form action="{{ route('breeding.store') }}" method="post" id="breeding_form">
+                <form action="{{ route('breeding.store') }}" method="post" id="formBreeding">
                     @csrf
                     @method('post')
 
                     <div class="card-content">
 
-<div class="columns is-multiline">
-
-    <!-- My dog -->
-    <div class="column">
-        <div class="field mb-4">
-            <label class="label" for="my_dog_id">Select your registered dog</label>
-            <div class="control">
-                <div class="select is-fullwidth">
-                    <select name="my_dog_id" id="my_dog_id" required>
-                        <option value="" disabled selected>Choose your dog</option>
-                        @foreach($dogs as $dog)
-                            <option value="{{ $dog->dog_id }}">
-                                {{ $dog->name }} ({{ $dog['sex'] == 'M' ? 'Male' : 'Female' }})
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <p class="help">This is the dog you have registered in the system.</p>
-        </div>
-    </div>
-
-    <!-- Other dog's name -->
-    <div class="column">
-        <div class="field mb-4">
-            <label class="label" for="other_dog_name">Enter the IDDR number or the dog's name.</label>
-            <div class="control">
-                <input class="input" type="text" name="other_dog_name" id="other_dog_name" placeholder="E.g., Rocky, Luna, etc." required>
-            </div>
-            <p class="help">Enter the IDDR number or the dog's name from the other owner.</p>
-        </div>
-    </div>
-
-    <!-- Other owner's email -->
-    <div class="column">
-        <div class="field mb-4">
-            <label class="label" for="other_owner_email">Email of the other dog’s owner</label>
-            <div class="control">
-                <input class="input" type="email" name="other_owner_email" id="other_owner_email" placeholder="example@email.com" required>
-            </div>
-            <p class="help">We will contact this person to confirm the breeding request.</p>
-        </div>
-    </div>
-
-</div>
-
-<div class="columns is-multiline">
-    <!-- Comments -->
-    <div class="column">
-        <div class="field">
-            <label class="label" for="comments">Additional comments (optional)</label>
-            <div class="control">
-                <textarea class="textarea" id="comments" name="comments" placeholder="You can add notes, preferences, etc."></textarea>
-            </div>
-        </div>
-    </div>
-</div>
-
-</div>
-
-
-                    <!-- <div class="card-content">
-
                         <div class="columns is-multiline">
 
-                        <div class="column">
-                            <div class="field mb-4">
-                                <label class="label" for="my_dog_id">Tu perro</label>
-                                <div class="control">
-                                    <div class="select is-fullwidth">
-                                        <select name="my_dog_id" id="my_dog_id" required>
-                                            @foreach($dogs as $dog)
-                                                <option value="{{ $dog->dog_id }}">{{ $dog->name }} ({{ $dog['sex'] == 'M' ? 'Male' : 'Female' }})</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column">
-                            <div class="field mb-4">
-                                <label class="label" for="other_dog_name">Nombre del otro perro</label>
-                                <div class="control">
-                                    <input class="input" type="text" name="other_dog_name" id="other_dog_name" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column">
-                            <div class="field mb-4">
-                                <label class="label" for="other_owner_email">Email del dueño del otro perro</label>
-                                <div class="control">
-                                    <input class="input" type="email" name="other_owner_email" id="other_owner_email" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        </div>
-                        <div class="columns is-multiline">
+                            <!-- My dog -->
                             <div class="column">
                                 <div class="field">
-                                    <label class="label" for="comments">Comentarios (opcional)</label>
+                                    <label class="label" for="my_dog_id">Select your registered dog</label>
                                     <div class="control">
-                                        <textarea class="textarea" id="comments" name="comments" placeholder="Detalles adicionales..."></textarea>
+                                        <div class="select is-fullwidth">
+                                            <select name="my_dog_id" id="my_dog_id" required>
+                                                <option value=""  selected>Choose your dog</option>
+                                                @foreach($dogs as $dog)
+                                                    <option value="{{ $dog->dog_id }}">
+                                                        {{ $dog->name }} ({{ $dog['sex'] == 'M' ? 'Male' : 'Female' }})
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <small class="error-message"></small>
+                                        </div>
                                     </div>
+                                    
                                 </div>
                             </div>
+
+                            <div class="column">
+                                <div class="field searchDog">
+                                    <label class="label" for="sire">Enter the IDDR number or the dog's name</label>
+                                    <div class="is-flex align-items-center">
+                                        <div class="control has-icons-left"  style="width: 100%;">
+                                            <input
+                                            class="input dog"
+                                            type="text"
+                                            name="dog"
+                                            id="dog">
+                                            <!-- Campo oculto para el dog_id -->
+                                            <!-- <input type="text" class="input dog_id is-hidden" name="dog_id"> -->
+                                            <input type="hidden" class="dog_id" name="dog_id" id="dog_id">
+                                            <small class="error-message"></small>
+                                            <span class="icon is-small is-left">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                                                    <path fill="currentColor" d="M10 2a8 8 0 1 1-5.293 14.293l-3.147 3.147a1 1 0 0 1-1.415-1.414l3.147-3.147A8 8 0 0 1 10 2zm0 2a6 6 0 1 0 0 12A6 6 0 0 0 10 4z" />
+                                                </svg>
+                                            </span>
+                                            
+                                        </div>
+                                        <div class="btn-container">
+                                            <button type="button" class="button  btn-searchDog no-radius-left" style="background-color: #fdcd8a;color:#450b03;margin:0!important">
+                                                Search
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- Contenedor para mostrar los resultados de la búsqueda -->
+                                <div id="dogResults" style="display: none;"></div>
+
+                                <div class="is-hidden dogEmail">
+                                    <!-- Email sire dog -->
+                                    <div class="field">
+                                        <label class="label" for="dog_email">Enter Email</label>
+                                        <div class="control has-icons-left">
+                                            <input
+                                            class="input"
+                                            type="email"
+                                            name="dog_email"
+                                            id="dog_email"
+                                            placeholder="Enter Email">
+                                            <span class="icon is-small is-left">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                                                    <path fill="currentColor" d="M2 4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4zm2 0v1.6l8 4.8l8-4.8V4H4zm16 2.4l-8 4.8l-8-4.8V18h16V6.4z" />
+                                                </svg>
+                                            </span>
+                                            <small class="error-message" id="error-dog_email"></small>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <label class="label" for="description">{{__('messages.main.formDog.noteSire')}}</label>
+                                        <div class="control">
+                                            <textarea class="textarea" name="dogDetails" id="dogDetails"></textarea>
+                                            <small class="error-message"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+
                         </div>
-                    </div> -->
+
+
+                    </div>
+
 
                     <div class="field mt-4 ml-4 mb-4">
                         <div class="control">

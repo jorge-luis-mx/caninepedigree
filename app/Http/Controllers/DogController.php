@@ -83,21 +83,44 @@ class DogController extends Controller
     }
 
 
-    public function search($reg_no)
+    public function search($reg_no,$breedingSearch=null)
     {
 
+        $reg_no = trim($reg_no);
         $data = [
-            'status' => null,
+            'status' => 204,
             'message' => '',
-            'data'=>[],
+            'data' => [],
             'errors' => null,
         ];
 
-        $reg_no = trim($reg_no);
+        if ($breedingSearch!=null ) {
+        // Buscar el perro por número de registro
+            $dog = Dog::where('reg_no', $reg_no)->where('sex','M')->first();
+
+            if ($dog) {
+                $dog->dog_hash = md5($dog->dog_id);
+                $data['status'] = 200;
+                $data['data'] = $dog;
+            } else {
+                // Buscar por nombre si no se encontró por número de registro
+                $dogs = Dog::where('name', 'LIKE', "%$reg_no%")->where('sex','M')->get();
+
+                if ($dogs->isNotEmpty()) {
+                    $dogs->each(function ($dog) {
+                        $dog->dog_hash = md5($dog->dog_id);
+                    });
+
+                    $data['status'] = 200;
+                    $data['data'] = $dogs;
+                }
+            }
+            return response()->json($data);
+        }
 
         // Buscar el perro por número de registro
         $dog = Dog::where('reg_no', $reg_no)->first();
-        
+
         if ($dog) {
             $dog->dog_hash = md5($dog->dog_id);
             $data['status'] = 200;
@@ -105,21 +128,16 @@ class DogController extends Controller
         } else {
             // Buscar por nombre si no se encontró por número de registro
             $dogs = Dog::where('name', 'LIKE', "%$reg_no%")->get();
-           
+
             if ($dogs->isNotEmpty()) {
-                foreach ($dogs as $dog) {
+                $dogs->each(function ($dog) {
                     $dog->dog_hash = md5($dog->dog_id);
-                }
+                });
+
                 $data['status'] = 200;
                 $data['data'] = $dogs;
-
-            }else{
-                $data['status'] = 204;
             }
         }
-        
-
-        
         return response()->json($data);
     }
 
@@ -213,7 +231,7 @@ class DogController extends Controller
                     'url'=>'http://www.caninepedigree-dev.com/register',
                     'dog'=>$dog
                 ];
-                Mail::to($sireEmail)->send(new sendEmailDogs($datos));
+                //Mail::to($sireEmail)->send(new sendEmailDogs($datos));
     
             }
 
@@ -229,7 +247,7 @@ class DogController extends Controller
                     'url'=>'http://www.caninepedigree-dev.com/register',
                     'dog'=>$dog
                 ];
-                Mail::to($damEmail)->send(new sendEmailDogs($datos));
+                //Mail::to($damEmail)->send(new sendEmailDogs($datos));
             }
 
             $dog->dog_id_md = md5($dog->dog_id);

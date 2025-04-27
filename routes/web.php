@@ -84,7 +84,7 @@ Route::middleware('auth')->group(function () {
     // Route::put('/dogs/{dog}', [DogController::class, 'update'])->name('dogs.update'); 
     
     //serch
-    Route::get('/dogs/search/{reg_no}', [DogController::class, 'search'])->name('dogs.search');
+    Route::get('/dogs/search/{reg_no}/{breedingSearch?}', [DogController::class, 'search'])->name('dogs.search');
 
     //payments
     Route::get('/payments/pay/{id}', [PaymentController::class,'pay']);

@@ -1,33 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Invitación para Cruza</title>
+    <title>Solicitud de Cruza</title>
 </head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-    <h2>¡Hola!</h2>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px;">
+    <h2 style="color: #4CAF50;">¡Hola!</h2>
+
     @php
-
         $dog = $datos['data'];
-
     @endphp
 
-    <p>Te han invitado a participar en una cruza de perros a través de nuestra plataforma.</p>
+    <p>Has recibido una solicitud para participar en una cruza de perros a través de nuestra plataforma.</p>
 
     <p>
-        El perro <strong>{{ $dog['dogName'] }}</strong> ha sido propuesto para una cruza con <strong>{{ $dog['other_dog_name'] }}</strong>.
+        La perra <strong>{{ $dog['dogName'] }}</strong> está interesada en cruzarse con tu perro.
     </p>
 
+    <p><strong>Nota:</strong> Actualmente solo contamos con el nombre de la perra que ha solicitado la cruza. Para avanzar con el proceso, es necesario que registres a tu perro en la plataforma.</p>
+    <p><strong>. Solo falta que registres a tu perro para completar la solicitud de cruza.</p>
     <p>
-        Para continuar con el proceso, por favor registra a tu perro en el sistema haciendo clic en el siguiente enlace: <a href="{{ $dog['url'] }}">Haz clic aquí para registrar a tu perro</a>
+        Por favor registra a tu perro haciendo clic en el siguiente botón:
     </p>
 
-    <p>
-
+    <p style="text-align: center;">
+        <a href="{{ $dog['url'] }}" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Registrar a mi perro</a>
     </p>
 
-    <p>Gracias por usar nuestro sistema. Si tienes preguntas, no dudes en contactarnos.</p>
+    <p>Si ya has registrado a tu perro, puedes ignorar este mensaje.</p>
 
-    <p>Saludos,<br><strong>El equipo de Cruzas</strong></p>
+    <p>Gracias por confiar en nuestra plataforma. Si tienes alguna pregunta o necesitas ayuda, estamos aquí para asistirte.</p>
+
+    <p style="margin-top: 30px;">Saludos cordiales,<br><strong>El equipo de Cruzas</strong></p>
 </body>
 </html>

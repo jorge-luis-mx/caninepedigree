@@ -3,204 +3,257 @@ import { Utils } from './utils.js';
 export  function breedingRequest() {
 
 
-   document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", () => {
 
-      const saveBtn = document.querySelector(".saveBreedingRequest");
-      if (saveBtn) {
-         saveBtn.addEventListener("click", e => {
-            e.preventDefault();
+        const utils = new Utils();
+        const formBreeding = document.getElementById('formBreeding');
+        let selectingDog = false;
 
-            const form = document.getElementById("breeding_form");
-            const formData = new FormData(form);
-            const errors = validateBreedingForm(formData);
-            if (errors.length > 0) {
-               return;
-            }
+        const handleSearch = (input, form, type) => {
 
-            // Convertir FormData a objeto plano
-            const data = {};
-            formData.forEach((value, key) => {
-                  data[key] = value;
-            });
+            const regNo = input.value.trim();
 
-            objets.saveBreedingRequest(e, form, data);
-            
-         });
-      }
+            fetch(`/dogs/search/${regNo}/breeding`)
+                .then(res => res.json())
+                .then(data => {
+                    
+                    if (data.status === 200) {
+                        showResults(data.data, form, type);
+                    }else{
+                        Swal.fire({
+                            title: 'No results found',
+                            text: 'Would you like to search in another way?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes',
+                            cancelButtonText: 'No',
+                            backdrop: true,
+                            allowOutsideClick: false
+                        }).then(result => {
+                            if (!result.isConfirmed) {
+                                
+                                form.querySelector(`.${type}Email`).classList.remove('is-hidden');
+                                form.querySelector(`.search${capitalize(type)}`).classList.add('is-hidden');
+                            }
+                        });
 
-   });
+                    }
+                })
+                .catch(err => console.error(`Error al buscar ${type}:`, err));
+        };
+        
+        if (formBreeding) {
 
-
-   const objets = {
-
-
-      saveBreedingRequest(e, form, data) {
-
-         fetch(form.action, {
-            method: form.method.toUpperCase(),
-            headers: {
-                "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value,
-                "Content-Type": "application/json",
-                "X-Requested-With": "XMLHttpRequest"
-            },
-            body: JSON.stringify(data)
-        })
-        .then(res => res.json())
-
-        .then(result => {
-
-        // Limpiar errores previos
-        clearErrors(form);
-         if (result.status === 'success') {
-            Swal.fire({
-                title: 'Breeding request sent!',
-                text: 'Your request has been submitted successfully.',
-                icon: 'success',
-                confirmButtonText: 'OK',
-                allowOutsideClick: false,
-                backdrop: true
-            });
-            form.reset();
-         } else if (result.errors) {
-            
-            showErrors(form, result.errors);
-         }
-
-        })
-        .catch(err => {
-            console.error("Error al enviar el formulario:", err);
-            alert("An error occurred. Please try again.");
-        });
-
-      }
-      
-   }
-
-   function validateBreedingForm(formData) {
-      const errors = [];
-      const fields = {
-          other_dog_name: {
-              el: document.querySelector('[name="other_dog_name"]'),
-              error: "The other dog's name is required.",
-          },
-          other_owner_email: {
-              el: document.querySelector('[name="other_owner_email"]'),
-              error: "The other owner's email is invalid.",
-          },
-          comments: {
-              el: document.querySelector('[name="comments"]'),
-              error: "Comments may only contain letters, numbers, spaces, and basic punctuation.",
-          },
-      };
-  
-      // Clear previous errors
-      Object.values(fields).forEach(({ el }) => {
-          if (el) {
-              el.classList.remove("input-error");
-              const errorEl = el.nextElementSibling;
-              if (errorEl && errorEl.classList.contains("error-msg")) {
-                  errorEl.remove();
-              }
-          }
-      });
-  
-      // Get field values
-      const other_dog_name = formData.get("other_dog_name")?.trim();
-      const other_owner_email = formData.get("other_owner_email")?.trim();
-      const comments = formData.get("comments")?.trim();
-  
-      // Validate name
-      if (!other_dog_name) {
-          showError(fields.other_dog_name.el, fields.other_dog_name.error);
-          errors.push(fields.other_dog_name.error);
-      }
-  
-      // Validate email
-      if (
-          !other_owner_email ||
-          !/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/.test(other_owner_email)
-      ) {
-          showError(fields.other_owner_email.el, fields.other_owner_email.error);
-          errors.push(fields.other_owner_email.error);
-      }
-  
-      // Validate comments if filled
-      if (comments) {
-          const pattern = /^[\p{L}\d\s.,!?¡¿()\-'"°áéíóúÁÉÍÓÚñÑ]+$/u;
-          if (!pattern.test(comments)) {
-              showError(fields.comments.el, fields.comments.error);
-              errors.push(fields.comments.error);
-          }
-      }
-  
-      return errors;
-  }
-  
-  function showError(input, message) {
-      if (!input) return;
-  
-      input.classList.add("input-error");
-  
-      const errorEl = document.createElement("div");
-      errorEl.classList.add("error-msg");
-      errorEl.style.color = "red";
-      errorEl.style.fontSize = "0.875rem";
-      errorEl.textContent = message;
-  
-      if (!input.nextElementSibling || !input.nextElementSibling.classList.contains("error-msg")) {
-          input.insertAdjacentElement("afterend", errorEl);
-      }
-  
-      input.addEventListener("input", () => {
-          input.classList.remove("input-error");
-          const nextEl = input.nextElementSibling;
-          if (nextEl && nextEl.classList.contains("error-msg")) {
-              nextEl.remove();
-          }
-      }, { once: true });
-  }
-  
-
-    // Función para mostrar errores en los inputs
-    function showErrors(form, errors) {
-        Object.keys(errors).forEach(field => {
-            let input = form.querySelector(`[name="${field}"]`);
-            if (input) {
-                input.classList.add("error"); // Agregar borde rojo
     
-                // Verificar si ya existe un mensaje de error
-                let errorMessage = input.nextElementSibling;
-                if (!errorMessage || !errorMessage.classList.contains("error-message")) {
-                    errorMessage = document.createElement("div");
-                    errorMessage.classList.add("error-message");
-                    input.after(errorMessage);
+            formBreeding.addEventListener('keydown', e => {
+                const target = e.target;
+                if (target.classList.contains('dog') && e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSearch(target, target.closest('form'), 'dog');
                 }
-    
-                errorMessage.textContent = errors[field][0]; // Mostrar el primer mensaje de error
+            });
+
+            // Agregar eventos click a los botones Search Sire y Search Dam
+            const btnDog = formBreeding.querySelector('.btn-searchDog');
+            if (btnDog) {
+                btnDog.addEventListener('click', () => {
+                    selectingDog = true; // <- evita doble ejecución desde blur
+                    const inputDog = formBreeding.querySelector('input.dog');
+                    if (inputDog) {
+                        handleSearch(inputDog, inputDog.closest('form'), 'dog');
+                    }
+                });
             }
-        });
+            
+        }
+
+        const showResults = (dogs, form, type) => {
+            
+            const container = document.getElementById(`dogResults`);
+            container.innerHTML = '';
+            
+
+            if (!Array.isArray(dogs)) dogs = [dogs];
+        
+            if (!dogs.length) {
+                container.innerHTML = '<div class="no-results">No dogs found.</div>';
+                container.style.display = 'block';
+                return;
+            }
+            
+            dogs.forEach(dog => {
+                const item = document.createElement('div');
+                item.className = 'result-item';
+                item.textContent = dog.name;
+                item.dataset.dogId = dog.dog_id;
+        
+                // Maneja el clic correctamente
+                item.addEventListener('mousedown', () => {
+                    selectingDog = true;
+                    // Usamos 'mousedown' en lugar de 'click' para que se registre antes de que el input pierda el foco
+                    selectDog(dog.dog_id, dog.name, form, type);
+                    
+                });
+        
+                container.appendChild(item);
+            });
+            container.style.display = 'block';
+            
+        };
+        
+        const selectDog = (id, name, form, type) => {
+            console.log(type);
+            form.querySelector(`input[name="${type}"]`).value = name;
+            form.querySelector(`input[name="${type}_id"]`).value = id;
+            document.getElementById(`${type}Results`).style.display = 'none';
+        };
+        const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
+
+
+
+        const saveBtn = document.querySelector(".saveBreedingRequest");
+        if (saveBtn) {
+            saveBtn.addEventListener("click", e => {
+                e.preventDefault();
+
+                const form = document.getElementById("formBreeding");
+                const serializedData  = utils.serializeForm(form);
+                const errors = validateDogForm(serializedData);
+
+                if (errors.length === 0) {
+
+                    objets.saveBreedingRequest(e, form, serializedData);
+                }
+
+
+               
+                
+            });
+        }
+
+    });
+
+
+    const objets = {
+
+         saveBreedingRequest(e, form, serializedData) {
+
+                fetch(form.action, {
+                    method: form.method.toUpperCase(),
+                    headers: {
+                        "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value,
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    body: JSON.stringify(serializedData)
+                })
+                .then(res => res.json())
+
+                .then(result => {
+
+                // Limpiar errores previos
+                // clearErrors(form);
+                if (result.status === 'success') {
+                    Swal.fire({
+                        title: 'Breeding request sent!',
+                        text: 'Your request has been submitted successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        allowOutsideClick: false,
+                        backdrop: true
+                    });
+                    form.reset();
+                } else if (result.errors) {
+                    
+                    showErrors(form, result.errors);
+                }
+
+                })
+                .catch(err => {
+                    console.error("Error al enviar el formulario:", err);
+                    alert("An error occurred. Please try again.");
+                });
+
+        }
+        
     }
+
+
+    function validateDogForm(serializedData) {
+        let hasError = false;
     
-    // Función para limpiar errores cuando el usuario escribe
-    function clearErrors(form) {
-        form.querySelectorAll(".error").forEach(input => {
-            input.classList.remove("error");
-        });
-
-        form.querySelectorAll(".error-message").forEach(msg => {
-            msg.remove();
-        });
-    }
-
-    // Agregar eventos a los inputs para limpiar errores cuando el usuario escribe
-    document.addEventListener("input", function(e) {
-        if (e.target.classList.contains("error")) {
-            e.target.classList.remove("error");
-            let errorMessage = e.target.nextElementSibling;
-            if (errorMessage && errorMessage.classList.contains("error-message")) {
-                errorMessage.remove();
+        const fields = ['my_dog_id', 'dog_id', 'dogDetails', 'dog_email'];
+        fields.forEach(id => clearError(id)); // Limpia antes de validar
+    
+        const dog_id = serializedData.dog_id?.trim() || '';
+        const dogDetails = serializedData.dogDetails?.trim() || '';
+        const dog_email = serializedData.dog_email?.trim() || '';
+        const my_dog_id = serializedData.my_dog_id?.trim() || '';
+    
+        if (!my_dog_id) {
+            showError('my_dog_id', 'Debe seleccionar su propio perro.');
+            hasError = true;
+        }
+    
+        if (!dog_id) {
+            showError('dog_id', 'Buscar el perro que desee cruzar');
+    
+            if (!dogDetails) {
+                showError('dogDetails', 'Debe completar los detalles del perro.');
+                hasError = true;
+            }
+            if (!dog_email) {
+                showError('dog_email', 'Debe completar el email del dueño del otro perro.');
+                hasError = true;
+            } else if (!validateEmail(dog_email)) {
+                showError('dog_email', 'El correo del dueño no es válido.');
+                hasError = true;
             }
         }
-    });
+    
+        addRealTimeValidation(fields); // 👉 importante: agregamos el evento aquí
+    
+        return hasError ? ['Hay errores'] : [];
+    }
+    
+    function showError(id, message) {
+        const input = document.getElementById(id);
+        const error = input.parentElement.querySelector('.error-message');
+    
+        input.classList.add('input-error');
+        error.textContent = message;
+    }
+    
+    function clearError(id) {
+        const input = document.getElementById(id);
+        const error = input.parentElement.querySelector('.error-message');
+    
+        input.classList.remove('input-error');
+        if (error) {
+            error.textContent = '';
+        }
+    }
+    
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+    
+    function addRealTimeValidation(fields) {
+        fields.forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener('input', function handler() {
+                    if (input.value.trim() !== '') {
+                        clearError(id);
+                        input.removeEventListener('input', handler); // 🔥 Solo escucha una vez
+                    }
+                });
+            }
+        });
+    }
+    
+
+
    
 }
