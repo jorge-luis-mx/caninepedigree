@@ -108,9 +108,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/breeding/request', [BreedingRequestController::class, 'index'])->name('breeding.index');
     Route::get('/breeding/request/create', [BreedingRequestController::class, 'create'])->name('breeding.create');
     Route::post('/breeding/request', [BreedingRequestController::class, 'store'])->name('breeding.store');
-
+    Route::post('/breeding/complete/{id}', [BreedingRequestController::class, 'complete'])->name('breeding.complete');
 
     
+    // Listar completadas
+    Route::get('/breeding/completed', [BreedingRequestController::class, 'listCompleted'])->name('breeding.listCompleted');
+    // Formulario de subir fotos para una cruza específica
+    Route::get('/breeding/{breeding}/upload-photos', [BreedingRequestController::class, 'uploadPhotos'])->name('breeding.uploadPhotos');
+    // Guardar fotos
+    Route::post('/breeding/{breeding}/store-photos', [BreedingRequestController::class, 'storePhotos'])->name('breeding.storePhotos');
+
+
 
 });
 

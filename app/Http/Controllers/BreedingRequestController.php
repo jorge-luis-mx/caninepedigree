@@ -31,13 +31,51 @@ class BreedingRequestController extends Controller
         $user = auth()->user();
         $profile = $user->userprofile;
 
-        $breedings = BreedingRequest::where('requester_id', $profile->profile_id)
+        // $breedings = BreedingRequest::where('requester_id', $profile->profile_id)
+        // ->where('status', 'pending')
+        // ->orderBy('created_at', 'desc')
+        // ->get();
+
+        // foreach ($breedings as $key => $breeding) {
+
+        // }
+
+        // $breedings = BreedingRequest::where('requester_id', $profile->profile_id)
+        // ->where('status', 'pending')
+        // ->orderBy('created_at', 'desc')
+        // ->with(['femaleDog', 'maleDog']) // Cargamos la perra y el perro
+        // ->get();
+
+
+        // return view('breeding.list-breeding',compact('breedings'));
+
+        $breedings = BreedingRequest::whereHas('maleDog', function($query) use ($profile) {
+            $query->where('owner_id', $profile->profile_id);
+        })
         ->where('status', 'pending')
         ->orderBy('created_at', 'desc')
+        ->with(['femaleDog', 'maleDog']) // Carga la perra y el perro
         ->get();
 
-        return view('breeding.list-breeding',compact('breedings'));
+        return view('breeding.list-breeding', compact('breedings'));
+        
 
+    }
+
+    public function complete($id)
+    {
+        $breeding = BreedingRequest::findOrFail($id);
+
+
+        if ($breeding->maleDog->current_owner_id !== auth()->user()->userprofile->profile_id) {
+
+            return response()->json(['success' => false, 'message' => 'No autorizado']);
+        }
+    
+        $breeding->status = 'completed';
+        $breeding->save();
+    
+        return response()->json(['success' => true]);
     }
 
     /**
@@ -137,6 +175,7 @@ class BreedingRequestController extends Controller
                     'female_dog_id' => $myDog->sex === 'F' ? $myDog->dog_id : $otherDog->dog_id,
                     'male_dog_id' => $myDog->sex === 'M' ? $myDog->dog_id : $otherDog->dog_id,
                     'requester_id'=>$userProfile->profile_id,
+                    'parent_type'=>$myDog->sex === 'M'? 'sire':'dam',
                     'owner_id'=> $owner->profile_id,
                     'status' => 'pending',
                 ]);
@@ -345,4 +384,61 @@ class BreedingRequestController extends Controller
     {
         //
     }
+
+
+    // Mostrar la lista de cruzas completadas
+    public function listCompleted()
+    {
+        $user = auth()->user();
+        $profile = $user->userprofile;
+
+        $breedings = BreedingRequest::whereHas('maleDog', function($query) use ($profile) {
+                $query->where('owner_id', $profile->profile_id);
+            })
+            ->where('status', 'completed')
+            ->with(['femaleDog', 'maleDog'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('breeding.completed', compact('breedings'));
+    }
+
+    // Mostrar formulario para subir fotos de una cruza
+    public function uploadPhotos($breedingId)
+    {
+        $breeding = BreedingRequest::findOrFail($breedingId);
+
+        
+        // Verificación de dueño
+        if ($breeding->maleDog->current_owner_id !== auth()->user()->userprofile->profile_id) {
+            abort(403, 'No autorizado');
+        }
+
+        return view('breeding.upload-photos', compact('breeding'));
+    }
+
+    // Guardar las fotos
+    public function storePhotos(Request $request, $breedingId)
+    {
+        $breeding = BreedingRequest::findOrFail($breedingId);
+
+        if ($breeding->maleDog->current_owner_id !== auth()->user()->userprofile->profile_id) {
+            abort(403, 'No autorizado');
+        }
+
+        $request->validate([
+            'photos.*' => 'required|image|max:2048'
+        ]);
+
+        foreach ($request->file('photos') as $photo) {
+            $path = $photo->store('breeding_photos', 'public');
+
+            // Aquí puedes guardar en tabla breeding_photos si quieres
+        }
+
+        return redirect()->route('breeding.listCompleted')->with('success', 'Fotos subidas correctamente.');
+    }
+
+
+
 }
