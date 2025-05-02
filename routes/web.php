@@ -29,7 +29,7 @@ use App\Http\Controllers\PedigreegController;
 use App\Http\Controllers\AdminDogsController;
 
 
-
+use App\Http\Controllers\PuppyController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -119,6 +119,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/breeding/{breeding}/store-photos', [BreedingRequestController::class, 'storePhotos'])->name('breeding.storePhotos');
 
 
+    
+    Route::get('/register-puppies', [PuppyController::class, 'register'])->name('puppies.register');
+    Route::post('/breeding/{breeding}/store-puppies', [PuppyController::class, 'store'])->name('puppies.store');
+
+
+    Route::get('/puppies/register', [PuppyController::class, 'create'])->name('puppies.create');
+    Route::post('/puppies/validate-breeding', [PuppyController::class, 'validateBreeding'])->name('puppies.validate');
+    Route::post('/puppies/register', [PuppyController::class, 'store'])->name('puppies.store');
+    
 
 });
 
