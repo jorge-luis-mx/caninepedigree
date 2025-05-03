@@ -77,7 +77,7 @@ class AdminDogsController extends Controller
                 'dam_id' => null,
                 'breeder_id' => $profile->profile_id,
                 'current_owner_id' => $profile->profile_id,
-                'status' => 'completed'
+                'status' => 'exempt'
             ]);
 
             $dog->save();

@@ -51,7 +51,7 @@ class DogController extends Controller
             if ($profile_id == $profile->profile_id) {
                 
                 $dogs = Dog::where('dogs.current_owner_id', $profile_id)
-                ->whereIn('dogs.status', ['completed'])
+                ->whereIn('dogs.status', ['completed','exempt'])
                 ->leftJoin('dog_payments', 'dogs.dog_id', '=', 'dog_payments.dog_id')
                 ->leftJoin('payments', 'dog_payments.payment_id', '=', 'payments.payment_id')
                 ->select(
@@ -96,7 +96,7 @@ class DogController extends Controller
 
         if ($breedingSearch!=null ) {
         // Buscar el perro por número de registro
-            $dog = Dog::where('reg_no', $reg_no)->where('sex','M')->first();
+            $dog = Dog::where('reg_no', $reg_no)->where('sex','M')->whereIn('status', ['completed','exempt'])->first();
 
             if ($dog) {
                 $dog->dog_hash = md5($dog->dog_id);
@@ -104,7 +104,7 @@ class DogController extends Controller
                 $data['data'] = $dog;
             } else {
                 // Buscar por nombre si no se encontró por número de registro
-                $dogs = Dog::where('name', 'LIKE', "%$reg_no%")->where('sex','M')->get();
+                $dogs = Dog::where('name', 'LIKE', "%$reg_no%")->where('sex','M')->whereIn('status', ['completed','exempt'])->get();
 
                 if ($dogs->isNotEmpty()) {
                     $dogs->each(function ($dog) {
@@ -119,7 +119,7 @@ class DogController extends Controller
         }
 
         // Buscar el perro por número de registro
-        $dog = Dog::where('reg_no', $reg_no)->first();
+        $dog = Dog::where('reg_no', $reg_no)->whereIn('status', ['completed','exempt'])->first();
 
         if ($dog) {
             $dog->dog_hash = md5($dog->dog_id);
@@ -127,7 +127,7 @@ class DogController extends Controller
             $data['data'] = $dog;
         } else {
             // Buscar por nombre si no se encontró por número de registro
-            $dogs = Dog::where('name', 'LIKE', "%$reg_no%")->get();
+            $dogs = Dog::where('name', 'LIKE', "%$reg_no%")->whereIn('status', ['completed','exempt'])->get();
 
             if ($dogs->isNotEmpty()) {
                 $dogs->each(function ($dog) {
@@ -199,7 +199,7 @@ class DogController extends Controller
                 'dam_id' => $dam_id,
                 'breeder_id' => $owner,
                 'current_owner_id' => $owner,
-                'status'=>$role->name == 'admin'? 'completed':'pending'
+                'status'=>$role->name == 'admin'? 'exempt':'pending'
             ]);
 
             $dog->save();

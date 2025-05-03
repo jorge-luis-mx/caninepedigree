@@ -25,9 +25,9 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(): View
+    public function create(?string $role = null): View
     {
-        return view('auth.register');
+        return view('auth.register',['role' => $role]);
     }
 
     /**
@@ -39,13 +39,14 @@ class RegisteredUserController extends Controller
     {
 
        
-        $request->validate([
+        $validated = $request->validate([
+            'role' => ['nullable', 'string', 'in:admin', 'regex:/^\S+$/'],
             'name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:user_profiles,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-        
+        $role = $validated['role'] ?? null;
         $text = preg_split('/\s+/', $request->last_name);
 
 
@@ -65,7 +66,7 @@ class RegisteredUserController extends Controller
             'profile_id' => $userProfile['profile_id'],  // Relacionar con `user_profile`
             'user_name' => $username,
             'password' => Hash::make($request->password),
-            'role_id'=>1,
+            'role_id'=>$role === 'admin'? 1: 2,
             'status' => 1, 
         ]);
     

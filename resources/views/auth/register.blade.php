@@ -47,6 +47,12 @@
                     <x-text-input id="password_confirmation" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" type="password" name="password_confirmation" required autocomplete="new-password" />
                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                 </div>
+                <!-- role -->
+                <div class="mb-1">
+
+                    <x-text-input id="role" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" type="hidden" name="role" value="{{ old('role', $role) }}"/>
+
+                </div>
 
                 <div class="flex items-center justify-between mt-4">
                     <a class="text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
