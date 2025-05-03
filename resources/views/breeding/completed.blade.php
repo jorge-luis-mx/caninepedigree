@@ -3,7 +3,7 @@
 <div class="container">
     <h2 class="title">Cruzas Completadas</h2>
 
-    <input id="searchInput" class="input is-small" type="text" placeholder="Buscar por nombre..." onkeyup="filterBreedings()">
+    <input id="searchInput" class="input" type="text" placeholder="Buscar por nombre..." onkeyup="filterBreedings()">
 
     <table class="table is-striped is-fullwidth mt-4">
         <thead>
@@ -42,7 +42,7 @@
                 <td>${breeding.female_dog.name}</td>
                 <td>${breeding.male_dog.name}</td>
                 <td>
-                    <a href="/breeding/${breeding.request_id}/upload-photos" class="button is-link is-small">
+                    <a href="/breeding/${breeding.request_id}/upload-photos" class="button is-link is-small has-text-white">
                         Subir Fotos de Cruza
                     </a>
                 </td>

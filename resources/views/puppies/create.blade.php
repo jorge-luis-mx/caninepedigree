@@ -74,7 +74,7 @@
                      <div id="puppyNamesContainer" class="mt-4"></div>
                   </div>
                   <div class="field mt-4">
-                     <button class="button savePuppies is-primary">Save Puppies</button>
+                     <button class="button savePuppies is-primary btn-general">Save Puppies</button>
                   </div>
                </form>
 

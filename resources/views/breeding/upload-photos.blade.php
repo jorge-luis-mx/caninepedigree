@@ -13,7 +13,7 @@
          </div>
 
          <div class="field mt-4">
-               <button type="submit" class="button is-success">Subir Fotos</button>
+               <button type="submit" class="button btn-general">Subir Fotos</button>
          </div>
       </form>
    </div>

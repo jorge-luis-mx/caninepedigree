@@ -11,7 +11,7 @@
 
         <h2 class="title">Solicitudes de Cruza Pendientes</h2>
 
-        <input id="searchInput" class="input is-small" type="text" placeholder="Buscar por nombre..." onkeyup="filterBreedings()">
+        <input id="searchInput" class="input " type="text" placeholder="Buscar por nombre..." onkeyup="filterBreedings()">
 
         <table class="table is-striped is-fullwidth mt-4">
             <thead>
