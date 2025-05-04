@@ -39,22 +39,18 @@ class DogController extends Controller
         $profile = $user->userprofile;
 
         $role = $user->role;
-        $permissions = $role->permissions; 
-        
-
+        $permissions = $role->permissions->where('pivot.status', 1);
         // $permissions = $user->role->permissions; // Permisos del rol del usuario
         // $hasPermission = $permissions->contains('name', 'create_post');
 
-       
-        if ($role->name == 'admin' || $role->name =='customer') {
+        $arrayRole =['Admin'];
+        
+        if (in_array($role->name, $arrayRole)) {
 
-            if ($profile_id == $profile->profile_id) {
-                
-                $dogs = Dog::where('dogs.current_owner_id', $profile_id)
-                ->whereIn('dogs.status', ['completed','exempt'])
-                ->leftJoin('dog_payments', 'dogs.dog_id', '=', 'dog_payments.dog_id')
-                ->leftJoin('payments', 'dog_payments.payment_id', '=', 'payments.payment_id')
-                ->select(
+            $dogs = Dog::whereIn('dogs.status', ['completed','exempt'])
+            ->leftJoin('dog_payments', 'dogs.dog_id', '=', 'dog_payments.dog_id')
+            ->leftJoin('payments', 'dog_payments.payment_id', '=', 'payments.payment_id')
+            ->select(
                     'dogs.dog_id',
                     DB::raw('MD5(dogs.dog_id) as dog_hash'),
                     'dogs.name',
@@ -62,16 +58,32 @@ class DogController extends Controller
                     DB::raw('COALESCE(SUM(payments.amount), 0) as total_paid'),
                     DB::raw('100 - COALESCE(SUM(payments.amount), 0) as amount_due')
                 )
-                ->groupBy('dogs.dog_id', 'dogs.name', 'dogs.breed', 'dogs.color', 'dogs.sex', 'dogs.status')
-                ->get();
+            ->groupBy('dogs.dog_id', 'dogs.name', 'dogs.breed', 'dogs.color', 'dogs.sex', 'dogs.status')
+            ->get();
 
-                
-            }
-            
+            return view('dogs.list-dogs',compact('dogs','role','permissions'));
         }
-  
-       
-        return view('dogs.list-dogs',compact('dogs','role'));
+
+        $arrayOwner = ['Admin','Employee'];
+        $ownerProfile = UserProfile::find(1);
+        $owner = in_array($role->name, $arrayOwner) ? $ownerProfile->profile_id : $profile_id;
+
+        $dogs = Dog::where('dogs.current_owner_id', $owner)
+            ->whereIn('dogs.status', ['completed','exempt'])
+            ->leftJoin('dog_payments', 'dogs.dog_id', '=', 'dog_payments.dog_id')
+            ->leftJoin('payments', 'dog_payments.payment_id', '=', 'payments.payment_id')
+            ->select(
+                    'dogs.dog_id',
+                    DB::raw('MD5(dogs.dog_id) as dog_hash'),
+                    'dogs.name',
+                    'dogs.status',
+                    DB::raw('COALESCE(SUM(payments.amount), 0) as total_paid'),
+                    DB::raw('100 - COALESCE(SUM(payments.amount), 0) as amount_due')
+                )
+            ->groupBy('dogs.dog_id', 'dogs.name', 'dogs.breed', 'dogs.color', 'dogs.sex', 'dogs.status')
+            ->get();
+
+        return view('dogs.list-dogs',compact('dogs','role','permissions'));
     }
 
     /**
@@ -169,14 +181,16 @@ class DogController extends Controller
     
         $user = auth()->user();
         $profile = $user->userprofile;
+        
+
         $role = $user->role;
         $permissions = $role->permissions; 
+        
+        $arrayRole =['Employee','Admin'];
+        
+        $ownerProfile = UserProfile::find(1);
+        $owner = in_array($role->name, $arrayRole) ? $ownerProfile->profile_id : $profile->profile_id;
 
-        if ($role->name == 'admin' || $role->name =='customer') {
-
-            $owner = $user->profile_id == $profile->profile_id ? $profile->profile_id: null;
-            
-        }
 
         $sire_id = (isset($validatedData['sire_id']) && !empty($validatedData['sire_id']) && $validatedData['sire_id'] != null) ? $validatedData['sire_id'] : null;
         $dam_id = (isset($validatedData['dam_id']) && !empty($validatedData['dam_id']) && $validatedData['dam_id'] != null) ? $validatedData['dam_id'] : null;
@@ -186,6 +200,8 @@ class DogController extends Controller
         $regnum = $this->generarCodigoRegistro();
         
         try {
+
+            $dogStatus = ['Admin','Administrator','Employee'];
             $text = preg_split('/\s+/', $profile->lastName);
             // Crea el registro sin reg_no
             $dog = Dog::create([
@@ -199,7 +215,7 @@ class DogController extends Controller
                 'dam_id' => $dam_id,
                 'breeder_id' => $owner,
                 'current_owner_id' => $owner,
-                'status'=>$role->name == 'admin'? 'exempt':'pending'
+                'status'=> in_array($role->name, $dogStatus ) ? 'exempt':'pending'
             ]);
 
             $dog->save();
@@ -267,7 +283,7 @@ class DogController extends Controller
                     'male_dog_id' => $request->sex === 'M' ? $dog->dog_id : $parentRequest->dog_id,
                     'requester_id'=>$profile->profile_id,
                     'owner_id'=>$profile->profile_id,
-                    'status' =>$role->name == 'admin'? 'completed':'pending',
+                    'status' =>$role->name == 'Admin'? 'completed':'pending',
                 ]);
 
                 // Eliminar solicitud previa

@@ -173,8 +173,11 @@ export  function dogs() {
             const saveBtn = document.querySelector(".saveDog");
             if (result.status === 200) {
                 
+                const dogStatus = ['Admin', 'Administrator', 'Employee'];
+
                 saveBtn.disabled = false;
-                if (result.data.rol=='admin') {
+                
+                if (dogStatus.includes(result.data.rol)) {
                     window.location.href = '/dogs';
                 }else{
                     let id = result.data.dog_id_md;

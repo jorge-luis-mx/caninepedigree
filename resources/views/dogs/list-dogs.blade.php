@@ -1,6 +1,6 @@
 <x-app-layout>
 
-   <!-- <h1 class="is-size-4">{{__('messages.main.dogs.title')}}</h1> -->
+   
 
    <div class="columns is-multiline">
       <div class="column">
@@ -62,7 +62,11 @@
 document.addEventListener("DOMContentLoaded", function() {
 
     let dogs = @json($dogs);
-    const rol = @json($role);
+    const role = @json($role);
+    const permissions = @json($permissions);
+    
+    const isAdmin = role?.name === 'Admin';
+    const canDelete = permissions.some(p => p.name === 'Delete');
 
     let currentPage = 1;
     const dogsPerPage = 10;
@@ -88,28 +92,30 @@ document.addEventListener("DOMContentLoaded", function() {
             td.dataset.href = `/dogs/show/${dog.dog_hash}`;
             td.style.cursor = 'pointer'; // Para que se vea como un link
             td.classList.add('clickable-td');
-
             // Evento para redirección al hacer clic
             td.addEventListener('click', () => {
                 window.location.href = td.dataset.href;
             });
+            row.appendChild(td); // Nombre del perro con enlace
 
-            // Agregar el td a la fila
-            row.appendChild(td);
+            if (isAdmin && canDelete) {
+                // Celda para el botón eliminar
+                const actionTd = document.createElement('td');
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Eliminar';
+                deleteBtn.className = 'button is-danger is-small';
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Evita que el clic afecte al evento del td
+                    deleteDog(dog.dog_id);
+                });
+                actionTd.appendChild(deleteBtn);
+                row.appendChild(actionTd);  // Botón eliminar
+            }
+
             tableBody.appendChild(row);
             
         });
 
-        // paginatedDogs.forEach((dog) => {
-        //     let sex = dog.sex == 'M' ? 'Male' : 'Female';
-        //     const row = document.createElement('tr');
-        //     row.innerHTML = `
-        //         <td><a href="/dogs/show/${dog.dog_hash}">${dog.name}</a> </td>
-                
-
-        //     `;
-        //     tableBody.appendChild(row);
-        // });
 
         renderPagination(dogsToDisplay);
     }
@@ -183,15 +189,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
         populateTable(filteredDogs);
     };
-
-
-
-    // Función para filtrar perros por nombre
-    // window.filterDogs = function() {
-    //     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    //     const filteredDogs = dogs.filter(dog => dog.name.toLowerCase().includes(searchTerm));
-    //     populateTable(filteredDogs);
-    // }
 
     // Funciones para manejar las acciones
     window.viewDetails = function(dogId) {
