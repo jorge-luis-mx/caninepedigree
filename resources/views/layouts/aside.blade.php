@@ -67,7 +67,7 @@
                             </li>
                         </ul>
                         
-                        <ul class="menu-list is-hidden">
+                        <ul class="menu-list ">
                             <li class="nav-drop">
                                 <a href="{{ route('puppies.create') }}" class="nav-link is-flex is-justify-content-space-between">
                                     <div class="is-flex is-justify-content-start is-align-items-center">
@@ -78,7 +78,7 @@
                             </li>
                         </ul>
 
-                        <ul class="menu-list is-hidden">
+                        <ul class="menu-list ">
                             <li class="nav-drop">
                                 <a class="nav-link is-flex is-justify-content-space-between">
                                     <div class="is-flex is-justify-content-start is-align-items-center">

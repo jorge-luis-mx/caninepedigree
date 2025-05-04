@@ -9,6 +9,8 @@
     // Acceder al árbol genealógico completo desde el array
     $dog = $pedigree['dog'];
 
+    // Generación 2: 
+
     $father = $pedigree['sire']['dog'] ?? null;  // Verifica si el padre existe
     $mother = $pedigree['dam']['dog'] ?? null;   // Verifica si la madre existe
     
@@ -20,9 +22,7 @@
     $motherFather = $pedigree['dam']['sire']['dog']?? null;
     $motherMother = $pedigree['dam']['dam']['dog']?? null;
 
-
     // Generación 4: Bisabuelos (8 nodos)
-
     // Del lado paterno:
    $bisabuelo1 = $pedigree['sire']['sire']['sire']['dog'] ?? null;   // Bisabuelo 1 (padre de abuelo paterno)
    $bisabuela1 = $pedigree['sire']['sire']['dam']['dog'] ?? null;    // Bisabuela 1 (madre de abuelo paterno)
