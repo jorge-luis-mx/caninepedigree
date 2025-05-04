@@ -1,4 +1,5 @@
 <x-app-layout>
+   
    <h1 class="is-size-4">{{__('messages.main.pedigree.title')}}</h1>
 
    <div class="container-search mt-5">

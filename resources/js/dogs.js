@@ -178,7 +178,19 @@ export  function dogs() {
                 saveBtn.disabled = false;
                 
                 if (dogStatus.includes(result.data.rol)) {
-                    window.location.href = '/dogs';
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Registration Successful!',
+                        text: 'The dog has been registered successfully.',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/dogs';
+                        }
+                    });
+                      
+                    
                 }else{
                     let id = result.data.dog_id_md;
                     const editUrl = `/payments/pay/${id}`;

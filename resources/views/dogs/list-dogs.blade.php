@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 deleteBtn.className = 'button is-danger is-small';
                 deleteBtn.addEventListener('click', (e) => {
                     e.stopPropagation(); // Evita que el clic afecte al evento del td
-                    deleteDog(dog.dog_id);
+                    deleteDog(dog.dog_hash);
                 });
                 actionTd.appendChild(deleteBtn);
                 row.appendChild(actionTd);  // Botón eliminar
@@ -197,6 +197,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     window.deleteDog = function(dogId) {
+        
         const confirmation = confirm(`¿Estás seguro de eliminar a este perro?`);
         if (confirmation) {
             fetch(`/dogs/${dogId}`, {
@@ -210,7 +211,8 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(data => {
                 if (data.success) {
                     alert('Perro eliminado con éxito');
-                    dogs = dogs.filter(dog => dog.dog_id !== dogId); // Corregido: usar dog.dog_id en lugar de dog.id
+                    dogs = dogs.filter(dog => dog.dog_hash !== dogId);
+                    // dogs = dogs.filter(dog => dog.dog_id !== dogId); // Corregido: usar dog.dog_id en lugar de dog.id
                     populateTable(dogs); // Refrescar la tabla
                 } else {
                     alert('Error al eliminar el perro');

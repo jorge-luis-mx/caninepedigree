@@ -26,6 +26,10 @@ use App\Http\Controllers\DogController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\BreedingRequestController;
 use App\Http\Controllers\PedigreegController;
+use App\Http\Controllers\PedigreeController;
+use App\Http\Controllers\CertificateController;
+
+
 use App\Http\Controllers\AdminDogsController;
 
 
@@ -79,7 +83,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dogs/create', [DogController::class, 'create'])->name('dogs.create');
     Route::post('/dogs', [DogController::class, 'store'])->name('dogs.store');
     Route::get('/dogs/show/{dog}', [DogController::class, 'show'])->name('dogs.show');
-    // Route::delete('/dogs/{dog}', [DogController::class, 'destroy'])->name('dogs.destroy');
+    Route::delete('/dogs/{dog}', [DogController::class, 'destroy'])->name('dogs.destroy');
     // Route::get('/dogs/{dog}/edit', [DogController::class, 'edit'])->name('dogs.edit'); 
     // Route::put('/dogs/{dog}', [DogController::class, 'update'])->name('dogs.update'); 
     
@@ -94,13 +98,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/payments/paypal/pending', [PaymentController::class,'payedOrderPending']);
     Route::get('/payments/paypal/paid', [PaymentController::class,'completed']);
 
+    Route::get('/pedigrees', [PedigreeController::class, 'index'])->name('pedigree.index');
+    Route::get('/pedigrees/{id}', [PedigreeController::class, 'show'])->name('pedigree.show');
 
 
+    Route::get('/certificates/{id}/pdf/{type}', [CertificateController::class, 'pdf'])->name('certificates.pdf');
 
-    Route::get('/pedigree', [PedigreegController::class, 'index'])->name('pediree.index');
-    Route::get('/dogs/pedigree/{id}', [DogController::class, 'showPedigree'])->name('pediree.showPedigree');
-
-    Route::get('/generate-pdf/{id}/{type}', [PedigreegController::class, 'generatePDF'])->name('pediree.generatePDF');
+    // Route::get('/pedigree', [PedigreegController::class, 'index'])->name('pediree.index');
+    //  Route::get('/dogs/pedigree/{id}', [DogController::class, 'showPedigree'])->name('pediree.showPedigree');
+    // Route::get('/generate-pdf/{id}/{type}', [PedigreegController::class, 'generatePDF'])->name('pediree.generatePDF');
 
 
 

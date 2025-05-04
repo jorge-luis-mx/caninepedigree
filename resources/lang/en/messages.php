@@ -12,6 +12,7 @@ return [
     ],
     'nav' => [
         'dogs' => 'Dogs',
+        'pedidree' => 'Pedidree',
         'profile'=>[
             'dashboard' => 'Dashboard',
             'profile' => 'Profile',

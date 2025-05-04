@@ -13,6 +13,10 @@
                         <div class="navbar-item"> {{ __('messages.nav.dogs') }}</div>  
                     </a>
 
+                    <a href="{{ route('pedigree.index') }}" class="nav-link">
+                        <div class="navbar-item"> {{ __('messages.nav.pedidree') }}</div>  
+                    </a>
+
                 </div>
 
                 <div class="navbar-menu">

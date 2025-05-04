@@ -70,7 +70,7 @@
       <tr>
          <td rowspan="4" ><b>(Sire)
             @if(isset($father['id']))
-               <a href="{{ route('pediree.showPedigree', ['id' => $father['id']]) }}">{{ $father['name'] ?? 'UNKNOWN' }}</a>
+               <a href="{{ route('pedigree.show', ['id' => $father['id']]) }}">{{ $father['name'] ?? 'UNKNOWN' }}</a>
             @else
                <span>UNKNOWN</span>
             @endif
@@ -78,7 +78,7 @@
          </td>
          <td rowspan="2"><b>
             @if(isset($fatherFather['id']))
-               <a href="{{ route('pediree.showPedigree', ['id' => $fatherFather['id']]) }}">{{ $fatherFather['name'] ?? 'UNKNOWN' }}</a>
+               <a href="{{ route('pedigree.show', ['id' => $fatherFather['id']]) }}">{{ $fatherFather['name'] ?? 'UNKNOWN' }}</a>
             @else
                <span>UNKNOWN</span>
             @endif
@@ -86,7 +86,7 @@
          </td>
          <td>
          @if(isset($bisabuelo1['id']))
-            <a href="{{ route('pediree.showPedigree', ['id' => $bisabuelo1['id']]) }}">{{ $bisabuelo1['name'] ?? 'UNKNOWN' }}</a>
+            <a href="{{ route('pedigree.show', ['id' => $bisabuelo1['id']]) }}">{{ $bisabuelo1['name'] ?? 'UNKNOWN' }}</a>
          @else
             <span>UNKNOWN</span>
          @endif
@@ -95,7 +95,7 @@
       <tr>
          <td>
          @if(isset($bisabuela1['id']))
-            <a href="{{ route('pediree.showPedigree', ['id' => $bisabuela1['id']]) }}">{{ $bisabuela1['name'] ?? 'UNKNOWN' }}</a>
+            <a href="{{ route('pedigree.show', ['id' => $bisabuela1['id']]) }}">{{ $bisabuela1['name'] ?? 'UNKNOWN' }}</a>
          @else
          <span>UNKNOWN</span>
          @endif
@@ -104,7 +104,7 @@
       <tr>
          <td rowspan="2"><b>
             @if(isset($fatherMother['id']))
-               <a href="{{ route('pediree.showPedigree', ['id' => $fatherMother['id']]) }}">{{ $fatherMother['name'] ?? 'UNKNOWN' }}</a>
+               <a href="{{ route('pedigree.show', ['id' => $fatherMother['id']]) }}">{{ $fatherMother['name'] ?? 'UNKNOWN' }}</a>
             @else
                <span>UNKNOWN</span>
             @endif
@@ -112,7 +112,7 @@
          </td>
          <td>
          @if(isset($bisabuelo2['id']))
-            <a href="{{ route('pediree.showPedigree', ['id' => $bisabuelo2['id']]) }}">{{ $bisabuelo2['name'] ?? 'UNKNOWN' }}</a>
+            <a href="{{ route('pedigree.show', ['id' => $bisabuelo2['id']]) }}">{{ $bisabuelo2['name'] ?? 'UNKNOWN' }}</a>
          @else
          <span>UNKNOWN</span>
          @endif
@@ -121,7 +121,7 @@
       <tr>
          <td>
          @if(isset($bisabuela2['id']))
-            <a href="{{ route('pediree.showPedigree', ['id' => $bisabuela2['id']]) }}">{{ $bisabuela2['name'] ?? 'UNKNOWN' }}</a>
+            <a href="{{ route('pedigree.show', ['id' => $bisabuela2['id']]) }}">{{ $bisabuela2['name'] ?? 'UNKNOWN' }}</a>
          @else
          <span>UNKNOWN</span>
          @endif
@@ -132,7 +132,7 @@
       <tr>
          <td rowspan="4"><b>(Dam) 
             @if(isset($mother['id']))
-               <a href="{{ route('pediree.showPedigree', ['id' => $mother['id']]) }}">{{ $mother['name'] ?? 'UNKNOWN' }}</a>
+               <a href="{{ route('pedigree.show', ['id' => $mother['id']]) }}">{{ $mother['name'] ?? 'UNKNOWN' }}</a>
             @else
                <span>UNKNOWN</span>
             @endif
@@ -140,7 +140,7 @@
          </td>
          <td rowspan="2"><b>
             @if(isset($motherFather['id']))
-               <a href="{{ route('pediree.showPedigree', ['id' => $motherFather['id']]) }}">{{ $motherFather['name'] ?? 'UNKNOWN' }}</a>
+               <a href="{{ route('pedigree.show', ['id' => $motherFather['id']]) }}">{{ $motherFather['name'] ?? 'UNKNOWN' }}</a>
             @else
             <span>UNKNOWN</span>
             @endif
@@ -148,7 +148,7 @@
          </td>
          <td>
          @if(isset($bisabuelo3['id']))
-            <a href="{{ route('pediree.showPedigree', ['id' => $bisabuelo3['id']]) }}">{{ $bisabuelo3['name'] ?? 'UNKNOWN' }}</a>
+            <a href="{{ route('pedigree.show', ['id' => $bisabuelo3['id']]) }}">{{ $bisabuelo3['name'] ?? 'UNKNOWN' }}</a>
          @else
          <span>UNKNOWN</span>
          @endif
@@ -158,7 +158,7 @@
       <tr>
          <td>
          @if(isset($bisabuela3['id']))
-            <a href="{{ route('pediree.showPedigree', ['id' => $bisabuela3['id']]) }}">{{ $bisabuela3['name'] ?? 'UNKNOWN' }}</a>
+            <a href="{{ route('pedigree.show', ['id' => $bisabuela3['id']]) }}">{{ $bisabuela3['name'] ?? 'UNKNOWN' }}</a>
          @else
          <span>UNKNOWN</span>
          @endif
@@ -167,7 +167,7 @@
       <tr>
          <td rowspan="2"><b>
          @if(isset($motherMother['id']))
-            <a href="{{ route('pediree.showPedigree', ['id' => $motherMother['id']]) }}">{{ $motherMother['name'] ?? 'UNKNOWN' }}</a>
+            <a href="{{ route('pedigree.show', ['id' => $motherMother['id']]) }}">{{ $motherMother['name'] ?? 'UNKNOWN' }}</a>
          @else
          <span>UNKNOWN</span>
          @endif
@@ -175,7 +175,7 @@
       </td>
          <td>
          @if(isset($bisabuelo4['id']))
-            <a href="{{ route('pediree.showPedigree', ['id' => $bisabuelo4['id']]) }}">{{ $bisabuelo4['name'] ?? 'UNKNOWN' }}</a>
+            <a href="{{ route('pedigree.show', ['id' => $bisabuelo4['id']]) }}">{{ $bisabuelo4['name'] ?? 'UNKNOWN' }}</a>
          @else
          <span>UNKNOWN</span>
          @endif
@@ -184,7 +184,7 @@
       <tr>
          <td>
          @if(isset($bisabuela4['id']))
-            <a href="{{ route('pediree.showPedigree', ['id' => $bisabuela4['id']]) }}">{{ $bisabuela4['name'] ?? 'UNKNOWN' }}</a>
+            <a href="{{ route('pedigree.show', ['id' => $bisabuela4['id']]) }}">{{ $bisabuela4['name'] ?? 'UNKNOWN' }}</a>
          @else
          <span>UNKNOWN</span>
          @endif

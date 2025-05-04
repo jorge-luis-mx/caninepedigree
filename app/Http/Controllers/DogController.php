@@ -384,9 +384,15 @@ class DogController extends Controller
         $dog = Dog::whereRaw('MD5(dog_id) = ?', $id)->firstOrFail();
 
         if ($dog) {
-            $dog->delete();
+            $dog->status = 'delete';
+            $dog->save();
+    
             return response()->json(['success' => true]);
         }
+        // if ($dog) {
+        //     $dog->delete();
+        //     return response()->json(['success' => true]);
+        // }
         return response()->json(['success' => false], 400);
         
     }
