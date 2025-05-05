@@ -246,7 +246,12 @@ h2 {
 /* Centrar contenido de celdas con rowspan 4 */
 table td[rowspan="4"] {
   vertical-align: middle; /* Centra verticalmente */
-  text-align: center; /* Centra horizontalmente */
+  //text-align: center; /* Centra horizontalmente */
+}
+
+table td[rowspan="2"] {
+  vertical-align: middle; /* Centra verticalmente */
+  //text-align: center; /* Centra horizontalmente */
 }
 
 .clickable-td {
@@ -278,6 +283,6 @@ table td[rowspan="4"] {
 
 
 .dog-item:hover {
-  background-color: #e6f0ff;
+  background-color: #fff8e6;
   color: #0056b3;
 }
