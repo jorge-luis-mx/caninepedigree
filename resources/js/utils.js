@@ -307,6 +307,101 @@ export class Utils {
   }
 
 
+  findDog(){
+
+   const containers = document.querySelectorAll('.search-container');
+   if (!containers.length) return; // No hay formularios de búsqueda, salir
+
+   let selectingDog = false;
+
+   containers.forEach(container => {
+
+      const input = container.querySelector('.dog-search');
+      const button = container.querySelector('.btn-search-dog');
+
+      if (!input) return;
+
+      const type = input.dataset.type;
+
+      input.addEventListener('keydown', e => {
+         if (e.key === 'Enter') {
+            e.preventDefault();
+            handleSearch(input, container, type);
+         }
+      });
+
+      if (button) {
+         button.addEventListener('click', () => {
+
+            selectingDog = true;
+            handleSearch(input, container, type);
+         });
+      }
+   });
+
+
+   
+      const handleSearch = (input, container, type) => {
+         const query = input.value.trim();
+         if (!query) return;
+   
+         fetch(`/dogs/search/${query}/breeding`)
+            .then(res => res.json())
+            .then(data => {
+               if (data.status === 200) {
+                  showResults(data.data, container, type);
+               }
+            })
+            .catch(err => console.error(`Error al buscar ${type}:`, err));
+      };
+   
+      const showResults = (dogs, container, type) => {
+       const resultsContainer = container.closest('.column').querySelector(`.results-container[data-type="${type}"]`);
+
+
+
+         if (!resultsContainer) return;
+   
+         resultsContainer.innerHTML = '';
+   
+         if (!Array.isArray(dogs)) dogs = [dogs];
+   
+         if (!dogs.length) {
+            resultsContainer.innerHTML = '<div class="no-results">No dogs found.</div>';
+            resultsContainer.style.display = 'block';
+            return;
+         }
+   
+         dogs.forEach(dog => {
+            const item = document.createElement('div');
+            item.className = 'result-item';
+            item.textContent = dog.name;
+            item.dataset.dogId = dog.dog_id;
+   
+            item.addEventListener('mousedown', () => {
+               selectingDog = true;
+               selectDog(dog.dog_id, dog.name, container, type);
+            });
+   
+            resultsContainer.appendChild(item);
+         });
+   
+         resultsContainer.style.display = 'block';
+      };
+   
+      const selectDog = (id, name, container, type) => {
+       const inputText = container.querySelector(`.dog-search[data-type="${type}"]`);
+       const inputHidden = container.querySelector(`.${type}-id`);
+       const resultsContainer = container.closest('.column').querySelector(`.results-container[data-type="${type}"]`);
+    
+       if (inputText) inputText.value = name;
+       if (inputHidden) inputHidden.value = id;
+       if (resultsContainer) resultsContainer.style.display = 'none';
+    };
+   
+   
+
+  }
 
     
 }

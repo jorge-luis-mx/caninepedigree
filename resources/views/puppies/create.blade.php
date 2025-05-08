@@ -1,8 +1,9 @@
 <x-app-layout>
 
    <div class="container">
-      <h3>Registrar Cachorros</h3>
 
+      <h3>Registrar Cachorros</h3>
+      
       <div class="columns is-multiline">
          <div class="column is-full is-flex is-justify-content-flex-end	">
             <div class="contador-wrapper">
@@ -14,69 +15,92 @@
          <div class="column">
             <div class="card" style="box-shadow: none;">
                <div class="card-content">
-               <form action="{{ route('dogs.store') }}" method="post">
-                  @csrf
-                  @method('post')
+                  <form id="formPuppies" action="{{ route('dogs.store') }}" method="post">
+                     @csrf
+                     @method('post')
 
-                  <div class="columns is-multiline">
+                     <div class="columns is-multiline">
 
-                     <div class="column">
-                        <div class="field searchDog">
-                           <label class="label" for="sire">Enter the IDDR number or the dog's name (Female)</label>
-                           <div class="is-flex align-items-center">
-                              <div class="control has-icons-left" style="width: 100%;">
-                                 <input class="input dog" type="text" name="dog" id="dog">
-                                 <input type="hidden" class="dog_id" name="dog_id" id="dog_id">
-                                 <small class="error-message"></small>
-                                 <span class="icon is-small is-left">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-                                       <path fill="currentColor" d="M10 2a8 8 0 1 1-5.293 14.293l-3.147 3.147a1 1 0 0 1-1.415-1.414l3.147-3.147A8 8 0 0 1 10 2zm0 2a6 6 0 1 0 0 12A6 6 0 0 0 10 4z" />
-                                    </svg>
-                                 </span>
-                              </div>
-                              <div class="btn-container">
-                                 <button type="button" class="button  btn-searchDog no-radius-left" style="background-color: #fdcd8a;color:#450b03;margin:0!important">
-                                    Search
-                                 </button>
-                              </div>
-                           </div>
-                        </div>
-                        <div id="dogResults" style="display: none;"></div>
-                     </div>
-
-                     <div class="column">
-                        <div class="field searchDog">
-                           <label class="label" for="sire">Enter the IDDR number or the dog's name (Male)</label>
-                           <div class="is-flex align-items-center">
-                              <div class="control has-icons-left" style="width: 100%;">
-                                 <input class="input dog" type="text" name="dog" id="dog">
-                                 <input type="hidden" class="dog_id" name="dog_id" id="dog_id">
-                                 <small class="error-message"></small>
-                                 <span class="icon is-small is-left">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-                                       <path fill="currentColor" d="M10 2a8 8 0 1 1-5.293 14.293l-3.147 3.147a1 1 0 0 1-1.415-1.414l3.147-3.147A8 8 0 0 1 10 2zm0 2a6 6 0 1 0 0 12A6 6 0 0 0 10 4z" />
-                                    </svg>
-                                 </span>
-                              </div>
-                              <div class="btn-container">
-                                 <button type="button" class="button  btn-searchDog no-radius-left" style="background-color: #fdcd8a;color:#450b03;margin:0!important">
-                                    Search
-                                 </button>
+                        <!-- Bloque para Female (Dog) -->
+                        <!-- <div class="column">
+                           <div class="field search-container" data-type="dog">
+                              <label class="label">Enter the IDDR number or the dog's name (Female)</label>
+                              <div class="is-flex align-items-center">
+                                 <div class="control has-icons-left" style="width: 100%;">
+                                    <input class="input dog-search" type="text" name="dog" data-type="dog">
+                                    <input type="hidden" name="dog_id" class="dog-id">
+                                    <small class="error-message"></small>
+                                    <span class="icon is-small is-left">
+                                       
+                                    </span>
+                                 </div>
+                                 <div class="btn-container">
+                                    <button type="button" class="button btn-search" data-type="dog" style="background-color: #fdcd8a;color:#450b03;margin:0!important">
+                                       Search
+                                    </button>
+                                 </div>
                               </div>
                            </div>
+                           <div class="results-container" id="dogResults" style="display: none;"></div>
+                        </div> -->
+
+                        <!-- Bloque para Male (Sire) -->
+                        <div class="column">
+                           <div class="field search-container" data-type="sire">
+                              <label class="label">Enter the IDDR number or the dog's name (Male / Sire)</label>
+                              <div class="is-flex align-items-center">
+                                 <div class="control has-icons-left" style="width: 100%;">
+                                    <input class="input dog-search" type="text" name="sire" data-type="sire">
+                                    <input type="hidden" name="sire_id" class="sire-id">
+                                    <small class="error-message"></small>
+                                    <span class="icon is-small is-left">
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                                          <path fill="currentColor" d="M10 2a8 8 0 1 1-5.293 14.293l-3.147 3.147a1 1 0 0 1-1.415-1.414l3.147-3.147A8 8 0 0 1 10 2zm0 2a6 6 0 1 0 0 12A6 6 0 0 0 10 4z" />
+                                       </svg>
+                                    </span>
+                                 </div>
+                                 <div class="btn-container">
+                                    <button type="button" class="button btn-search-dog" data-type="sire" style="background-color: #fdcd8a;color:#450b03;margin:0!important">
+                                       Search
+                                    </button>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="results-container" data-type="sire" style="display: none;"></div>
                         </div>
-                        <div id="dogResults" style="display: none;"></div>
+
+                        <!-- Bloque para Dam (si necesario) -->
+                        <div class="column">
+                           <div class="field search-container" data-type="dam">
+                              <label class="label">Enter the IDDR number or the dog's name (Female / Dam)</label>
+                              <div class="is-flex align-items-center">
+                                 <div class="control has-icons-left" style="width: 100%;">
+                                    <input class="input dog-search" type="text" name="dam" data-type="dam">
+                                    <input type="hidden" name="dam_id" class="dam-id">
+                                    <small class="error-message"></small>
+                                    <span class="icon is-small is-left">
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                                          <path fill="currentColor" d="M10 2a8 8 0 1 1-5.293 14.293l-3.147 3.147a1 1 0 0 1-1.415-1.414l3.147-3.147A8 8 0 0 1 10 2zm0 2a6 6 0 1 0 0 12A6 6 0 0 0 10 4z" />
+                                       </svg>
+                                    </span>
+                                 </div>
+                                 <div class="btn-container">
+                                    <button type="button" class="button btn-search-dog" data-type="dam" style="background-color: #fdcd8a;color:#450b03;margin:0!important">
+                                       Search
+                                    </button>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="results-container" data-type="dam" style="display: none;"></div>
+                        </div>
                      </div>
-
-                  </div>
-
-                  <div id="puppyForm" class="" style="display: none;">
-                     <div id="puppyNamesContainer" class="mt-4"></div>
-                  </div>
-                  <div class="field mt-4">
-                     <button class="button savePuppies is-primary btn-general">Save Puppies</button>
-                  </div>
-               </form>
+                     <div id="puppyForm" class="" style="display: none;">
+                        <div id="puppyNamesContainer" class="mt-4"></div>
+                     </div>
+                     <div class="field mt-4">
+                        <button class="button savePuppies is-primary btn-general">Save Puppies</button>
+                     </div>
+                  </form>
 
                </div>
             </div>
@@ -90,15 +114,18 @@
    document.addEventListener('DOMContentLoaded', () => {
 
       const saved = sessionStorage.getItem('puppiesTemp');
+
       if (saved) {
          const obj = JSON.parse(saved);
-         contador = obj.count;
+         //contador = obj.count;
+         contador = obj.count > 0 ? obj.count : 1;
          actualizarContador();
          mostrarFormularioCachorros();
          generarFormulariosCachorros(obj.puppies);
 
 
       } else {
+         contador = 1;
          actualizarContador();
          mostrarFormularioCachorros();
          generarFormulariosCachorros();

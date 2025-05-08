@@ -11,6 +11,7 @@ import { dogs } from './dogs.js';
 import { pedigree } from './pedigree.js';
 import { breedingRequest } from './breeding_request.js';
 
+import { Utils } from './utils.js'; 
 
 window.Alpine = Alpine;
 Alpine.start();
@@ -43,18 +44,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
         });
     }
-
+    const utils = new Utils();
+    utils.findDog(); 
 });
 
 dogs();
 pedigree();
 breedingRequest();
-
-
 mainFunction();
-airport();
-map();
-serviceType();
-pricing();
-operations();
 profile();
