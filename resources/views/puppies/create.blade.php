@@ -113,11 +113,14 @@
    <script>
    document.addEventListener('DOMContentLoaded', () => {
 
+      agregarListenersInputs();
+      
       const saved = sessionStorage.getItem('puppiesTemp');
 
       if (saved) {
+
          const obj = JSON.parse(saved);
-         //contador = obj.count;
+
          contador = obj.count > 0 ? obj.count : 1;
          actualizarContador();
          mostrarFormularioCachorros();
@@ -137,31 +140,37 @@
          saveBtn.addEventListener('click', async (e) => {
             e.preventDefault();
             
-            const formData = capturarDatosFormulario();
-            
-            try {
-               const response = await fetch('{{ route('dogs.store') }}', {
-                  method: 'POST',
-                  headers: {
-                     'Content-Type': 'application/json',
-                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                  },
-                  body: JSON.stringify(formData)
-               });
-               const result = await response.json();
-               console.log(result);
-
-               if (response.ok) {
-                  alert('¡Cachorros guardados!');
-                  sessionStorage.removeItem('puppiesTemp');
-               } else {
-                  alert('Error al guardar.');
-               }
-
-            } catch (err) {
-               console.error('Error en fetch:', err);
-               alert('Error de red o servidor');
+            if (!validarFormularioCompleto()) {
+               return; // Detiene si hay errores
             }
+
+            
+            const formData = capturarDatosCompletos();
+            console.log(formData);
+            
+            // try {
+            //    const response = await fetch('{{ route('dogs.store') }}', {
+            //       method: 'POST',
+            //       headers: {
+            //          'Content-Type': 'application/json',
+            //          'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            //       },
+            //       body: JSON.stringify(formData)
+            //    });
+            //    const result = await response.json();
+            //    console.log(result);
+
+            //    if (response.ok) {
+            //       alert('¡Cachorros guardados!');
+            //       sessionStorage.removeItem('puppiesTemp');
+            //    } else {
+            //       alert('Error al guardar.');
+            //    }
+
+            // } catch (err) {
+            //    console.error('Error en fetch:', err);
+            //    alert('Error de red o servidor');
+            // }
          });
       }
 
@@ -273,16 +282,25 @@
 
       // Guardar los datos en sessionStorage
       guardarDatosEnStorage(data); // Guardamos directamente el arreglo de cachorros
+      
+      // Al final de la función generarFormulariosCachorros()
+      container.querySelectorAll('.puppy-name, .puppy-color, .puppy-birthdate').forEach(input => {
+         input.addEventListener('input', () => limpiarError(input));
+      });
+
    }
 
 
 
-   function guardarDatosEnStorage(puppies) {
+   function guardarDatosEnStorage(puppies = null) {
+      const datos = puppies || capturarDatosFormulario().puppies;
+
       sessionStorage.setItem('puppiesTemp', JSON.stringify({
-         count: puppies.length,
-         puppies: puppies
+         count: datos.length,
+         puppies: datos
       }));
    }
+
 
 
    function capturarDatosFormulario() {
@@ -303,6 +321,144 @@
          puppies
       };
    }
+
+
+function mostrarError(input, mensaje) {
+   input.classList.add('is-danger');
+   const small = input.parentElement.querySelector('.error-message');
+   if (small) {
+      small.textContent = mensaje;
+      small.style.display = 'block';
+   }
+}
+
+function limpiarError(input) {
+   input.classList.remove('is-danger');
+   const small = input.parentElement.querySelector('.error-message');
+   if (small) {
+      small.textContent = '';
+      small.style.display = 'none';
+   }
+}
+
+function validarFormularioCompleto() {
+   let valido = true;
+
+   // Buscar por name o clase
+   const damInput = document.querySelector('input[name="dam"]');
+   const damIdInput = document.querySelector('.dam-id');
+   const sireInput = document.querySelector('input[name="sire"]');
+   const sireIdInput = document.querySelector('.sire-id');
+
+   if (!damInput || damInput.value.trim() === '') {
+      mostrarError(damInput, 'Debes ingresar el nombre o IDDR de la hembra');
+      valido = false;
+   } else {
+      limpiarError(damInput);
+   }
+
+   if (!damIdInput || damIdInput.value.trim() === '') {
+      mostrarError(damInput, 'Debes seleccionar una hembra válida de la lista');
+      valido = false;
+   }
+
+   if (!sireInput || sireInput.value.trim() === '') {
+      mostrarError(sireInput, 'Debes ingresar el nombre o IDDR del macho');
+      valido = false;
+   } else {
+      limpiarError(sireInput);
+   }
+
+   if (!sireIdInput || sireIdInput.value.trim() === '') {
+      mostrarError(sireInput, 'Debes seleccionar un macho válido de la lista');
+      valido = false;
+   }
+
+   // Validar cachorros
+   const cards = document.querySelectorAll('#puppyNamesContainer .card');
+   cards.forEach((card, index) => {
+      const name = card.querySelector('.puppy-name');
+      const color = card.querySelector('.puppy-color');
+      const birthdate = card.querySelector('.puppy-birthdate');
+
+      if (name && name.value.trim() === '') {
+         mostrarError(name, `Nombre del cachorro ${index + 1} es obligatorio`);
+         valido = false;
+      } else if (name) {
+         limpiarError(name);
+      }
+
+      if (color && color.value.trim() === '') {
+         mostrarError(color, `Color del cachorro ${index + 1} es obligatorio`);
+         valido = false;
+      } else if (color) {
+         limpiarError(color);
+      }
+
+      if (birthdate && birthdate.value.trim() === '') {
+         mostrarError(birthdate, `Fecha de nacimiento del cachorro ${index + 1} es obligatoria`);
+         valido = false;
+      } else if (birthdate) {
+         limpiarError(birthdate);
+      }
+   });
+
+   return valido;
+}
+
+function capturarDatosCompletos() {
+
+   const form = document.getElementById('formPuppies');
+   const formData = new FormData(form);
+
+   // Convertir los datos generales a objeto plano
+   const datosGenerales = {};
+   formData.forEach((value, key) => {
+      if (datosGenerales[key]) {
+         if (!Array.isArray(datosGenerales[key])) {
+            datosGenerales[key] = [datosGenerales[key]];
+         }
+         datosGenerales[key].push(value);
+      } else {
+         datosGenerales[key] = value;
+      }
+   });
+
+   // Capturar los datos de los cachorros
+   const puppies = [];
+   const cards = document.querySelectorAll('#puppyNamesContainer .card');
+   cards.forEach(card => {
+      puppies.push({
+         name: card.querySelector('.puppy-name')?.value || '',
+         sex: card.querySelector('.puppy-sex')?.value || '',
+         color: card.querySelector('.puppy-color')?.value || '',
+         birthdate: card.querySelector('.puppy-birthdate')?.value || ''
+      });
+   });
+
+   // Combinar y retornar todo
+   return {
+      ...datosGenerales,      // Ej: mother_id, father_id, camada_id, etc.
+      count: puppies.length,
+      puppies: puppies
+   };
+}
+
+
+function agregarListenersInputs() {
+   // Inputs de búsqueda
+   const searchInputs = document.querySelectorAll('input[name="dam"], input[name="sire"]');
+   searchInputs.forEach(input => {
+      input.addEventListener('input', () => limpiarError(input));
+   });
+
+   // Inputs de cachorros
+   const puppyInputs = document.querySelectorAll('.puppy-name, .puppy-color, .puppy-birthdate');
+   puppyInputs.forEach(input => {
+      input.addEventListener('input', () => limpiarError(input));
+   });
+}
+
 
 </script>
 
