@@ -47,7 +47,7 @@
                         <!-- Bloque para Male (Sire) -->
                         <div class="column">
                            <div class="field search-container" data-type="sire">
-                              <label class="label">Enter the IDDR number or the dog's name (Male / Sire)</label>
+                              <label class="label">Enter the IDDR number or the dog's name (Sire)</label>
                               <div class="is-flex align-items-center">
                                  <div class="control has-icons-left" style="width: 100%;">
                                     <input class="input dog-search" type="text" name="sire" data-type="sire">
@@ -72,7 +72,7 @@
                         <!-- Bloque para Dam (si necesario) -->
                         <div class="column">
                            <div class="field search-container" data-type="dam">
-                              <label class="label">Enter the IDDR number or the dog's name (Female / Dam)</label>
+                              <label class="label">Enter the IDDR number or the dog's name (Dam)</label>
                               <div class="is-flex align-items-center">
                                  <div class="control has-icons-left" style="width: 100%;">
                                     <input class="input dog-search" type="text" name="dam" data-type="dam">
@@ -122,6 +122,7 @@
          const obj = JSON.parse(saved);
 
          contador = obj.count > 0 ? obj.count : 1;
+         console.log(contador);
          actualizarContador();
          mostrarFormularioCachorros();
          generarFormulariosCachorros(obj.puppies);
@@ -144,33 +145,55 @@
                return; // Detiene si hay errores
             }
 
-            
             const formData = capturarDatosCompletos();
-            console.log(formData);
-            
-            // try {
-            //    const response = await fetch('{{ route('dogs.store') }}', {
-            //       method: 'POST',
-            //       headers: {
-            //          'Content-Type': 'application/json',
-            //          'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            //       },
-            //       body: JSON.stringify(formData)
-            //    });
-            //    const result = await response.json();
-            //    console.log(result);
 
-            //    if (response.ok) {
-            //       alert('¡Cachorros guardados!');
-            //       sessionStorage.removeItem('puppiesTemp');
-            //    } else {
-            //       alert('Error al guardar.');
-            //    }
+             try {
+                const response = await fetch('/puppies/register', {
+                   method: 'POST',
+                   headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                   },
+                   body: JSON.stringify(formData)
+                });
+                const result = await response.json();
+                console.log(result);
 
-            // } catch (err) {
-            //    console.error('Error en fetch:', err);
-            //    alert('Error de red o servidor');
-            // }
+                if (response.ok) {
+                   alert('¡Cachorros guardados!');
+
+                  sessionStorage.removeItem('puppiesTemp');
+
+                  // Limpiar campos principales del formulario
+                  document.querySelector('input[name="sire"]').value = '';
+                  document.querySelector('input[name="sire_id"]').value = '';
+                  document.querySelector('input[name="dam"]').value = '';
+                  document.querySelector('input[name="dam_id"]').value = '';
+
+                  // Eliminar todos los formularios de cachorros generados
+                  const puppiesContainer = document.querySelector('#puppyNamesContainer'); // Ajusta el selector si es diferente
+                  puppiesContainer.innerHTML = '';
+
+                  // Reiniciar contador si lo usas
+                  contador = 1; // Asegúrate de declarar esta variable en el scope global
+                  actualizarContador();
+                  // Crear nuevo formulario inicial vacío
+                  generarFormulariosCachorros();
+
+                  // Limpiar mensajes de error y clases
+                  document.querySelectorAll('.error-message').forEach(el => el.remove());
+                  document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+                  
+
+                } else {
+                   alert('Error al guardar.');
+                }
+
+             } catch (err) {
+                console.error('Error en fetch:', err);
+                alert('Error de red o servidor');
+             }
          });
       }
 
@@ -344,37 +367,35 @@ function limpiarError(input) {
 function validarFormularioCompleto() {
    let valido = true;
 
-   // Buscar por name o clase
    const damInput = document.querySelector('input[name="dam"]');
    const damIdInput = document.querySelector('.dam-id');
    const sireInput = document.querySelector('input[name="sire"]');
    const sireIdInput = document.querySelector('.sire-id');
 
    if (!damInput || damInput.value.trim() === '') {
-      mostrarError(damInput, 'Debes ingresar el nombre o IDDR de la hembra');
+      mostrarError(damInput, 'You must enter the name or IDDR');
       valido = false;
    } else {
       limpiarError(damInput);
    }
 
    if (!damIdInput || damIdInput.value.trim() === '') {
-      mostrarError(damInput, 'Debes seleccionar una hembra válida de la lista');
+      mostrarError(damInput, 'You must enter a valid name or IDDR');
       valido = false;
    }
 
    if (!sireInput || sireInput.value.trim() === '') {
-      mostrarError(sireInput, 'Debes ingresar el nombre o IDDR del macho');
+      mostrarError(sireInput, 'You must enter the name or IDDR');
       valido = false;
    } else {
       limpiarError(sireInput);
    }
 
    if (!sireIdInput || sireIdInput.value.trim() === '') {
-      mostrarError(sireInput, 'Debes seleccionar un macho válido de la lista');
+      mostrarError(sireInput, 'You must enter a valid name or IDDR');
       valido = false;
    }
 
-   // Validar cachorros
    const cards = document.querySelectorAll('#puppyNamesContainer .card');
    cards.forEach((card, index) => {
       const name = card.querySelector('.puppy-name');
@@ -382,21 +403,21 @@ function validarFormularioCompleto() {
       const birthdate = card.querySelector('.puppy-birthdate');
 
       if (name && name.value.trim() === '') {
-         mostrarError(name, `Nombre del cachorro ${index + 1} es obligatorio`);
+         mostrarError(name, `Puppy ${index + 1} name is required`);
          valido = false;
       } else if (name) {
          limpiarError(name);
       }
 
       if (color && color.value.trim() === '') {
-         mostrarError(color, `Color del cachorro ${index + 1} es obligatorio`);
+         mostrarError(color, `Puppy ${index + 1} color is required`);
          valido = false;
       } else if (color) {
          limpiarError(color);
       }
 
       if (birthdate && birthdate.value.trim() === '') {
-         mostrarError(birthdate, `Fecha de nacimiento del cachorro ${index + 1} es obligatoria`);
+         mostrarError(birthdate, `Puppy ${index + 1} birth date is required`);
          valido = false;
       } else if (birthdate) {
          limpiarError(birthdate);

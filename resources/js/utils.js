@@ -345,11 +345,20 @@ export class Utils {
          const query = input.value.trim();
          if (!query) return;
    
-         fetch(`/dogs/search/${query}/breeding`)
+         fetch(`/dogs/search/${query}`)
             .then(res => res.json())
             .then(data => {
                if (data.status === 200) {
                   showResults(data.data, container, type);
+               }else{
+                input.value = '';
+                Swal.fire({
+                    title: 'No results found',
+                    text: 'Would you like to search in another way?',
+                    icon: 'warning',
+                    backdrop: true,
+                    allowOutsideClick: false
+                });
                }
             })
             .catch(err => console.error(`Error al buscar ${type}:`, err));

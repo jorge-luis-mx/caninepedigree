@@ -126,8 +126,8 @@ Route::middleware('auth')->group(function () {
 
 
     
-    Route::get('/register-puppies', [PuppyController::class, 'register'])->name('puppies.register');
-    Route::post('/breeding/{breeding}/store-puppies', [PuppyController::class, 'store'])->name('puppies.store');
+    // Route::get('/register-puppies', [PuppyController::class, 'register'])->name('puppies.register');
+    // Route::post('/breeding/{breeding}/store-puppies', [PuppyController::class, 'store'])->name('puppies.store');
 
 
     Route::get('/puppies/register', [PuppyController::class, 'create'])->name('puppies.create');
