@@ -13,27 +13,34 @@
                <div class="mt-2" id="paypal-button-container"></div>
                <input type="" id="invoice" value="{{$dog->invoice}}" hidden>
          </div>
-
-        <!-- SUMARY -->
-        <div class="column">
+         
+         <!-- SUMARY -->
+         <div class="column">
             <section class="card">
                <div class="card-content">
-                  <p class="title">Service</p>
+                  <p class="title is-5 mb-3">Service</p>
+
                   <div class="field">
-                     <p>{{$dog->payment[0]->type}}</p>
+                     <p class="is-size-6 has-text-weight-medium">{{ ucfirst($dog->payment[0]->type) }}</p>
                   </div>
+
                   <div class="field mt-4">
-                     <label class="label">{{$dog->name}}</label>
+                     <label class="label is-size-6 has-text-grey-dark">Dog's Name:</label>
+                     <p class="is-size-6">{{ $dog->name }}</p>
                   </div>
                </div>
-               <section class="hero is-link p-2">
-                  <div class="pl-3 pr-3 is-flex  is-justify-content-space-between">
-                        <div>Total</div>
-                        <div>{{$dog->payment[0]->amount}} MXN</div>
+
+               <section class="hero is-link p-3">
+                  <div class="is-flex is-justify-content-space-between">
+                     <div class="has-text-weight-semibold">Total</div>
+                     <div class="has-text-weight-semibold">
+                        {{ $dog->payment[0]->amount }} MXN
+                     </div>
                   </div>
                </section>
             </section>
          </div>
+
       </div>
    </div>
 </section>

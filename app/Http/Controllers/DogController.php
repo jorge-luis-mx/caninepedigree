@@ -207,7 +207,7 @@ class DogController extends Controller
             $dog = Dog::create([
                 'reg_no'=>$regnum,
                 'name' => $text[0].' '.$validatedData['name'],
-                'breed' => $validatedData['breed'],
+                'breed' => 'Pit Bull Terrier',
                 'color' => $validatedData['color'],
                 'sex' => $validatedData['sex'],
                 'birthdate' => $validatedData['birthdate'],

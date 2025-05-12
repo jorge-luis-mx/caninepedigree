@@ -11,7 +11,7 @@ class DogsValidations
       
         $rules = [
             'name' => 'required|regex:/^[\pL0-9\s\'\(\)]+$/u',  // Requerido, solo letras y espacios (incluye acentos)
-            'breed' => 'required|regex:/^[\pL0-9\s\'\(\)]+$/u',  // Requerido, letras, números y espacios (incluye acentos)
+            //'breed' => 'required|regex:/^[\pL0-9\s\'\(\)]+$/u',  // Requerido, letras, números y espacios (incluye acentos)
             'color' => 'required|regex:/^[\pL\s\-]+$/u',  // Requerido, solo letras y espacios
             'sex' => 'required|regex:/^[\pL\s]+$/u',  // Requerido, solo letras y espacios
             'birthdate' => 'required|date',  // Requerido, debe ser una fecha válida

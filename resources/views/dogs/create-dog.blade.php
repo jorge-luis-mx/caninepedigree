@@ -25,7 +25,7 @@
                               </div>
                            </div>
                         </div>
-                        <div class="column">
+                        <!-- <div class="column">
                            <div class="field mb-4">
                               <label class="label" for="breed">{{__('messages.main.formDog.breed')}}</label>
                               <div class="control">
@@ -36,7 +36,7 @@
                                     value="Pit Bull Terrier" readonly>
                               </div>
                            </div>
-                        </div>
+                        </div> -->
                      </div>
 
                      <div class="columns is-multiline">
