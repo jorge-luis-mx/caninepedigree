@@ -25,8 +25,8 @@ return [
         'dogs'=>[
             'title'=>'',
             'btn'=>'Agregar un perro',
-            'search'=>'Introduce el nombre del perro',
-            'placeholder'=>'Introduce el nombre del perro...'
+            'search'=>'Ingresa el nombre para buscar perros registrados',
+            'placeholder'=>'Escribe un nombre para buscar...'
         ],
 
         'headerTable'=>[

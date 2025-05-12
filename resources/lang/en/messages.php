@@ -25,8 +25,8 @@ return [
         'dogs'=>[
             'title'=>'',
             'btn'=>'Add a Dog',
-            'search'=>"Enter the Dog's Name",
-            'placeholder'=>'Search by registration number or name...'
+            'search'=>"Enter a name to search for registered dogs",
+            'placeholder'=>'Type a name to search...'
             
         ],
 
