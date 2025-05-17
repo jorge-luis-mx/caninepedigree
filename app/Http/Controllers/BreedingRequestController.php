@@ -31,24 +31,6 @@ class BreedingRequestController extends Controller
         $user = auth()->user();
         $profile = $user->userprofile;
 
-        // $breedings = BreedingRequest::where('requester_id', $profile->profile_id)
-        // ->where('status', 'pending')
-        // ->orderBy('created_at', 'desc')
-        // ->get();
-
-        // foreach ($breedings as $key => $breeding) {
-
-        // }
-
-        // $breedings = BreedingRequest::where('requester_id', $profile->profile_id)
-        // ->where('status', 'pending')
-        // ->orderBy('created_at', 'desc')
-        // ->with(['femaleDog', 'maleDog']) // Cargamos la perra y el perro
-        // ->get();
-
-
-        // return view('breeding.list-breeding',compact('breedings'));
-
         $breedings = BreedingRequest::whereHas('maleDog', function($query) use ($profile) {
             $query->where('owner_id', $profile->profile_id);
         })

@@ -8,44 +8,27 @@
         
         @if(!empty($breedings))
 
-
-        <h2 class="title">Solicitudes de Cruza Pendientes</h2>
-
-        <input id="searchInput" class="input " type="text" placeholder="Buscar por nombre..." onkeyup="filterBreedings()">
-
-        <table class="table is-striped is-fullwidth mt-4">
-            <thead>
-                <tr>
-                    <th>Perra</th>
-                    <th>Tu Perro</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody id="breedingTableBody"></tbody>
-        </table>
-
-        <div id="pagination" class="mt-4"></div>
-
-        
-        
-        <!--         
-        <div class="table-container mt-5">
-            <table class="table is-fullwidth is-striped is-hoverable is-bordered">
-
-                <tbody id="dogTableBody">
-                    
-                </tbody>
+            <h2 class="title">Solicitudes de Cruza Pendientes</h2>
+            <input id="searchInput" class="input " type="text" placeholder="Buscar por nombre..." onkeyup="filterBreedings()">
+            <table class="table is-striped is-fullwidth mt-4">
+                <thead>
+                    <tr>
+                        <th>Perra</th>
+                        <th>Tu Perro</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="breedingTableBody"></tbody>
             </table>
-        </div>
-        <div id="pagination" class="mt-4 has-text-centered"></div> -->
+            <div id="pagination" class="mt-4"></div>
 
         @else
 
-        <div class="columns is-multiline">
-            <div class="column mt-4">
-                No dogs found for this profile.
+            <div class="columns is-multiline">
+                <div class="column mt-4">
+                    No dogs found for this profile.
+                </div>
             </div>
-        </div>
         @endif
 
     </div>
