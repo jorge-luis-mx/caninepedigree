@@ -198,15 +198,28 @@ class DogController extends Controller
         DB::beginTransaction();
 
         $regnum = $this->generarCodigoRegistro();
-        
+        $orderReference = $this->getOrderReference();
+
         try {
 
             $dogStatus = ['Admin','Administrator','Employee'];
-            $text = preg_split('/\s+/', $profile->lastName);
-            // Crea el registro sin reg_no
+
+            $payment = Payment::create([
+                'user_id' => $owner, 
+                'order_reference'=>$orderReference,
+                'amount' => 100.00, 
+                'type' => 'registration', 
+                'status' => 'pending', 
+                'payment_method' => null 
+            ]);
+
+            $paymentProtected = $payment->toArray();
+            $paymentProtected['id_hash'] = md5($payment->payment_id);
+            $paymentProtected['rol'] = $role->name;
+            
             $dog = Dog::create([
                 'reg_no'=>$regnum,
-                'name' => $text[0].' '.$validatedData['name'],
+                'name' => $validatedData['name'],
                 'breed' => 'Pit Bull Terrier',
                 'color' => $validatedData['color'],
                 'sex' => $validatedData['sex'],
@@ -217,23 +230,47 @@ class DogController extends Controller
                 'current_owner_id' => $owner,
                 'status'=> in_array($role->name, $dogStatus ) ? 'exempt':'pending'
             ]);
-
             $dog->save();
 
-            // Crear el pago
-            $payment = Payment::create([
-                'user_id' => $owner, // Usuario que realiza el pago
-                'amount' => 100.00, // Monto del pago (puedes ajustarlo según corresponda)
-                'type' => 'registration', // Tipo de pago (registro del perro)
-                'status' => 'pending', // Estado del pago (aún no completado)
-                'payment_method' => null // Método de pago (ajústalo según la lógica de pago)
-            ]);
-
-            // Registrar la relación en dog_payments
             DogPayment::create([
                 'dog_id' => $dog->dog_id,
                 'payment_id' => $payment->payment_id
             ]);
+
+            //fin
+            // $dogStatus = ['Admin','Administrator','Employee'];
+            // $text = preg_split('/\s+/', $profile->lastName);
+            // Crea el registro sin reg_no
+            // $dog = Dog::create([
+            //     'reg_no'=>$regnum,
+            //     'name' => $text[0].' '.$validatedData['name'],
+            //     'breed' => 'Pit Bull Terrier',
+            //     'color' => $validatedData['color'],
+            //     'sex' => $validatedData['sex'],
+            //     'birthdate' => $validatedData['birthdate'],
+            //     'sire_id' => $sire_id,
+            //     'dam_id' => $dam_id,
+            //     'breeder_id' => $owner,
+            //     'current_owner_id' => $owner,
+            //     'status'=> in_array($role->name, $dogStatus ) ? 'exempt':'pending'
+            // ]);
+
+            // $dog->save();
+
+            // Crear el pago
+            // $payment = Payment::create([
+            //     'user_id' => $owner, // Usuario que realiza el pago
+            //     'amount' => 100.00, // Monto del pago (puedes ajustarlo según corresponda)
+            //     'type' => 'registration', // Tipo de pago (registro del perro)
+            //     'status' => 'pending', // Estado del pago (aún no completado)
+            //     'payment_method' => null // Método de pago (ajústalo según la lógica de pago)
+            // ]);
+
+            // Registrar la relación en dog_payments
+            // DogPayment::create([
+            //     'dog_id' => $dog->dog_id,
+            //     'payment_id' => $payment->payment_id
+            // ]);
 
             if ($sire_id == null ) {
 
@@ -268,7 +305,8 @@ class DogController extends Controller
 
             $dog->dog_id_md = md5($dog->dog_id);
             $dog->rol = $role->name;
-
+            $paymentProtected['rol'] = $role->name;
+            
             $parent_type = $request->sex === 'M' ? 'sire' : 'dam';
 
             // Verificamos si hay una solicitud de cruza pendiente para este usuario
@@ -294,10 +332,9 @@ class DogController extends Controller
                 // Mail::to($requestingUser->email)->send(new Breeding($dog));
             }
 
-           
             $data['message'] = 'Pricing inserted successfully';
             $data['status'] = 200;
-            $data['data'] = $dog;
+            $data['data'] = $paymentProtected;
             // Confirma la transacción
             DB::commit();
         } catch (\Exception $e) {
@@ -333,6 +370,17 @@ class DogController extends Controller
     }
     
 
+    public function getOrderReference(){
+
+        $cadena = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        $orderReference = '';
+
+        for ($i = 0; $i < 12; $i++) {
+            $orderReference .= $cadena[random_int(0, strlen($cadena) - 1)];
+        }
+
+        return $orderReference;
+    }
 
     /**
      * Display the specified resource.

@@ -192,7 +192,8 @@ export  function dogs() {
                       
                     
                 }else{
-                    let id = result.data.dog_id_md;
+                   
+                    let id = result.data.id_hash;
                     const editUrl = `/payments/pay/${id}`;
                     window.location.href = editUrl;
                 }

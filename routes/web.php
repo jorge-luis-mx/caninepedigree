@@ -91,7 +91,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dogs/search/{reg_no}/{breedingSearch?}', [DogController::class, 'search'])->name('dogs.search');
 
     //payments
-    Route::get('/payments/pay/{id}', [PaymentController::class,'pay']);
+    Route::get('/payments/pay/{id}/{puppies?}', [PaymentController::class,'pay']);
     Route::post('/payments/paypal/create', [PaymentController::class,'createOrder']);
     Route::get('/payments/paypal/capture/{id}', [PaymentController::class,'captureOrder']);
     Route::post('/payments/paypal/payed', [PaymentController::class,'payedOrder']);

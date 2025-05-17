@@ -7,6 +7,10 @@ use App\Models\BreedingRequest;
 use App\Validations\PuppiesValidations;
 
 use App\Models\Dog;
+use App\Models\Payment;
+use App\Models\DogPayment;
+use App\Models\UserProfile;
+
 use Illuminate\Support\Facades\DB;
 
 class PuppyController extends Controller
@@ -39,7 +43,16 @@ class PuppyController extends Controller
     {
         $user = auth()->user();
         $profile = $user->userprofile;
-        $owner = $profile->profile_id;
+
+
+        $role = $user->role;
+        $permissions = $role->permissions; 
+        
+        $arrayRole =['Employee','Admin'];
+        
+        $ownerProfile = UserProfile::find(1);
+        $owner = in_array($role->name, $arrayRole) ? $ownerProfile->profile_id : $profile->profile_id;
+
 
         // Limpiar todos los campos (incluso los anidados dentro de 'puppies')
         $data = $request->all();
@@ -67,12 +80,26 @@ class PuppyController extends Controller
         $regnum = generarCodigoRegistro();
 
         try {
+            $dogStatus = ['Admin','Administrator','Employee'];
+
             // Obtener solo los datos validados
             $validated = $validator->validated();
+            $orderReference = $this->getOrderReference();
+            $total = $validated['totalPuppies'] * 100;
+            $payment = Payment::create([
+                'user_id' => $owner, 
+                'order_reference'=>$orderReference,
+                'amount' => $total, 
+                'type' => 'registration', 
+                'status' => 'pending', 
+                'payment_method' => null 
+            ]);
+            $paymentProtected = $payment->toArray();
+            $paymentProtected['id_hash'] = md5($payment->payment_id);
 
             foreach ($validated['puppies'] as $puppy) {
 
-                Dog::create([
+                $dog = Dog::create([
                     'reg_no'    =>$regnum,
                     'name'      => $puppy['name'],
                     'breed'      => 'Pit Bull Terrier',
@@ -84,12 +111,24 @@ class PuppyController extends Controller
                     'breeder_id'=>$owner,
                     'current_owner_id'=>$owner,
                     'is_puppy'    => 1, 
+                    'status'=> in_array($role->name, $dogStatus ) ? 'exempt':'pending'
+                ]);
+
+                DogPayment::create([
+                    'dog_id' => $dog->dog_id,
+                    'payment_id' => $payment->payment_id
                 ]);
             }
 
             DB::commit();
-
-            return response()->json(['message' => 'Cachorros registrados exitosamente.'], 201);
+            $data = [
+                'status' => 200,
+                'message' => 'Cachorros registrados exitosamente',
+                'data'=>$paymentProtected,
+                'errors' => null,
+            ];
+            
+            return response()->json($data);
 
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -131,7 +170,17 @@ class PuppyController extends Controller
 
         // return response()->json(['success' => true]);
     }
+    public function getOrderReference(){
 
+        $cadena = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        $orderReference = '';
+
+        for ($i = 0; $i < 12; $i++) {
+            $orderReference .= $cadena[random_int(0, strlen($cadena) - 1)];
+        }
+
+        return $orderReference;
+    }
     /**
      * Show the form for creating a new resource.
      */

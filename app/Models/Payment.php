@@ -16,6 +16,7 @@ class Payment extends Model
 
     protected $fillable = [
         'user_id',
+        'order_reference',
         'amount',
         'breeding_request_id',
         'type',

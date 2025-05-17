@@ -156,39 +156,56 @@
                    },
                    body: JSON.stringify(formData)
                 });
-                const result = await response.json();
-                console.log(result);
 
-                if (response.ok) {
-                   alert('¡Cachorros guardados!');
+                  const result = await response.json();
+                  if (response.ok) {
 
-                  sessionStorage.removeItem('puppiesTemp');
+                        const dogStatus = ['Admin', 'Administrator', 'Employee'];
+                        if (dogStatus.includes(result.data.rol)) {
 
-                  // Limpiar campos principales del formulario
-                  document.querySelector('input[name="sire"]').value = '';
-                  document.querySelector('input[name="sire_id"]').value = '';
-                  document.querySelector('input[name="dam"]').value = '';
-                  document.querySelector('input[name="dam_id"]').value = '';
+                           Swal.fire({
+                                 icon: 'success',
+                                 title: 'Registration Successful!',
+                                 text: 'The dog has been registered successfully.',
+                                 confirmButtonText: 'OK'
+                           }).then((result) => {
+                                 if (result.isConfirmed) {
+                                    window.location.href = '/dogs';
+                                 }
+                           });
+                              
+                           
+                        }else{
+                           
+                           let id = result.data.id_hash;
+                           const editUrl = `/payments/pay/${id}/puppies`;
+                           window.location.href = editUrl;
+                        }
 
-                  // Eliminar todos los formularios de cachorros generados
-                  const puppiesContainer = document.querySelector('#puppyNamesContainer'); // Ajusta el selector si es diferente
-                  puppiesContainer.innerHTML = '';
+                        sessionStorage.removeItem('puppiesTemp');
+                        // Limpiar campos principales del formulario
+                        document.querySelector('input[name="sire"]').value = '';
+                        document.querySelector('input[name="sire_id"]').value = '';
+                        document.querySelector('input[name="dam"]').value = '';
+                        document.querySelector('input[name="dam_id"]').value = '';
 
-                  // Reiniciar contador si lo usas
-                  contador = 1; // Asegúrate de declarar esta variable en el scope global
-                  actualizarContador();
-                  // Crear nuevo formulario inicial vacío
-                  generarFormulariosCachorros();
+                        // Eliminar todos los formularios de cachorros generados
+                        const puppiesContainer = document.querySelector('#puppyNamesContainer'); // Ajusta el selector si es diferente
+                        puppiesContainer.innerHTML = '';
 
-                  // Limpiar mensajes de error y clases
-                  document.querySelectorAll('.error-message').forEach(el => el.remove());
-                  document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+                        // Reiniciar contador si lo usas
+                        contador = 1; // Asegúrate de declarar esta variable en el scope global
+                        actualizarContador();
+                        // Crear nuevo formulario inicial vacío
+                        generarFormulariosCachorros();
 
-                  
+                        // Limpiar mensajes de error y clases
+                        document.querySelectorAll('.error-message').forEach(el => el.remove());
+                        document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
 
-                } else {
-                   alert('Error al guardar.');
-                }
+                  } else {
+                     alert('Error al guardar.');
+                  }
 
              } catch (err) {
                 console.error('Error en fetch:', err);
@@ -460,7 +477,7 @@ function capturarDatosCompletos() {
    // Combinar y retornar todo
    return {
       ...datosGenerales,      // Ej: mother_id, father_id, camada_id, etc.
-      count: puppies.length,
+      totalPuppies: puppies.length,
       puppies: puppies
    };
 }

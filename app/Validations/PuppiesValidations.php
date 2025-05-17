@@ -10,6 +10,7 @@ class PuppiesValidations
     {
         $rules = [
             // Validar campos del padre y madre
+            'totalPuppies'=>'required',
             'sire' => 'required|regex:/^[\pL0-9\s\'\(\)]+$/u',
             'sire_id' => 'required|integer',
             'dam' => 'required|regex:/^[\pL0-9\s\'\(\)]+$/u',

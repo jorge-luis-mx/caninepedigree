@@ -11,35 +11,57 @@
                <!-- Alternative option -->
                <b>Pay with a Paypal account</b>
                <div class="mt-2" id="paypal-button-container"></div>
-               <input type="" id="invoice" value="{{$dog->invoice}}" hidden>
+               <input type="hidden" id="invoice" value="{{ $payment->order_reference }}">
+
          </div>
          
          <!-- SUMARY -->
-         <div class="column">
-            <section class="card">
-               <div class="card-content">
-                  <p class="title is-5 mb-3">Service</p>
+<div class="column">
+    <section class="card">
+        <div class="card-content">
+            <p class="title is-5 mb-3">Service</p>
 
-                  <div class="field">
-                     <p class="is-size-6 has-text-weight-medium">{{ ucfirst($dog->payment[0]->type) }}</p>
-                  </div>
+            <div class="field">
+                <p class="is-size-6 has-text-weight-medium">
+                    {{ ucfirst($payment->type ?? 'Sin pago') }}
+                </p>
+            </div>
 
-                  <div class="field mt-4">
-                     <label class="label is-size-6 has-text-grey-dark">Dog's Name:</label>
-                     <p class="is-size-6">{{ $dog->name }}</p>
-                  </div>
+            <div class="field mt-4">
+                <label class="label is-size-6 has-text-grey-dark">
+                    {{ isset($dog) ? "Dog's Name:" : "Puppies' Names:" }}
+                </label>
+
+               <div class="is-size-6">
+                  @if(isset($dog))
+                     {{ $dog->name }}
+                  @elseif(isset($puppies) && $puppies->count())
+                     <ul>
+                           @foreach($puppies as $puppy)
+                              <li>{{ $puppy->name }}</li>
+                           @endforeach
+                     </ul>
+                  @else
+                     Sin nombre
+                  @endif
                </div>
 
-               <section class="hero is-link p-3">
-                  <div class="is-flex is-justify-content-space-between">
-                     <div class="has-text-weight-semibold">Total</div>
-                     <div class="has-text-weight-semibold">
-                        {{ $dog->payment[0]->amount }} MXN
-                     </div>
-                  </div>
-               </section>
-            </section>
-         </div>
+            </div>
+        </div>
+
+        <section class="hero is-link p-3">
+            <div class="is-flex is-justify-content-space-between">
+                <div class="has-text-weight-semibold">Total</div>
+                <div class="has-text-weight-semibold">
+                    {{ $payment->amount ?? '0.00' }} MXN
+                </div>
+            </div>
+        </section>
+    </section>
+</div>
+
+
+
 
       </div>
    </div>
