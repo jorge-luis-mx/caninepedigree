@@ -15,9 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class PuppyController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         //
@@ -53,7 +51,6 @@ class PuppyController extends Controller
         $ownerProfile = UserProfile::find(1);
         $owner = in_array($role->name, $arrayRole) ? $ownerProfile->profile_id : $profile->profile_id;
 
-
         // Limpiar todos los campos (incluso los anidados dentro de 'puppies')
         $data = $request->all();
 
@@ -80,22 +77,25 @@ class PuppyController extends Controller
         $regnum = generarCodigoRegistro();
 
         try {
-            $dogStatus = ['Admin','Administrator','Employee'];
 
+            $dogStatus = ['Admin','Administrator','Employee'];
             // Obtener solo los datos validados
             $validated = $validator->validated();
             $orderReference = $this->getOrderReference();
             $total = $validated['totalPuppies'] * 100;
+
             $payment = Payment::create([
                 'user_id' => $owner, 
                 'order_reference'=>$orderReference,
                 'amount' => $total, 
                 'type' => 'registration', 
                 'status' => 'pending', 
-                'payment_method' => null 
+                'payment_method' => 'paypal' 
             ]);
+
             $paymentProtected = $payment->toArray();
             $paymentProtected['id_hash'] = md5($payment->payment_id);
+            $paymentProtected['rol'] = $role->name;
 
             foreach ($validated['puppies'] as $puppy) {
 
@@ -170,6 +170,7 @@ class PuppyController extends Controller
 
         // return response()->json(['success' => true]);
     }
+
     public function getOrderReference(){
 
         $cadena = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -181,49 +182,31 @@ class PuppyController extends Controller
 
         return $orderReference;
     }
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
         return view('puppies.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    // public function store(Request $request)
-    // {
-    //     //
-    // }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, string $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(string $id)
     {
         //

@@ -122,7 +122,7 @@
          const obj = JSON.parse(saved);
 
          contador = obj.count > 0 ? obj.count : 1;
-         console.log(contador);
+
          actualizarContador();
          mostrarFormularioCachorros();
          generarFormulariosCachorros(obj.puppies);
