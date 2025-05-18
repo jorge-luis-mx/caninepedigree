@@ -86,9 +86,7 @@ class DogController extends Controller
         return view('dogs.list-dogs',compact('dogs','role','permissions'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
         return view('dogs.create-dog');
@@ -153,9 +151,7 @@ class DogController extends Controller
         return response()->json($data);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
        
@@ -382,13 +378,10 @@ class DogController extends Controller
         return $orderReference;
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
         
-
         $dog = Dog::whereRaw('MD5(dog_id) = ?', [$id])
         ->with([
             'sire', 'dam',
@@ -407,25 +400,19 @@ class DogController extends Controller
         return view('dogs/show-dog',compact('dog'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, string $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(string $id)
     {
 
@@ -437,10 +424,7 @@ class DogController extends Controller
     
             return response()->json(['success' => true]);
         }
-        // if ($dog) {
-        //     $dog->delete();
-        //     return response()->json(['success' => true]);
-        // }
+
         return response()->json(['success' => false], 400);
         
     }
@@ -450,7 +434,6 @@ class DogController extends Controller
     public function showPedigree($id)
     {
        
-        
         $dog = Dog::whereRaw('MD5(dog_id) = ?', [$id])
             ->with([
                 'sire', 'dam',
@@ -468,4 +451,5 @@ class DogController extends Controller
         return view('pedigree.show-pedigree', compact('pedigree'));
        
     }
+
 }
