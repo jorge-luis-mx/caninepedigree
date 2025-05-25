@@ -64,7 +64,7 @@ class DogController extends Controller
             return view('dogs.list-dogs',compact('dogs','role','permissions'));
         }
 
-        $arrayOwner = ['Admin','Employee'];
+        $arrayOwner = ['Administrator','Employee'];
         $ownerProfile = UserProfile::find(1);
         $owner = in_array($role->name, $arrayOwner) ? $ownerProfile->profile_id : $profile_id;
 

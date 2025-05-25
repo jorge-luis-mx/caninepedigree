@@ -1,6 +1,6 @@
 <x-app-layout>
 
-   
+    <h1 class="is-size-4">Dogs</h1>
 
    <div class="columns is-multiline">
       <div class="column">

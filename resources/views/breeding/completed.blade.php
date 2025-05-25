@@ -1,7 +1,9 @@
 <x-app-layout>
 
-<div class="container">
-    <h2 class="title">Cruzas Completadas</h2>
+<h1 class="is-size-4">Manage Request</h1>
+
+<div class="container mt-6">
+    
 
     <input id="searchInput" class="input" type="text" placeholder="Buscar por nombre..." onkeyup="filterBreedings()">
 

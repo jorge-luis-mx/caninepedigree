@@ -1,11 +1,11 @@
 import './bootstrap';
 import Alpine from 'alpinejs';
 import mainFunction from './dashboard.js';
-import { airport } from './airport.js';
-import { map } from './map.js';
-import { serviceType } from './serviceType.js';
-import { pricing } from './pricing.js';
-import { operations } from './operations.js';
+// import { airport } from './airport.js';
+// import { map } from './map.js';
+// import { serviceType } from './serviceType.js';
+// import { pricing } from './pricing.js';
+// import { operations } from './operations.js';
 import { profile } from './profile.js';
 import { dogs } from './dogs.js';
 import { pedigree } from './pedigree.js';

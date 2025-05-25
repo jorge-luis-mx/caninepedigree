@@ -2,13 +2,12 @@
 <x-app-layout>
 
 
+    <h1 class="is-size-4">Manage Request</h1>
 
-
-   <div class="container">
+   <div class="container mt-6">
         
         @if(!empty($breedings))
 
-            <h2 class="title">Solicitudes de Cruza Pendientes</h2>
             <input id="searchInput" class="input " type="text" placeholder="Buscar por nombre..." onkeyup="filterBreedings()">
             <table class="table is-striped is-fullwidth mt-4">
                 <thead>

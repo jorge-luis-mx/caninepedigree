@@ -1,5 +1,6 @@
 <x-app-layout>
 
+    <h1 class="is-size-4">New Request</h1>
 
     <div class="columns is-multiline mt-4">
 

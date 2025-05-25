@@ -2,7 +2,7 @@
 
    <div class="container">
 
-      <h3>Registrar Cachorros</h3>
+      <h1 class="is-size-4">Puppies</h1>
       
       <div class="columns is-multiline">
          <div class="column is-full is-flex is-justify-content-flex-end	">
