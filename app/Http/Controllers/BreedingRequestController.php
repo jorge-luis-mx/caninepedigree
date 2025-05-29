@@ -157,7 +157,7 @@ class BreedingRequestController extends Controller
                     'female_dog_id' => $myDog->sex === 'F' ? $myDog->dog_id : $otherDog->dog_id,
                     'male_dog_id' => $myDog->sex === 'M' ? $myDog->dog_id : $otherDog->dog_id,
                     'requester_id'=>$userProfile->profile_id,
-                    'parent_type'=>$myDog->sex === 'M'? 'sire':'dam',
+                    // 'parent_type'=>$myDog->sex === 'M'? 'sire':'dam',
                     'owner_id'=> $owner->profile_id,
                     'status' => 'pending',
                 ]);
@@ -421,6 +421,10 @@ class BreedingRequestController extends Controller
         return redirect()->route('breeding.listCompleted')->with('success', 'Fotos subidas correctamente.');
     }
 
+    public function listSent(){
 
+        $send_request = BreedingRequest::with(['femaleDog', 'maleDog'])->get();
+        return view('breeding.list-sent-request', compact('send_request'));
+    }
 
 }

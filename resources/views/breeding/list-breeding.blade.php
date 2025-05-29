@@ -12,9 +12,9 @@
             <table class="table is-striped is-fullwidth mt-4">
                 <thead>
                     <tr>
-                        <th>Perra</th>
-                        <th>Tu Perro</th>
-                        <th>Acción</th>
+                        <th>Female Dog</th>
+                        <th>Your Male Dog</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="breedingTableBody"></tbody>
@@ -54,7 +54,7 @@
             row.innerHTML = `
                 <td>${breeding.female_dog.name}</td>
                 <td>${breeding.male_dog.name}</td>
-                <td><button class="button is-success is-small" onclick="completeBreeding(${breeding.request_id})">Completar Cruza</button></td>
+                <td><button class="button is-success is-small" onclick="completeBreeding(${breeding.request_id})">Complete Breeding</button></td>
             `;
             tableBody.appendChild(row);
         });

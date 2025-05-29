@@ -46,7 +46,6 @@
                                             name="dog"
                                             id="dog">
                                             <!-- Campo oculto para el dog_id -->
-                                            <!-- <input type="text" class="input dog_id is-hidden" name="dog_id"> -->
                                             <input type="hidden" class="dog_id" name="dog_id" id="dog_id">
                                             <small class="error-message"></small>
                                             <span class="icon is-small is-left">

@@ -10,9 +10,9 @@
     <table class="table is-striped is-fullwidth mt-4">
         <thead>
             <tr>
-                <th>Perra</th>
-                <th>Tu Perro</th>
-                <th>Acción</th>
+                <th>Female Dog</th>
+                <th>Your Male Dog</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody id="breedingTableBody"></tbody>
@@ -45,7 +45,7 @@
                 <td>${breeding.male_dog.name}</td>
                 <td>
                     <a href="/breeding/${breeding.request_id}/upload-photos" class="button is-link is-small has-text-white">
-                        Subir Fotos de Cruza
+                        Upload Breeding Photos 
                     </a>
                 </td>
             `;
