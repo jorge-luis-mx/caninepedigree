@@ -42,4 +42,9 @@ class BreedingRequest extends Model
     {
         return $this->belongsTo(UserProfile::class, 'owner_id');
     }
+
+    public function photos()
+    {
+        return $this->hasMany(BreedingPhoto::class);
+    }
 }

@@ -73,6 +73,12 @@ return [
         'pedigree'=>[
             'title'=>'Pedigrí',
         ],
+
+    ],
+    'files'=>[
+        'upload_photos' => 'Subir Fotos',
+        'select_files' => 'Seleccionar Archivos',
+        'no_files_selected' => 'Ningún archivo seleccionado',
     ]
 ];
 

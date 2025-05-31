@@ -33,6 +33,8 @@ export  function dogs() {
                                 
                                 form.querySelector(`.${type}Mail`).classList.remove('is-hidden');
                                 form.querySelector(`.search${capitalize(type)}`).classList.add('is-hidden');
+                                const container = document.getElementById(`${type}Results`);
+                                container.innerHTML = '';
                             }
                         });
                     }

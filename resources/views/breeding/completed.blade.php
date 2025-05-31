@@ -1,6 +1,6 @@
 <x-app-layout>
 
-<h1 class="is-size-4">Manage Request</h1>
+<h1 class="is-size-4">Confirmed Request</h1>
 
 <div class="container mt-6">
     

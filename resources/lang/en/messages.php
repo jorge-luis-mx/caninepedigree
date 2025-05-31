@@ -75,5 +75,11 @@ return [
             'title'=>'Pedidree',
         ],
 
+
+    ],
+    'files'=>[
+        'upload_photos' => 'Upload Photos',
+        'select_files' => 'Select Files',
+        'no_files_selected' => 'No files selected',
     ]
 ];

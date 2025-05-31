@@ -18,6 +18,9 @@ use App\Models\Dog;
 use App\Models\UserProfile;
 use App\Models\DogParentRequest;
 use App\Models\BreedingRequest;
+
+use App\Models\BreedingPhoto;
+
 //traits
 use App\Traits\Pedigree;
 
@@ -153,11 +156,39 @@ class BreedingRequestController extends Controller
                 $userProfile = $otherDog->breeder;
                 $owner = $otherDog->currentOwner;
 
+                // Identificar cuál es la hembra
+                $femaleDogId = $myDog->sex === 'F' ? $myDog->dog_id : $otherDog->dog_id;
+
+                // Buscar la última solicitud de cruza (pendiente o completada) para esta perra
+                $lastBreeding = BreedingRequest::where('female_dog_id', $femaleDogId)
+                    ->whereIn('status', ['pending', 'completed'])
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+
+                if ($lastBreeding) {
+                    // Si está pendiente, denegar nueva solicitud
+                    if ($lastBreeding->status === 'pending') {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'This female already has a pending breeding request.',
+                        ], 403);
+                    }
+
+                    // Si está completada, verificar si han pasado al menos 12 meses
+                    $monthsSinceLast = $lastBreeding->created_at->diffInMonths(now());
+                    if ($monthsSinceLast < 12) {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'This female was recently bred. At least 12 months must pass between breedings.',
+                        ], 403);
+                    }
+                }
+
+
                 $breedingRequest = BreedingRequest::create([
                     'female_dog_id' => $myDog->sex === 'F' ? $myDog->dog_id : $otherDog->dog_id,
                     'male_dog_id' => $myDog->sex === 'M' ? $myDog->dog_id : $otherDog->dog_id,
-                    'requester_id'=>$userProfile->profile_id,
-                    // 'parent_type'=>$myDog->sex === 'M'? 'sire':'dam',
+                    'requester_id'=>$myOwner->profile_id, //$userProfile->profile_id,
                     'owner_id'=> $owner->profile_id,
                     'status' => 'pending',
                 ]);
@@ -375,7 +406,7 @@ class BreedingRequestController extends Controller
         $profile = $user->userprofile;
 
         $breedings = BreedingRequest::whereHas('maleDog', function($query) use ($profile) {
-                $query->where('owner_id', $profile->profile_id);
+                $query->where('requester_id', $profile->profile_id);
             })
             ->where('status', 'completed')
             ->with(['femaleDog', 'maleDog'])
@@ -392,9 +423,9 @@ class BreedingRequestController extends Controller
 
         
         // Verificación de dueño
-        if ($breeding->maleDog->current_owner_id !== auth()->user()->userprofile->profile_id) {
-            abort(403, 'No autorizado');
-        }
+        // if ($breeding->maleDog->current_owner_id !== auth()->user()->userprofile->profile_id) {
+        //     abort(403, 'No autorizado');
+        // }
 
         return view('breeding.upload-photos', compact('breeding'));
     }
@@ -402,20 +433,29 @@ class BreedingRequestController extends Controller
     // Guardar las fotos
     public function storePhotos(Request $request, $breedingId)
     {
+        
         $breeding = BreedingRequest::findOrFail($breedingId);
 
-        if ($breeding->maleDog->current_owner_id !== auth()->user()->userprofile->profile_id) {
-            abort(403, 'No autorizado');
-        }
-
+        // Validar que se envíen fotos (array) y cada una sea imagen < 2MB
         $request->validate([
-            'photos.*' => 'required|image|max:2048'
+            'photos' => 'required|array',
+            'photos.*' => 'image|max:2048',
         ]);
 
-        foreach ($request->file('photos') as $photo) {
+        // Verificar si ya existe foto principal para esta cruza
+        $hasMain = BreedingPhoto::where('breeding_request_id', $breedingId)
+            ->where('is_main', 1)
+            ->exists();
+
+        foreach ($request->file('photos') as $index => $photo) {
             $path = $photo->store('breeding_photos', 'public');
 
-            // Aquí puedes guardar en tabla breeding_photos si quieres
+            BreedingPhoto::create([
+                'breeding_request_id' => $breedingId,
+                'photo_url' => $path,
+                // Si no hay principal y esta es la PRIMERA foto (index=0), marcar como principal
+                'is_main' => (!$hasMain && $index === 0) ? 1 : 0,
+            ]);
         }
 
         return redirect()->route('breeding.listCompleted')->with('success', 'Fotos subidas correctamente.');
@@ -423,7 +463,7 @@ class BreedingRequestController extends Controller
 
     public function listSent(){
 
-        $send_request = BreedingRequest::with(['femaleDog', 'maleDog'])->get();
+        $send_request = BreedingRequest::with(['femaleDog', 'maleDog'])->where('status', 'pending')->get();
         return view('breeding.list-sent-request', compact('send_request'));
     }
 

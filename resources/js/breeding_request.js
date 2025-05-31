@@ -163,10 +163,25 @@ export  function breedingRequest() {
                         backdrop: true
                     });
                     form.reset();
-                } else if (result.errors) {
-                    
+                }else if(result.status === 'error'){
+                    Swal.fire({
+                        title: 'Breeding request sent!',
+                        text: result.message,
+                        icon: 'warning',
+                        confirmButtonText: 'OK',
+                        allowOutsideClick: false,
+                        backdrop: true
+                    });
+                }else{
+
                     showErrors(form, result.errors);
-                }
+                } 
+                
+                
+                // else if (result.errors) {
+                    
+                //     showErrors(form, result.errors);
+                // }
 
                 })
                 .catch(err => {
