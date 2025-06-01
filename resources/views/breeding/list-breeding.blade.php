@@ -95,11 +95,42 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Cruza completada con éxito');
+
+                    Swal.fire({
+                        title: 'Breeding Completed!',
+                        text: 'The breeding request has been successfully registered.',
+                        icon: 'success',
+                        confirmButtonText: 'Got it',
+                        confirmButtonColor: '#28a745',
+                        background: '#f0fff5',
+                        iconColor: '#28a745',
+                        allowOutsideClick: false,
+                        backdrop: true,
+                        timer: 3500,
+                        timerProgressBar: true
+                    });
+
+                    
                     breedings = breedings.filter(b => b.request_id !== requestId);
                     populateTable(breedings);
+
                 } else {
-                    alert('Error al completar la cruza');
+
+                Swal.fire({
+                    title: 'Oops!',
+                    text: data.message || 'Something went wrong. Please try again.',
+                    icon: 'warning',
+                    confirmButtonText: 'Understood',
+                    confirmButtonColor: '#e6a100', // warm yellow tone
+                    background: '#fffbea',
+                    iconColor: '#e6a100',
+                    allowOutsideClick: false,
+                    backdrop: true,
+                    timer: 4000,
+                    timerProgressBar: true
+                });
+
+
                 }
             });
         }
