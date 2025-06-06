@@ -1,3 +1,35 @@
 .input-error {
    border: 1px solid red;
 }
+
+
+
+    .image-preview {
+        position: relative;
+        display: inline-block;
+        margin: 10px;
+    }
+
+    .image-preview img {
+        max-width: 150px;
+        border-radius: 6px;
+    }
+
+.delete-btn {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: #ff3860;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 16px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
