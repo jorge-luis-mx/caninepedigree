@@ -14,7 +14,7 @@ trait Pedigree
      * @param int $maxGenerations
      * @return array|null
      */
-    public function findPedigree(?Dog $dog, int $generation = 1, int $maxGenerations = 4): ?array
+    public function findPedigree(?Dog $dog, int $generation = 1, int $maxGenerations = 5): ?array
     {
         if (!$dog || $generation > $maxGenerations) {
             return null;

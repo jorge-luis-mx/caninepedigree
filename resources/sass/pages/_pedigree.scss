@@ -242,11 +242,14 @@ h2 {
 .table a:hover {
   color: #007BFF;
 }
-
+table td {
+  vertical-align: middle !important;
+  text-align: center;
+}
 /* Centrar contenido de celdas con rowspan 4 */
 table td[rowspan="4"] {
   vertical-align: middle; /* Centra verticalmente */
-  //text-align: center; /* Centra horizontalmente */
+  text-align: center; /* Centra horizontalmente */
 }
 
 table td[rowspan="2"] {

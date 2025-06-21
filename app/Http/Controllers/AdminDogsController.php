@@ -63,6 +63,7 @@ class AdminDogsController extends Controller
         DB::beginTransaction();
 
         $regnum = $this->generarCodigoRegistro();
+
         try {
 
             // Crea el registro sin reg_no
@@ -82,13 +83,17 @@ class AdminDogsController extends Controller
 
             $dog->save();
 
-            // Crear el pago
+
+
+            $orderReference = $this->getOrderReference();
+
             $payment = Payment::create([
-                'user_id' => 18, // Usuario que realiza el pago
-                'amount' => 100.00, // Monto del pago (puedes ajustarlo según corresponda)
-                'type' => 'registration', // Tipo de pago (registro del perro)
-                'status' => 'completed', // Estado del pago (aún no completado)
-                'payment_method' => 'card' // Método de pago (ajústalo según la lógica de pago)
+                'user_id' => 1, 
+                'order_reference'=>$orderReference,
+                'amount' => 100.00, 
+                'type' => 'registration', 
+                'status' => 'pending', 
+                'payment_method' => 'Paypal' 
             ]);
 
             // Registrar la relación en dog_payments
@@ -98,6 +103,7 @@ class AdminDogsController extends Controller
             ]);
 
             DB::commit();
+       
             return redirect()->back()->with('success', '¡El perro fue registrado con éxito!');
         } catch (\Exception $e) {
 
@@ -107,7 +113,17 @@ class AdminDogsController extends Controller
             DB::rollBack();
         }
     }
+    public function getOrderReference(){
 
+        $cadena = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        $orderReference = '';
+
+        for ($i = 0; $i < 12; $i++) {
+            $orderReference .= $cadena[random_int(0, strlen($cadena) - 1)];
+        }
+
+        return $orderReference;
+    }
     public function generarCodigoRegistro() {
         $letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         $numeros = "0123456789";
