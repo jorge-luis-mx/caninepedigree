@@ -31,9 +31,195 @@ class AdminDogsController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function pedigree()
     {
-        //
+        return view('pedigree/index-pedigree');
+    }
+
+    public function storePedigree(Request $request){
+
+        $generations = $request->input('generations');
+        $registeredDogs = [];
+
+        DB::beginTransaction();
+
+        try {
+            foreach ($generations as $generationNumber => $dogs) {
+                foreach ($dogs as $role => $dogData) {
+                    $dogName = trim($dogData['name'] ?? '');
+                    $sex = $dogData['sex'] ?? null;
+                    $color = $dogData['color'] ?? null;
+
+                    if (!$dogName) {
+                        continue; // O lanzar una excepción si lo deseas
+                    }
+
+                    $regnum = $this->generarCodigoRegistro();
+                    $orderReference = $this->getOrderReference();
+
+                    // Verificar si ya existe (puedes ampliar lógica si deseas considerar sex y color también)
+                    $dog = Dog::where('name', $dogName)->first();
+
+                    if (!$dog) {
+                        $dog = Dog::create([
+                            'reg_no' => $regnum,
+                            'name' => $dogName,
+                            'breed' => 'Pit Bull Terrier', // Si es fijo
+                            'color' => $color,
+                            'sex' => $sex,
+                            'birthdate'=>'2006-06-12',
+                            'sire_id'=>null,
+                            'dam_id'=>null,
+                            'breeder_id'=>1,
+                            'current_owner_id'=>1,
+                            'status'=>'completed',
+                            'is_puppy'=>0,
+                            'breeding_request_id'=>null
+                        ]);
+                    }
+
+                    // Guardar agrupado por generación y rol
+                    $registeredDogs[$generationNumber][$role] = $dog->dog_id;
+                }
+            }
+
+
+            foreach ($registeredDogs as $key => $itemDog) {
+                
+                
+                foreach ($itemDog as $roleKey => $value) {
+                    
+                    switch ($roleKey) {
+                        
+                        case 'dogOne':
+                            Dog::where('dog_id', $value)->update([
+                                'sire_id' => $registeredDogs[2]['father'],
+                                'dam_id' => $registeredDogs[2]['mother'],
+                            ]);
+                            break;
+
+                        case 'father':
+                            Dog::where('dog_id', $value)->update([
+                                'sire_id' => $registeredDogs[3]['fatherFather'],
+                                'dam_id' => $registeredDogs[3]['fatherMother'],
+                            ]);
+                            break;
+
+                        case 'mother':
+                            Dog::where('dog_id', $value)->update([
+                                'sire_id' => $registeredDogs[3]['motherFather'],
+                                'dam_id' => $registeredDogs[3]['motherMother'],
+                            ]);
+                            break;
+
+                        //3
+                        case 'fatherFather':
+                            Dog::where('dog_id', $value)->update([
+                                'sire_id' => $registeredDogs[4]['bisabuelo1'],
+                                'dam_id' => $registeredDogs[4]['bisabuela1'],
+                            ]);
+                            break;
+
+                        case 'fatherMother':
+                            Dog::where('dog_id', $value)->update([
+                                'sire_id' => $registeredDogs[4]['bisabuelo2'],
+                                'dam_id' => $registeredDogs[4]['bisabuela2'],
+                            ]);
+                            break;
+
+                        case 'motherFather':
+                            Dog::where('dog_id', $value)->update([
+                                'sire_id' => $registeredDogs[4]['bisabuelo3'],
+                                'dam_id' => $registeredDogs[4]['bisabuela3'],
+                            ]);
+                            break;
+
+                        case 'motherMother':
+                            Dog::where('dog_id', $value)->update([
+                                'sire_id' => $registeredDogs[4]['bisabuelo4'],
+                                'dam_id' => $registeredDogs[4]['bisabuela4'],
+                            ]);
+                            break;
+                        //4
+
+                        case 'bisabuelo1':
+                            Dog::where('dog_id', $value)->update([
+                                'sire_id' => $registeredDogs[5]['tatarabuelo1'],
+                                'dam_id' => $registeredDogs[5]['tatarabuela1'],
+                            ]);
+                            break;
+
+                        case 'bisabuela1':
+                            Dog::where('dog_id', $value)->update([
+                                'sire_id' => $registeredDogs[5]['tatarabuelo2'],
+                                'dam_id' => $registeredDogs[5]['tatarabuela2'],
+                            ]);
+                            break;
+
+                        case 'bisabuelo2':
+                            Dog::where('dog_id', $value)->update([
+                                'sire_id' => $registeredDogs[5]['tatarabuelo3'],
+                                'dam_id' => $registeredDogs[5]['tatarabuela3'],
+                            ]);
+                            break;
+
+                        case 'bisabuela2':
+                            Dog::where('dog_id', $value)->update([
+                                'sire_id' => $registeredDogs[5]['tatarabuelo4'],
+                                'dam_id' => $registeredDogs[5]['tatarabuela4'],
+                            ]);
+                            break;
+                        //
+                        case 'bisabuelo3':
+                            Dog::where('dog_id', $value)->update([
+                                'sire_id' => $registeredDogs[5]['tatarabuelo5'],
+                                'dam_id' => $registeredDogs[5]['tatarabuela5'],
+                            ]);
+                            break;
+
+                        case 'bisabuela3':
+                            Dog::where('dog_id', $value)->update([
+                                'sire_id' => $registeredDogs[5]['tatarabuelo6'],
+                                'dam_id' => $registeredDogs[5]['tatarabuela6'],
+                            ]);
+                            break;
+
+                        case 'bisabuelo4':
+                            Dog::where('dog_id', $value)->update([
+                                'sire_id' => $registeredDogs[5]['tatarabuelo7'],
+                                'dam_id' => $registeredDogs[5]['tatarabuela7'],
+                            ]);
+                            break;
+
+                        case 'bisabuela4':
+                            Dog::where('dog_id', $value)->update([
+                                'sire_id' => $registeredDogs[5]['tatarabuelo8'],
+                                'dam_id' => $registeredDogs[5]['tatarabuela8'],
+                            ]);
+                            break;
+
+                        default:
+
+                            break;
+                    }
+                }
+
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Perros procesados correctamente.',
+                'dog_ids' => $registeredDogs
+            ]);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json([
+                'error' => 'Error al procesar perros.',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+
     }
 
     /**

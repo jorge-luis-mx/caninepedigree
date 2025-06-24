@@ -70,6 +70,10 @@ Route::get('/dashboard', function () {
 
 Route::get('/admin/dogs', [AdminDogsController::class, 'index'])->name('adminDogs.index');
 Route::post('/admin/dogs', [AdminDogsController::class, 'store'])->name('adminDogs.store');
+Route::get('/admin/pedigree', [AdminDogsController::class, 'pedigree'])->name('adminDogs.pedigree');
+Route::post('/admin/pedigree', [AdminDogsController::class, 'storePedigree'])->name('admin.pedigree');
+
+
 
 Route::middleware('auth')->group(function () {
 
