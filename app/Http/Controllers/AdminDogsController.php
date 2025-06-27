@@ -36,11 +36,21 @@ class AdminDogsController extends Controller
      */
     public function pedigree()
     {
-        return view('pedigree/index-pedigree');
+        $user = auth()->user();
+        $role = $user->role;
+
+        $arrayRole =['Admin','Administrator','Employee'];
+        if(in_array($role->name, $arrayRole) ){
+
+            return view('pedigree/index-pedigree');
+        }else{
+            return redirect('/dogs');
+        }
+        
     }
 
     public function storePedigree(Request $request){
-dd("aqui");
+
         $generations = $request->input('generations');
         $registeredDogs = [];
 
@@ -61,7 +71,8 @@ dd("aqui");
                     $orderReference = $this->getOrderReference();
 
                     // Verificar si ya existe (puedes ampliar lógica si deseas considerar sex y color también)
-                    $dog = Dog::where('name', $dogName)->first();
+                    //$dog = Dog::where('name', $dogName)->first();
+                    $dog = Dog::whereRaw('LOWER(name) = ?', [strtolower($dogName)])->first();
 
                     if (!$dog) {
                         $dog = Dog::create([

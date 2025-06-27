@@ -174,6 +174,14 @@ class DogController extends Controller
         }
         $validatedData = $validator->validated();
         
+        $dog = Dog::whereRaw('LOWER(name) = ?', [strtolower($validatedData['name'])])->first();
+
+
+        if ($dog) {
+
+            $data['message'] = 'A dog with this name already exists in the system.';
+            return response()->json($data, 422);
+        }
     
         $user = auth()->user();
         $profile = $user->userprofile;
@@ -191,12 +199,13 @@ class DogController extends Controller
         $sire_id = (isset($validatedData['sire_id']) && !empty($validatedData['sire_id']) && $validatedData['sire_id'] != null) ? $validatedData['sire_id'] : null;
         $dam_id = (isset($validatedData['dam_id']) && !empty($validatedData['dam_id']) && $validatedData['dam_id'] != null) ? $validatedData['dam_id'] : null;
       
-        DB::beginTransaction();
 
         $regnum = $this->generarCodigoRegistro();
         $orderReference = $this->getOrderReference();
 
         try {
+
+            DB::beginTransaction();
 
             $dogStatus = ['Admin','Administrator','Employee'];
 
@@ -233,40 +242,6 @@ class DogController extends Controller
                 'payment_id' => $payment->payment_id
             ]);
 
-            //fin
-            // $dogStatus = ['Admin','Administrator','Employee'];
-            // $text = preg_split('/\s+/', $profile->lastName);
-            // Crea el registro sin reg_no
-            // $dog = Dog::create([
-            //     'reg_no'=>$regnum,
-            //     'name' => $text[0].' '.$validatedData['name'],
-            //     'breed' => 'Pit Bull Terrier',
-            //     'color' => $validatedData['color'],
-            //     'sex' => $validatedData['sex'],
-            //     'birthdate' => $validatedData['birthdate'],
-            //     'sire_id' => $sire_id,
-            //     'dam_id' => $dam_id,
-            //     'breeder_id' => $owner,
-            //     'current_owner_id' => $owner,
-            //     'status'=> in_array($role->name, $dogStatus ) ? 'exempt':'pending'
-            // ]);
-
-            // $dog->save();
-
-            // Crear el pago
-            // $payment = Payment::create([
-            //     'user_id' => $owner, // Usuario que realiza el pago
-            //     'amount' => 100.00, // Monto del pago (puedes ajustarlo según corresponda)
-            //     'type' => 'registration', // Tipo de pago (registro del perro)
-            //     'status' => 'pending', // Estado del pago (aún no completado)
-            //     'payment_method' => null // Método de pago (ajústalo según la lógica de pago)
-            // ]);
-
-            // Registrar la relación en dog_payments
-            // DogPayment::create([
-            //     'dog_id' => $dog->dog_id,
-            //     'payment_id' => $payment->payment_id
-            // ]);
 
             if ($sire_id == null ) {
 
@@ -331,8 +306,9 @@ class DogController extends Controller
             $data['message'] = 'Pricing inserted successfully';
             $data['status'] = 200;
             $data['data'] = $paymentProtected;
-            // Confirma la transacción
+            
             DB::commit();
+            
         } catch (\Exception $e) {
 
             $data['message'] = 'Failed to insert the pricing. Please check the data and try again';

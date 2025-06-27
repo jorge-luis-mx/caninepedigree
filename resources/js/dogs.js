@@ -205,6 +205,16 @@ export  function dogs() {
                 saveBtn.disabled = false;
                 // Si hay errores, mostrarlos en los inputs correspondientes
                 showErrors(form, result.errors);
+            }else{
+                Swal.fire({
+                    title: 'Dog already registered',
+                    text: result.message,
+                    icon: 'warning',
+                    confirmButtonText: 'OK',
+                    backdrop: true,
+                    allowOutsideClick: false
+                });
+                 saveBtn.disabled = false;
             }
 
             })
