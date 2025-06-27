@@ -20,7 +20,9 @@ class PedigreeController extends Controller
      */
     public function index()
     {
-        return view('pedigree/show-all-pedigree');
+        $user = auth()->user();
+        $role = $user->role;
+        return view('pedigree/show-all-pedigree',compact('role'));
     }
 
     /**

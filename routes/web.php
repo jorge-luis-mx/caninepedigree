@@ -70,12 +70,17 @@ Route::get('/dashboard', function () {
 
 Route::get('/admin/dogs', [AdminDogsController::class, 'index'])->name('adminDogs.index');
 Route::post('/admin/dogs', [AdminDogsController::class, 'store'])->name('adminDogs.store');
-Route::get('/admin/pedigree', [AdminDogsController::class, 'pedigree'])->name('adminDogs.pedigree');
-Route::post('/admin/pedigree', [AdminDogsController::class, 'storePedigree'])->name('admin.pedigree');
+
 
 
 
 Route::middleware('auth')->group(function () {
+
+    Route::get('/admin/pedigree', [AdminDogsController::class, 'pedigree'])->name('adminDogs.pedigree');
+    Route::post('/admin/pedigree', [AdminDogsController::class, 'storePedigree'])->name('admin.pedigree');
+    Route::get('/admin/pedigree/{dog}/edit', [AdminDogsController::class, 'edit'])->name('admin.pedigree.edit');
+    Route::put('/admin/pedigree/edit', [AdminDogsController::class, 'update'])->name('admin.pedigree.update');
+
 
     //profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -88,8 +93,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/dogs', [DogController::class, 'store'])->name('dogs.store');
     Route::get('/dogs/show/{dog}', [DogController::class, 'show'])->name('dogs.show');
     Route::delete('/dogs/{dog}', [DogController::class, 'destroy'])->name('dogs.destroy');
-    // Route::get('/dogs/{dog}/edit', [DogController::class, 'edit'])->name('dogs.edit'); 
-    // Route::put('/dogs/{dog}', [DogController::class, 'update'])->name('dogs.update'); 
+    Route::get('/dog/{dog}/edit', [DogController::class, 'edit'])->name('dogs.edit'); 
+    Route::put('/dog/{dog}', [DogController::class, 'update'])->name('dogs.update'); 
     
     //serch
     Route::get('/dogs/search/{reg_no}/{breedingSearch?}', [DogController::class, 'search'])->name('dogs.search');

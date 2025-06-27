@@ -16,8 +16,11 @@ use App\Models\BreedingRequest;
 
 use Carbon\Carbon;
 
+//Traits
+use App\Traits\Pedigree;
 class AdminDogsController extends Controller
 {
+    use Pedigree;
     /**
      * Display a listing of the resource.
      */
@@ -37,7 +40,7 @@ class AdminDogsController extends Controller
     }
 
     public function storePedigree(Request $request){
-
+dd("aqui");
         $generations = $request->input('generations');
         $registeredDogs = [];
 
@@ -342,15 +345,91 @@ class AdminDogsController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $dog = Dog::whereRaw('MD5(dog_id) = ?', [$id])
+
+            ->with([
+                'sire', 'dam',
+                'sire.sire', 'sire.dam',
+                'dam.sire', 'dam.dam',
+                'sire.sire.sire', 'sire.sire.dam',
+                'sire.dam.sire', 'sire.dam.dam',
+                'dam.sire.sire', 'dam.sire.dam',
+                'dam.dam.sire', 'dam.dam.dam',
+            ])
+            ->firstOrFail();
+
+        $pedigree = $this->findPedigree($dog);
+
+        return view('pedigree.edit-pedigree', compact('pedigree'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+  
+        $generations = $request->input('generations');
+
+        if (!is_array($generations)) {
+            return response()->json(['error' => 'Formato inválido en generations.'], 400);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            foreach ($generations as $generationNumber => $dogs) {
+                foreach ($dogs as $role => $dogData) {
+
+                    $dogName = trim($dogData['name'] ?? '');
+                    $sex = $dogData['sex'] ?? null;
+                    $color = $dogData['color'] ?? null;
+                    $id = $dogData['invoice'] ?? null;
+
+                    
+                    if (!$id) {
+                        return response()->json(['error' => "Falta el ID en $role de generación $generationNumber"], 400);
+                    }
+
+                    $dog = Dog::whereRaw('MD5(dog_id) = ?', [$id])->first();
+
+                    if (!$dog) {
+                        return response()->json([
+                            'error' => "Perro no encontrado para $role en generación $generationNumber."
+                        ], 404);
+                    }
+                    
+                    $updates = [];
+
+                    if ($dogName && $dog->name !== $dogName) {
+                        $updates['name'] = $dogName;
+                    }
+
+                    if ($color && $dog->color !== $color) {
+                        $updates['color'] = $color;
+                    }
+
+                    if (!empty($updates)) {
+                        $dog->update($updates);
+                    }
+                }
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status'=>200,
+                'message' => 'Pedigree actualizado correctamente.',
+            ]);
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json([
+                'error' => 'Error al procesar perros.',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+
     }
 
     /**

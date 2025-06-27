@@ -107,6 +107,29 @@
                         deleteDog(dog.dog_hash);
                     });
                     actionTd.appendChild(deleteBtn);
+
+                    // Botón Editar
+                    const editBtn = document.createElement('button');
+                    editBtn.textContent = 'Editar Pedigree';
+                    editBtn.className = 'button is-warning is-small';
+                    editBtn.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Evita que el clic afecte al evento del td
+                        editPedigree(dog.dog_hash);
+                    });
+                    actionTd.appendChild(editBtn);
+
+
+                    // Botón Editar
+                    const editBtnDog = document.createElement('button');
+                    editBtnDog.textContent = 'Editar';
+                    editBtnDog.className = 'button is-warning is-small';
+                    editBtnDog.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Evita que el clic afecte al evento del td
+                        editDog(dog.dog_hash);
+                    });
+                    actionTd.appendChild(editBtnDog);
+
+
                     row.appendChild(actionTd);  // Botón eliminar
                 }
 
@@ -299,6 +322,16 @@ function renderPagination(dogsList) {
                 .catch(error => alert('Error al eliminar el perro: ' + error));
             }
         }
+
+        window.editPedigree = function(dogId) {
+
+            window.location.href = `/admin/pedigree/${dogId}/edit`;
+        };
+
+        window.editDog = function(dogId) {
+
+            window.location.href = `/dog/${dogId}/edit`;
+        };
 
         window.requestMating = function(dogId) {
             alert(`Solicitar cruza para ${dogs[index].name}`);

@@ -403,13 +403,25 @@ class DogController extends Controller
 
     public function edit(string $id)
     {
-        //
+        $dog = Dog::whereRaw('MD5(dog_id) = ?', $id)->firstOrFail();
+        $dogs =  $dogs = Dog::all(); 
+        return view('dogs.edit-dog', compact('dog','dogs'));
     }
 
 
     public function update(Request $request, string $id)
     {
-        //
+        $dog = Dog::find($id);
+
+        if (!$dog) {
+            return response()->json(['status' => 404, 'message' => 'Perro no encontrado.'], 404);
+        }
+
+        $dog->update($request->only([
+            'name', 'breed', 'color', 'sex', 'birthdate', 'sire_id', 'dam_id'
+        ]));
+
+        return response()->json(['status' => 200, 'message' => 'Perro actualizado correctamente.']);
     }
 
 
