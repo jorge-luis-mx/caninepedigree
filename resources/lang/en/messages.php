@@ -23,11 +23,25 @@ return [
         'dashboard' => 'Dashboard',
 
         'dogs'=>[
-            'title'=>'',
+            'title'=>'Dogs',
             'btn'=>'Add a Dog',
             'search'=>"Enter a name to search for registered dogs",
-            'placeholder'=>'Type a name to search...'
-            
+            'placeholder'=>'Type a name to search...',
+            'previous' => 'Previous',
+            'next' => 'Next'
+        ],
+        'dogDetails'=>[
+            'name'=>'Name',
+            'title'=>'Dog Information',
+            'btnRegistration'=>'Registration Certificate',
+            'btnPedigree'=>'Pedigree Certificate',
+            'owner'=>'Owner',
+            'regNo'=>'Reg. No',
+            'breed'=>'Breed',
+            'color'=>'Color',
+            'sex'=>'Sex',
+            'date'=>'Date of Birth',
+            'registered'=>'Registered On'
         ],
 
         'headerTable'=>[
@@ -68,11 +82,14 @@ return [
 
         ],
 
-        'detailsDogs'=>[
-            'title'=>'Dog Information',
-        ],
+
         'pedigree'=>[
             'title'=>'Pedidree',
+            'btnAddPedigree'=>'Add Pedigree',
+            'placeInput'=>'Search...',
+            'btnSearch'=>'Search',
+            'sire'=>'Sire',
+            'dam'=>'Dam'
         ],
 
 

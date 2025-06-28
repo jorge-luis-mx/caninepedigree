@@ -84,16 +84,16 @@
                           <img src="{{ asset('assets/img/dogs-image.jpg') }}" />
                         </div>
                         <div class="dog-details">
-                          <p><label>Name:</label> <span>{{$dog['name']}}</span></p>
-                          <p><label>Owner:</label> <span>{{$dog['owner']['name']}}</span></p>
-                          <p><label>Reg. No:</label> <span>{{$dog['number']}}</span></p>
-                          <p><label>Breed:</label> <span>{{$dog['breed']}}</span></p>
-                          <p><label>Color:</label> <span>{{$dog['color']}}</span></p>
-                          <p><label>Sex:</label> <span>{{$dog['sex']=='M'?'Male':'Female' }}</span></p>
-                          <p><label>Date of Birth:</label> 
+                          <p><label>{{__('messages.main.dogDetails.name')}}:</label> <span>{{$dog['name']}}</span></p>
+                          <p><label>{{__('messages.main.dogDetails.owner')}}:</label> <span>{{$dog['owner']['name']}}</span></p>
+                          <p><label>{{__('messages.main.dogDetails.regNo')}}:</label> <span>{{$dog['number']}}</span></p>
+                          <p><label>{{__('messages.main.dogDetails.breed')}}:</label> <span>{{$dog['breed']}}</span></p>
+                          <p><label>{{__('messages.main.dogDetails.color')}}:</label> <span>{{$dog['color']}}</span></p>
+                          <p><label>{{__('messages.main.dogDetails.sex')}}:</label> <span>{{$dog['sex']=='M'?'Male':'Female' }}</span></p>
+                          <p><label>{{__('messages.main.dogDetails.date')}}:</label> 
                               <span>{{ \Carbon\Carbon::parse($dog['birthdate'])->format('F d, Y') }}</span>
                           </p>
-                          <p><label>Registered On:</label> 
+                          <p><label>{{__('messages.main.dogDetails.registered')}}:</label> 
                               <span>{{ \Carbon\Carbon::parse($dog['date'])->format('F d, Y') }}</span>
                           </p>
                         </div>
@@ -103,7 +103,7 @@
 
             <!-- Árbol genealógico de 4 generaciones -->
             <tr>
-              <td rowspan="8"><b>(Sire)</b><br>
+              <td rowspan="8"><b>({{__('messages.main.pedigree.sire')}})</b><br>
                 @if(isset($father['id']))
                   <a href="{{ route('pedigree.show', ['id' => $father['id']]) }}">{{ $father['name'] ?? 'UNKNOWN' }}</a>
                 @else
@@ -226,7 +226,7 @@
 
             <!-- DAM -->
             <tr>
-              <td rowspan="8"><b>(Dam)</b><br>
+              <td rowspan="8"><b>({{__('messages.main.pedigree.dam')}})</b><br>
                 @if(isset($mother['id']))
                   <a href="{{ route('pedigree.show', ['id' => $mother['id']]) }}">{{ $mother['name'] ?? 'UNKNOWN' }}</a>
                 @else

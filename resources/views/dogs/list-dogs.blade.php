@@ -1,6 +1,6 @@
 <x-app-layout>
 
-    <h1 class="is-size-4">Dogs</h1>
+    <h1 class="is-size-4">{{__('messages.main.dogs.title')}}</h1>
 
    <div class="columns is-multiline">
       <div class="column">
@@ -15,7 +15,6 @@
                   </div>
                </div>
             </a>
-
          </div>
       </div>
    </div>
@@ -147,7 +146,7 @@ function renderPagination(dogsList) {
     if (totalPages <= 1) return;
 
     const prevBtn = document.createElement('button');
-    prevBtn.textContent = 'Anterior';
+    prevBtn.textContent = "{{__('messages.main.dogs.previous')}}";
     prevBtn.className = 'button is-small mx-1';
     prevBtn.disabled = currentPage === 1;
     prevBtn.onclick = () => {
@@ -213,7 +212,7 @@ function renderPagination(dogsList) {
     }
 
     const nextBtn = document.createElement('button');
-    nextBtn.textContent = 'Siguiente';
+    nextBtn.textContent = "{{__('messages.main.dogs.next')}}";
     nextBtn.className = 'button is-small mx-1';
     nextBtn.disabled = currentPage === totalPages;
     nextBtn.onclick = () => {

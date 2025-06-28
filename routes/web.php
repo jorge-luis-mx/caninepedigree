@@ -108,7 +108,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/payments/paypal/paid', [PaymentController::class,'completed']);
 
     Route::get('/pedigrees', [PedigreeController::class, 'index'])->name('pedigree.index');
+    Route::get('/pedigrees/create', [PedigreeController::class, 'create'])->name('pedigree.create');
     Route::get('/pedigrees/{id}', [PedigreeController::class, 'show'])->name('pedigree.show');
+    
 
 
     Route::get('/certificates/{id}/pdf/{type}', [CertificateController::class, 'pdf'])->name('certificates.pdf');

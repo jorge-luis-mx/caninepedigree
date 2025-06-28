@@ -23,10 +23,26 @@ return [
         'dashboard' => 'Bienvenido',
 
         'dogs'=>[
-            'title'=>'',
-            'btn'=>'Agregar un perro',
+            'title'=>'Mascotas',
+            'btn'=>'Agregar un Perro',
             'search'=>'Ingresa el nombre para buscar perros registrados',
-            'placeholder'=>'Escribe un nombre para buscar...'
+            'placeholder'=>'Escribe un nombre para buscar...',
+            'previous' => 'Anterior',
+            'next' => 'Siguiente'
+        ],
+
+        'dogDetails'=>[
+            'name'=>'Nombre',
+            'title'=>'Información del perro',
+            'btnRegistration'=>'Certificado de Registro',
+            'btnPedigree'=>'Certificado de Pedigrí',
+            'owner'=>'Dueño',
+            'regNo'=>'N.º de Registro',
+            'breed'=>'Raza',
+            'color'=>'Color',
+            'sex'=>'Sexo',
+            'date'=>'Fecha de Nacimiento',
+            'registered'=>'Registrado'
         ],
 
         'headerTable'=>[
@@ -66,12 +82,15 @@ return [
             'phone'=>'Numero de Telefono',
         ],
 
-        'detailsDogs'=>[
-            'title'=>'Información del perro',
-        ],
+
 
         'pedigree'=>[
             'title'=>'Pedigrí',
+            'btnAddPedigree'=>'Agregar Pedigrí',
+            'placeInput'=>'Buscar...',
+            'btnSearch'=>'Buscar',
+            'sire'=>'Padre',
+            'dam'=>'Madre'
         ],
 
     ],

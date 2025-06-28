@@ -30,7 +30,18 @@ class PedigreeController extends Controller
      */
     public function create()
     {
-        //
+
+
+        $user = auth()->user();
+        $role = $user->role;
+
+        $arrayRole =['Admin','Administrator','Employee'];
+        if(in_array($role->name, $arrayRole) ){
+
+            return view('pedigree/create-pedigree');
+        }else{
+            return redirect('/pedigrees');
+        }
     }
 
     /**
