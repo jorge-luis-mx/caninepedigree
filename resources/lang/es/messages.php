@@ -90,7 +90,12 @@ return [
             'placeInput'=>'Buscar...',
             'btnSearch'=>'Buscar',
             'sire'=>'Padre',
-            'dam'=>'Madre'
+            'dam'=>'Madre',
+            'first'=>'Primero',
+            'second'=>'Segundo',
+            'third'=>'Tercero',
+            'fourth'=>'Cuarto',
+            'btnSubmit'=>'Enviar'
         ],
 
     ],

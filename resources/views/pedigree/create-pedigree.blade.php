@@ -1,6 +1,6 @@
 <x-app-layout>
    
-   <form id="miFormulario" method="POST" action="{{ route('admin.pedigree') }}">
+   <form id="miFormulario" method="POST" action="{{ route('admin.pedigree') }}"  autocomplete="off">
       @csrf
       <section>
          <div class="table-container table is-bordered is-striped is-narrow is-hoverable">
@@ -9,8 +9,8 @@
 
                   <tr>
                      <td colspan="4">
-                           <p><label>Name:</label><span>Samo</span></p>
-                           <input type="text" id="dogOne" name="dogOne" class="input is-small mb-3" placeholder="Name" required >
+                           <!-- <p><label>{{__('messages.main.dogDetails.name')}}:</label><span>Samo</span></p> -->
+                           <input type="text" id="dogOne" name="dogOne" class="input is-small mb-3 mt-2" placeholder="{{__('messages.main.dogDetails.name')}}" required >
                            <select name="dogOne_sex" required>
                               <option value="M">Male</option>
                               <option value="F">Female</option>
@@ -18,12 +18,17 @@
                            <input type="text" name="dogOne_color" class="input is-small mt-3" placeholder="Color" required>
                      </td>
                   </tr>
-
+                  <tr>
+                     <td>{{__('messages.main.pedigree.first')}}</td>
+                     <td>{{__('messages.main.pedigree.second')}}</td>
+                     <td>{{__('messages.main.pedigree.third')}}</td>
+                     <td>{{__('messages.main.pedigree.fourth')}}</td>
+                  </tr>
                   <!-- Árbol genealógico de 4 generaciones -->
                   <tr>
                      <td rowspan="8"><b>(Sire)</b><br>
                         <a href="http://www.caninepedigree-dev.com/pedigrees/8f85517967795eeef66c225f7883bdcb">Max</a>
-                        <input type="text" id="father" name="father" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="father" name="father" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="father_sex" required  class="is-hidden">
                            <option value="M" selected>Male</option>
                            <option value="F">Female</option>
@@ -32,7 +37,7 @@
                      </td>
                      <td rowspan="4">
                         <a href="http://www.caninepedigree-dev.com/pedigrees/bf8229696f7a3bb4700cfddef19fa23f">Bruno</a>
-                        <input type="text" id="fatherFather" name="fatherFather" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="fatherFather" name="fatherFather" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="fatherFather_sex" required  class="is-hidden">
                            <option value="M" selected>Male</option>
                            <option value="F">Female</option>
@@ -41,7 +46,7 @@
                      </td>
                      <td rowspan="2">
                         <a href="http://www.caninepedigree-dev.com/pedigrees/7e7757b1e12abcb736ab9a754ffb617a">Rex</a>
-                        <input type="text" id="bisabuelo1" name="bisabuelo1" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="bisabuelo1" name="bisabuelo1" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="bisabuelo1_sex" required  class="is-hidden">
                            <option value="M" selected>Male</option>
                            <option value="F">Female</option>
@@ -50,7 +55,7 @@
                      </td>
                      <td>
                         <a href="http://www.caninepedigree-dev.com/pedigrees/7ef605fc8dba5425d6965fbd4c8fbe1f">pongo</a>
-                        <input type="text" id="tatarabuelo1" name="tatarabuelo1" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="tatarabuelo1" name="tatarabuelo1" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="tatarabuelo1_sex" required  class="is-hidden">
                            <option value="M" selected>Male</option>
                            <option value="F">Female</option>
@@ -61,7 +66,7 @@
                   <tr>
                      <td>
                         <a href="http://www.caninepedigree-dev.com/pedigrees/a8f15eda80c50adb0e71943adc8015cf">Lola</a>
-                        <input type="text" id="tatarabuela1" name="tatarabuela1" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="tatarabuela1" name="tatarabuela1" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="tatarabuela1_sex" required  class="is-hidden">
                            <option value="M">Male</option>
                            <option value="F" selected>Female</option>
@@ -72,7 +77,7 @@
                   <tr>
                      <td rowspan="2">
                         <a href="http://www.caninepedigree-dev.com/pedigrees/5878a7ab84fb43402106c575658472fa">Canela</a>
-                        <input type="text" id="bisabuela1" name="bisabuela1" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="bisabuela1" name="bisabuela1" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="bisabuela1_sex" required  class="is-hidden">
                            <option value="M">Male</option>
                            <option value="F" selected>Female</option>
@@ -81,7 +86,7 @@
                      </td>
                      <td>
                         <a href="http://www.caninepedigree-dev.com/pedigrees/37a749d808e46495a8da1e5352d03cae">Toto</a>
-                        <input type="text" id="tatarabuelo2" name="tatarabuelo2" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="tatarabuelo2" name="tatarabuelo2" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="tatarabuelo2_sex" required  class="is-hidden">
                            <option value="M" selected>Male</option>
                            <option value="F">Female</option>
@@ -92,7 +97,7 @@
                   <tr>
                      <td>
                         <a href="http://www.caninepedigree-dev.com/pedigrees/b3e3e393c77e35a4a3f3cbd1e429b5dc">Mimi</a>
-                        <input type="text" id="tatarabuela2" name="tatarabuela2" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="tatarabuela2" name="tatarabuela2" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="tatarabuela2_sex" required  class="is-hidden">
                            <option value="M">Male</option>
                            <option value="F" selected>Female</option>
@@ -103,7 +108,7 @@
                   <tr>
                      <td rowspan="4">
                         <a href="http://www.caninepedigree-dev.com/pedigrees/82161242827b703e6acf9c726942a1e4">Bella</a>
-                        <input type="text" id="fatherMother" name="fatherMother" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="fatherMother" name="fatherMother" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="fatherMother_sex" required  class="is-hidden">
                            <option value="M">Male</option>
                            <option value="F" selected>Female</option>
@@ -112,7 +117,7 @@
                      </td>
                      <td rowspan="2">
                         <a href="http://www.caninepedigree-dev.com/pedigrees/006f52e9102a8d3be2fe5614f42ba989">Duke</a>
-                        <input type="text" id="bisabuelo2" name="bisabuelo2" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="bisabuelo2" name="bisabuelo2" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="bisabuelo2_sex" required  class="is-hidden">
                            <option value="M" selected>Male</option>
                            <option value="F">Female</option>
@@ -121,7 +126,7 @@
                      </td>
                      <td>
                         <a href="http://www.caninepedigree-dev.com/pedigrees/1d7f7abc18fcb43975065399b0d1e48e">Chip</a>
-                        <input type="text" id="tatarabuelo3" name="tatarabuelo3" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="tatarabuelo3" name="tatarabuelo3" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="tatarabuelo3_sex" required  class="is-hidden">
                            <option value="M" selected>Male</option>
                            <option value="F">Female</option>
@@ -132,7 +137,7 @@
                   <tr>
                      <td>
                         <a href="http://www.caninepedigree-dev.com/pedigrees/2a79ea27c279e471f4d180b08d62b00a">Lucy</a>
-                        <input type="text" id="tatarabuela3" name="tatarabuela3" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="tatarabuela3" name="tatarabuela3" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="tatarabuela3_sex" required  class="is-hidden">
                            <option value="M">Male</option>
                            <option value="F" selected>Female</option>
@@ -143,7 +148,7 @@
                   <tr>
                      <td rowspan="2">
                         <a href="http://www.caninepedigree-dev.com/pedigrees/3636638817772e42b59d74cff571fbb3">Nala</a>
-                        <input type="text" id="bisabuela2" name="bisabuela2" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="bisabuela2" name="bisabuela2" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="bisabuela2_sex" required  class="is-hidden">
                            <option value="M">Male</option>
                            <option value="F" selected>Female</option>
@@ -152,7 +157,7 @@
                      </td>
                      <td>
                         <a href="http://www.caninepedigree-dev.com/pedigrees/1c9ac0159c94d8d0cbedc973445af2da">Fang</a>
-                        <input type="text" id="tatarabuelo4" name="tatarabuelo4" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="tatarabuelo4" name="tatarabuelo4" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="tatarabuelo4_sex" required  class="is-hidden">
                            <option value="M" selected>Male</option>
                            <option value="F">Female</option>
@@ -163,7 +168,7 @@
                   <tr>
                      <td>
                         <a href="http://www.caninepedigree-dev.com/pedigrees/6c4b761a28b734fe93831e3fb400ce87">Daisy</a>
-                        <input type="text" id="tatarabuela4" name="tatarabuela4" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="tatarabuela4" name="tatarabuela4" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="tatarabuela4_sex" required  class="is-hidden">
                            <option value="M">Male</option>
                            <option value="F" selected>Female</option>
@@ -176,7 +181,7 @@
                   <tr>
                      <td rowspan="8"><b>(Dam)</b><br>
                         <a href="http://www.caninepedigree-dev.com/pedigrees/8f53295a73878494e9bc8dd6c3c7104f">Luna</a>
-                        <input type="text" id="mother" name="mother" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="mother" name="mother" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="mother_sex" required  class="is-hidden">
                            <option value="M">Male</option>
                            <option value="F" selected>Female</option>
@@ -185,7 +190,7 @@
                      </td>
                      <td rowspan="4">
                         <a href="http://www.caninepedigree-dev.com/pedigrees/38af86134b65d0f10fe33d30dd76442e">Leo</a>
-                        <input type="text" id="motherFather" name="motherFather" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="motherFather" name="motherFather" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="motherFather_sex" required  class="is-hidden">
                            <option value="M" selected>Male</option>
                            <option value="F" >Female</option>
@@ -194,7 +199,7 @@
                      </td>
                      <td rowspan="2">
                         <a href="http://www.caninepedigree-dev.com/pedigrees/149e9677a5989fd342ae44213df68868">simba</a>
-                        <input type="text" id="bisabuelo3" name="bisabuelo3" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="bisabuelo3" name="bisabuelo3" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="bisabuelo3_sex" required  class="is-hidden">
                            <option value="M" selected>Male</option>
                            <option value="F">Female</option>
@@ -203,7 +208,7 @@
                      </td>
                      <td>
                         <a href="http://www.caninepedigree-dev.com/pedigrees/06409663226af2f3114485aa4e0a23b4">Milo</a>
-                        <input type="text" id="tatarabuelo5" name="tatarabuelo5" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="tatarabuelo5" name="tatarabuelo5" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="tatarabuelo5_sex" required  class="is-hidden">
                            <option value="M" selected>Male</option>
                            <option value="F">Female</option>
@@ -214,7 +219,7 @@
                   <tr>
                      <td>
                         <a href="http://www.caninepedigree-dev.com/pedigrees/140f6969d5213fd0ece03148e62e461e">Flor</a>
-                        <input type="text" id="tatarabuela5" name="tatarabuela5" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="tatarabuela5" name="tatarabuela5" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="tatarabuela5_sex" required  class="is-hidden">
                            <option value="M">Male</option>
                            <option value="F" selected>Female</option>
@@ -225,7 +230,7 @@
                   <tr>
                      <td rowspan="2">
                         <a href="http://www.caninepedigree-dev.com/pedigrees/a4a042cf4fd6bfb47701cbc8a1653ada">Kira</a>
-                        <input type="text" id="bisabuela3" name="bisabuela3" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="bisabuela3" name="bisabuela3" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="bisabuela3_sex" required  class="is-hidden">
                            <option value="M">Male</option>
                            <option value="F" selected>Female</option>
@@ -234,7 +239,7 @@
                      </td>
                      <td>
                         <a href="http://www.caninepedigree-dev.com/pedigrees/b73ce398c39f506af761d2277d853a92">Bingo</a>
-                        <input type="text" id="tatarabuelo6" name="tatarabuelo6" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="tatarabuelo6" name="tatarabuelo6" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="tatarabuelo6_sex" required  class="is-hidden">
                            <option value="M" selected>Male</option>
                            <option value="F">Female</option>
@@ -245,7 +250,7 @@
                   <tr>
                      <td>
                         <a href="http://www.caninepedigree-dev.com/pedigrees/bd4c9ab730f5513206b999ec0d90d1fb">Frida</a>
-                        <input type="text" id="tatarabuela6" name="tatarabuela6" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="tatarabuela6" name="tatarabuela6" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="tatarabuela6_sex" required  class="is-hidden">
                            <option value="M" >Male</option>
                            <option value="F" selected>Female</option>
@@ -256,7 +261,7 @@
                   <tr>
                      <td rowspan="4">
                         <a href="http://www.caninepedigree-dev.com/pedigrees/96da2f590cd7246bbde0051047b0d6f7">Maya</a>
-                        <input type="text" id="motherMother" name="motherMother" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="motherMother" name="motherMother" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="motherMother_sex" required  class="is-hidden">
                            <option value="M">Male</option>
                            <option value="F" selected>Female</option>
@@ -265,7 +270,7 @@
                      </td>
                      <td rowspan="2">
                         <a href="http://www.caninepedigree-dev.com/pedigrees/1ff8a7b5dc7a7d1f0ed65aaa29c04b1e">Zeus</a>
-                        <input type="text" id="bisabuelo4" name="bisabuelo4" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="bisabuelo4" name="bisabuelo4" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="bisabuelo4_sex" required  class="is-hidden">
                            <option value="M" selected>Male</option>
                            <option value="F">Female</option>
@@ -274,7 +279,7 @@
                      </td>
                      <td>
                         <a href="http://www.caninepedigree-dev.com/pedigrees/82aa4b0af34c2313a562076992e50aa3">Truman</a>
-                        <input type="text" id="tatarabuelo7" name="tatarabuelo7" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="tatarabuelo7" name="tatarabuelo7" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="tatarabuelo7_sex" required  class="is-hidden">
                            <option value="M" selected>Male</option>
                            <option value="F">Female</option>
@@ -285,7 +290,7 @@
                   <tr>
                      <td>
                         <a href="http://www.caninepedigree-dev.com/pedigrees/0777d5c17d4066b82ab86dff8a46af6f">Lluvia</a>
-                        <input type="text" id="tatarabuela7" name="tatarabuela7" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="tatarabuela7" name="tatarabuela7" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="tatarabuela7_sex" required  class="is-hidden">
                            <option value="M">Male</option>
                            <option value="F" selected>Female</option>
@@ -296,7 +301,7 @@
                   <tr>
                      <td rowspan="2">
                         <a href="http://www.caninepedigree-dev.com/pedigrees/f7e6c85504ce6e82442c770f7c8606f0">Frida</a>
-                        <input type="text" id="bisabuela4" name="bisabuela4" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="bisabuela4" name="bisabuela4" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="bisabuela4_sex" required  class="is-hidden">
                            <option value="M">Male</option>
                            <option value="F" selected>Female</option>
@@ -305,7 +310,7 @@
                      </td>
                      <td>
                         <a href="http://www.caninepedigree-dev.com/pedigrees/fa7cdfad1a5aaf8370ebeda47a1ff1c3">Odie</a>
-                        <input type="text" id="tatarabuelo8" name="tatarabuelo8" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="tatarabuelo8" name="tatarabuelo8" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="tatarabuelo8_sex" required  class="is-hidden">
                            <option value="M" selected>Male</option>
                            <option value="F">Female</option>
@@ -316,7 +321,7 @@
                   <tr>
                      <td>
                         <a href="http://www.caninepedigree-dev.com/pedigrees/9766527f2b5d3e95d4a733fcfb77bd7e">Moka</a>
-                        <input type="text" id="tatarabuela8" name="tatarabuela8" class="input is-small mb-3" placeholder="Name" required>
+                        <input type="text" id="tatarabuela8" name="tatarabuela8" class="input is-small mb-3" placeholder="{{__('messages.main.dogDetails.name')}}" required>
                         <select name="tatarabuela8_sex" required  class="is-hidden">
                            <option value="M">Male</option>
                            <option value="F" selected>Female</option>
@@ -330,7 +335,7 @@
          </div>
       </section>
 
-      <button type="submit" class="button btn-general mt-3">Enviar</button>
+      <button type="submit" class="button btn-general mt-3">{{__('messages.main.pedigree.btnSubmit')}}</button>
 
    </form>
 

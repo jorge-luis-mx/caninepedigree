@@ -100,7 +100,12 @@
                     </div>
               </td>
             </tr>
-
+            <tr>
+              <td>{{__('messages.main.pedigree.first')}}</td>
+              <td>{{__('messages.main.pedigree.second')}}</td>
+              <td>{{__('messages.main.pedigree.third')}}</td>
+              <td>{{__('messages.main.pedigree.fourth')}}</td>
+            </tr>
             <!-- Árbol genealógico de 4 generaciones -->
             <tr>
               <td rowspan="8"><b>({{__('messages.main.pedigree.sire')}})</b><br>

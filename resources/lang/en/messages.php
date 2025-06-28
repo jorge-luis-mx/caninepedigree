@@ -89,7 +89,12 @@ return [
             'placeInput'=>'Search...',
             'btnSearch'=>'Search',
             'sire'=>'Sire',
-            'dam'=>'Dam'
+            'dam'=>'Dam',
+            'first'=>'First',
+            'second'=>'Second',
+            'third'=>'Third',
+            'fourth'=>'Fourth',
+            'btnSubmit'=>'Send'
         ],
 
 
