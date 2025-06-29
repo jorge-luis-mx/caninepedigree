@@ -96,6 +96,10 @@ return [
             'fourth'=>'Fourth',
             'btnSubmit'=>'Send'
         ],
+        'swalPedigree'=>[
+            'title'=>'Missing Fields',
+            'text'=>'Please complete the required fields (name and color).'
+        ]
 
 
     ],

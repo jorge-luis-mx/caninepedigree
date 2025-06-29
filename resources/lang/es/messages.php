@@ -97,7 +97,10 @@ return [
             'fourth'=>'Cuarto',
             'btnSubmit'=>'Enviar'
         ],
-
+        'swalPedigree'=>[
+            'title'=>'Faltan campos',
+            'text'=>'Por favor completa los campos obligatorios (nombre y color).'
+        ]
     ],
     'files'=>[
         'upload_photos' => 'Subir Fotos',
