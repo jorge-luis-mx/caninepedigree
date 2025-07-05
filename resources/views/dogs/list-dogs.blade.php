@@ -108,14 +108,14 @@
                     actionTd.appendChild(deleteBtn);
 
                     // Botón Editar
-                    const editBtn = document.createElement('button');
-                    editBtn.textContent = 'Editar Pedigree';
-                    editBtn.className = 'button is-warning is-small';
-                    editBtn.addEventListener('click', (e) => {
-                        e.stopPropagation(); // Evita que el clic afecte al evento del td
-                        editPedigree(dog.dog_hash);
-                    });
-                    actionTd.appendChild(editBtn);
+                    // const editBtn = document.createElement('button');
+                    // editBtn.textContent = 'Editar Pedigree';
+                    // editBtn.className = 'button is-warning is-small';
+                    // editBtn.addEventListener('click', (e) => {
+                    //     e.stopPropagation(); // Evita que el clic afecte al evento del td
+                    //     editPedigree(dog.dog_hash);
+                    // });
+                    // actionTd.appendChild(editBtn);
 
 
                     // Botón Editar
