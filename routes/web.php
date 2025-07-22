@@ -31,9 +31,11 @@ use App\Http\Controllers\CertificateController;
 
 
 use App\Http\Controllers\AdminDogsController;
-
+use Illuminate\Support\Facades\Mail;
 
 use App\Http\Controllers\PuppyController;
+
+use Illuminate\Support\Facades\Artisan;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -44,6 +46,15 @@ use App\Http\Controllers\PuppyController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/clear-cache', function () {
+    Artisan::call('config:clear');
+    Artisan::call('cache:clear');
+    Artisan::call('route:clear');
+    Artisan::call('view:clear');
+    Artisan::call('config:cache');
+
+    return '✔️ Cachés limpiadas correctamente';
+});
 
 //lang
 Route::middleware('auth')->get('/lang/{locale}', function ($locale) {
@@ -111,6 +122,96 @@ Route::middleware('auth')->group(function () {
     Route::get('/pedigrees/create', [PedigreeController::class, 'create'])->name('pedigree.create');
     Route::get('/pedigrees/{id}', [PedigreeController::class, 'show'])->name('pedigree.show');
     
+
+Route::get('/send-test', function () {
+    try {
+        // Verificar configuración
+        $fromAddress = config('mail.from.address');
+        $mailer = config('mail.default');
+        $mailgunDomain = config('services.mailgun.domain');
+        
+        // Verificar que el FROM sea del dominio correcto
+        if (!str_contains($fromAddress, 'devscun.com')) {
+            return response()->json([
+                'error' => 'FROM address debe ser del dominio devscun.com',
+                'current_from' => $fromAddress,
+                'expected_domain' => 'devscun.com'
+            ]);
+        }
+        
+        // Verificar que esté usando Mailgun
+        if ($mailer !== 'mailgun') {
+            return response()->json([
+                'error' => 'Mailer debe ser mailgun',
+                'current_mailer' => $mailer,
+                'check_env' => 'Verifica MAIL_MAILER=mailgun en .env'
+            ]);
+        }
+        
+        Mail::raw('Correo de prueba desde Laravel usando Mailgun con el dominio devscun.com', function ($message) {
+            $message->to('jorge06g92@gmail.com')
+                    ->subject('Prueba Mailgun - devscun.com verificado');
+        });
+        
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Correo enviado correctamente con Mailgun',
+            'from_address' => $fromAddress,
+            'mailer' => $mailer,
+            'mailgun_domain' => $mailgunDomain,
+            'timestamp' => now(),
+            'to_email' => 'jorge06g92@gmail.com'
+        ]);
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'config_debug' => [
+                'mailer' => config('mail.default'),
+                'mailgun_domain' => config('services.mailgun.domain'),
+                'from_address' => config('mail.from.address'),
+                'mailgun_secret_set' => config('services.mailgun.secret') ? 'YES' : 'NO'
+            ]
+        ]);
+    }
+});
+
+
+// Route::get('/send-test', function () {
+//     try {
+//         // Verificar configuración
+//         $fromAddress = config('mail.from.address');
+//         $mailer = config('mail.default');
+        
+//         // Verificar que el FROM sea del subdominio correcto
+//         if (!str_contains($fromAddress, 'devscun.com')) {
+//             return response()->json([
+//                 'error' => 'FROM address debe ser del dominio devscun.com',
+//                 'current_from' => $fromAddress
+//             ]);
+//         }
+        
+//         Mail::raw('Correo de prueba desde el devscun.com usando SendGrid.', function ($message) {
+//             $message->to('jorge06g92@gmail.com')
+//                     ->subject('Prueba desde subdominio autenticado');
+//         });
+        
+//         return response()->json([
+//             'status' => 'success',
+//             'message' => 'Correo enviado correctamente',
+//             'from_address' => $fromAddress,
+//             'mailer' => $mailer
+//         ]);
+//     } catch (\Exception $e) {
+//         return response()->json([
+//             'status' => 'error',
+//             'message' => $e->getMessage(),
+//             'trace' => $e->getTraceAsString()
+//         ]);
+//     }
+// });
+
 
 
     Route::get('/certificates/{id}/pdf/{type}', [CertificateController::class, 'pdf'])->name('certificates.pdf');

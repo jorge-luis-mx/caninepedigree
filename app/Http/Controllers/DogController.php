@@ -8,9 +8,12 @@ use App\Validations\DogsValidations;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Log;
+use Exception;
+use RuntimeException;
 
-use App\Mail\sendEmailDogs;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\sendEmailDogs;
 use App\Mail\Breeding;
 
 //model
@@ -245,33 +248,114 @@ class DogController extends Controller
 
             if ($sire_id == null ) {
 
-                $sireEmail = $validatedData['sire_email'];
-                $descriptionSire = $validatedData['descriptionSire'];
+                try {
 
-                //send mails
-                $datos = [
-                    'from'=>'canine@aquacaribbeantravel.com',
-                    'subject' => 'Dog registration request',
-                    'url'=>'http://www.caninepedigree-dev.com/register',
-                    'dog'=>$dog
-                ];
-                //Mail::to($sireEmail)->send(new sendEmailDogs($datos));
+                    $sireEmail = $validatedData['sire_email'];
+                    $descriptionSire = $validatedData['descriptionSire'] ?? '';
+
+                    // Validate email before sending
+                    if (!filter_var($sireEmail, FILTER_VALIDATE_EMAIL)) {
+                        throw new Exception('The sire email address is not valid');
+                    }
+
+                    // Configure email data
+                    $emailData = [
+                        'from' => config('mail.from.address'),
+                        'from_name' => config('mail.from.name', 'Canine'),
+                        'subject' => 'Dog registration request',
+                        'url' => config('app.url') . 'register',
+                        'dog' => $dog,
+                        'description' => $descriptionSire
+                    ];
+
+                    // Send email with error handling
+                    Mail::to($sireEmail)->send(new SendEmailDogs($emailData));
+
+                    // Log successful sending
+                    Log::info('Dog registration email sent successfully', [
+                        'recipient' => $sireEmail,
+                        'dog_id' => $dog->id ?? null
+                    ]);
+
+                } catch (Exception $e) {
+                        // Log the error
+                        Log::error('Error sending dog registration email', [
+                            'error' => $e->getMessage(),
+                            'recipient' => $sireEmail ?? 'undefined',
+                            'dog_id' => $dog->id ?? null
+                        ]);
+                        
+                        // Optional: throw custom exception or handle error according to requirements
+                        throw new RuntimeException('Could not send notification email', 0, $e);
+                }
+
+                // $sireEmail = $validatedData['sire_email'];
+                // $descriptionSire = $validatedData['descriptionSire'];
+
+                // //send mails
+                // $datos = [
+                //     'from'=>'info@devscun.com',
+                //     'subject' => 'Dog registration request',
+                //     'url'=>'http://www.caninepedigree-dev.com/register',
+                //     'dog'=>$dog
+                // ];
+                // Mail::to($sireEmail)->send(new sendEmailDogs($datos));
     
             }
 
             if ($dam_id == null ) {
 
-                $damEmail = $validatedData['dam_email'];
-                $descriptionDam = $validatedData['descriptionDam'];
+                try {
+                    $damEmail = $validatedData['dam_email'];
+                    $descriptionDam = $validatedData['descriptionDam'] ?? '';
 
-                //send mails
-                $datos = [
-                    'from'=>'canine@aquacaribbeantravel.com',
-                    'subject' => 'Dog registration request',
-                    'url'=>'http://www.caninepedigree-dev.com/register',
-                    'dog'=>$dog
-                ];
-                //Mail::to($damEmail)->send(new sendEmailDogs($datos));
+                    // Validate email before sending
+                    if (!filter_var($damEmail, FILTER_VALIDATE_EMAIL)) {
+                        throw new Exception('The dam email address is not valid');
+                    }
+
+                    // Configure email data
+                    $emailData = [
+                        'from' => config('mail.from.address', 'info@devscun.com'),
+                        'from_name' => config('mail.from.name', 'Canine'),
+                        'subject' => 'Dog registration request',
+                        'url' => config('app.url') . 'register',
+                        'dog' => $dog,
+                        'description' => $descriptionDam
+                    ];
+
+                    // Send email with error handling
+                    Mail::to($damEmail)->send(new SendEmailDogs($emailData));
+                    
+                    // Log successful sending
+                    Log::info('Dog registration email sent successfully to dam', [
+                        'recipient' => $damEmail,
+                        'dog_id' => $dog->id ?? null
+                    ]);
+
+                } catch (Exception $e) {
+                    // Log the error
+                    Log::error('Error sending dog registration email to dam', [
+                        'error' => $e->getMessage(),
+                        'recipient' => $damEmail ?? 'undefined',
+                        'dog_id' => $dog->id ?? null
+                    ]);
+                    
+                    // Optional: throw custom exception or handle error according to requirements
+                    throw new RuntimeException('Could not send notification email to dam', 0, $e);
+                }
+
+                // $damEmail = $validatedData['dam_email'];
+                // $descriptionDam = $validatedData['descriptionDam'];
+
+                // //send mails
+                // $datos = [
+                //     'from'=>'info@devscun.com',
+                //     'subject' => 'Dog registration request',
+                //     'url'=>'http://www.caninepedigree-dev.com/register',
+                //     'dog'=>$dog
+                // ];
+                // Mail::to($damEmail)->send(new sendEmailDogs($datos));
             }
 
             $dog->dog_id_md = md5($dog->dog_id);
@@ -303,7 +387,7 @@ class DogController extends Controller
                 // Mail::to($requestingUser->email)->send(new Breeding($dog));
             }
 
-            $data['message'] = 'Pricing inserted successfully';
+            $data['message'] = 'CANINE inserted successfully';
             $data['status'] = 200;
             $data['data'] = $paymentProtected;
             
@@ -311,7 +395,7 @@ class DogController extends Controller
             
         } catch (\Exception $e) {
 
-            $data['message'] = 'Failed to insert the pricing. Please check the data and try again';
+            $data['message'] = 'Failed to insert the CANINE. Please check the data and try again';
             $data['status'] = 500;
             $data['errors'] = $e->getMessage();
             DB::rollBack();
