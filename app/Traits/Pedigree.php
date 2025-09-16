@@ -28,6 +28,7 @@ trait Pedigree
                 'breed' => $dog->breed,
                 'color' => $dog->color,
                 'sex' => $dog->sex,
+                'url'=>$dog->url,
                 'birthdate' => $dog->birthdate,
                 'date' => $dog->created_at,
                 'status' => $dog->status,

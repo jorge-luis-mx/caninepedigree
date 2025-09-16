@@ -16,6 +16,7 @@
                               <option value="F">Female</option>
                            </select>
                            <!-- <input type="text" name="dogOne_color" class="input is-small mt-3" placeholder="Color" > -->
+                           <input type="text" name="dogOne_url" class="input is-small mt-3" placeholder="url" >
                      </td>
                   </tr>
                   <tr>
@@ -34,6 +35,7 @@
                            <option value="F">Female</option>
                         </select>
                         <!-- <input type="text" name="father_color" class="input is-small" placeholder="Color" > -->
+                         <input type="text" name="father_url" class="input is-small" placeholder="url" >
                      </td>
                      <td rowspan="4">
                         <!-- <a href="http://www.caninepedigree-dev.com/pedigrees/bf8229696f7a3bb4700cfddef19fa23f">Bruno</a> -->
@@ -43,6 +45,7 @@
                            <option value="F">Female</option>
                         </select>
                         <!-- <input type="text" name="fatherFather_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="fatherFather_url" class="input is-small" placeholder="url" >
                      </td>
                      <td rowspan="2">
                         <!-- <a href="http://www.caninepedigree-dev.com/pedigrees/7e7757b1e12abcb736ab9a754ffb617a">Rex</a> -->
@@ -52,6 +55,7 @@
                            <option value="F">Female</option>
                         </select>
                         <!-- <input type="text" name="bisabuelo1_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="bisabuelo1_url" class="input is-small" placeholder="url" >
                      </td>
                      <td>
                         <!-- <a href="http://www.caninepedigree-dev.com/pedigrees/7ef605fc8dba5425d6965fbd4c8fbe1f">pongo</a> -->
@@ -61,6 +65,7 @@
                            <option value="F">Female</option>
                         </select>
                         <!-- <input type="text" name="tatarabuelo1_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="tatarabuelo1_url" class="input is-small" placeholder="url" >
                      </td>
                   </tr>
                   <tr>
@@ -72,6 +77,7 @@
                            <option value="F" selected>Female</option>
                         </select>
                         <!-- <input type="text" name="tatarabuela1_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="tatarabuela1_url" class="input is-small" placeholder="url" >
                      </td>
                   </tr>
                   <tr>
@@ -83,6 +89,7 @@
                            <option value="F" selected>Female</option>
                         </select>
                         <!-- <input type="text" name="bisabuela1_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="bisabuela1_url" class="input is-small" placeholder="url" >
                      </td>
                      <td>
                         <!-- <a href="http://www.caninepedigree-dev.com/pedigrees/37a749d808e46495a8da1e5352d03cae">Toto</a> -->
@@ -92,6 +99,7 @@
                            <option value="F">Female</option>
                         </select>
                         <!-- <input type="text" name="tatarabuelo2_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="tatarabuelo2_url" class="input is-small" placeholder="url" >
                      </td>
                   </tr>
                   <tr>
@@ -103,6 +111,7 @@
                            <option value="F" selected>Female</option>
                         </select>
                         <!-- <input type="text" name="tatarabuela2_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="tatarabuela2_url" class="input is-small" placeholder="url" >
                      </td>
                   </tr>
                   <tr>
@@ -114,6 +123,7 @@
                            <option value="F" selected>Female</option>
                         </select>
                         <!-- <input type="text" name="fatherMother_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="fatherMother_url" class="input is-small" placeholder="url" >
                      </td>
                      <td rowspan="2">
                         <!-- <a href="http://www.caninepedigree-dev.com/pedigrees/006f52e9102a8d3be2fe5614f42ba989">Duke</a> -->
@@ -123,6 +133,7 @@
                            <option value="F">Female</option>
                         </select>
                         <!-- <input type="text" name="bisabuelo2_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="bisabuelo2_url" class="input is-small" placeholder="url" >
                      </td>
                      <td>
                         <!-- <a href="http://www.caninepedigree-dev.com/pedigrees/1d7f7abc18fcb43975065399b0d1e48e">Chip</a> -->
@@ -132,6 +143,7 @@
                            <option value="F">Female</option>
                         </select>
                         <!-- <input type="text" name="tatarabuelo3_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="tatarabuelo3_url" class="input is-small" placeholder="url" >
                      </td>
                   </tr>
                   <tr>
@@ -143,6 +155,7 @@
                            <option value="F" selected>Female</option>
                         </select>
                         <!-- <input type="text" name="tatarabuela3_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="tatarabuela3_url" class="input is-small" placeholder="url" >
                      </td>
                   </tr>
                   <tr>
@@ -154,6 +167,7 @@
                            <option value="F" selected>Female</option>
                         </select>
                         <!-- <input type="text" name="bisabuela2_color" class="input is-small" placeholder="Color" > -->
+                         <input type="text" name="bisabuela2_url" class="input is-small" placeholder="url" >
                      </td>
                      <td>
                         <!-- <a href="http://www.caninepedigree-dev.com/pedigrees/1c9ac0159c94d8d0cbedc973445af2da">Fang</a> -->
@@ -163,6 +177,7 @@
                            <option value="F">Female</option>
                         </select>
                         <!-- <input type="text" name="tatarabuelo4_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="tatarabuelo4_url" class="input is-small" placeholder="url" >
                      </td>
                   </tr>
                   <tr>
@@ -174,6 +189,7 @@
                            <option value="F" selected>Female</option>
                         </select>
                         <!-- <input type="text" name="tatarabuela4_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="tatarabuela4_url" class="input is-small" placeholder="url" >
                      </td>
                   </tr>
 
@@ -187,6 +203,7 @@
                            <option value="F" selected>Female</option>
                         </select>
                         <!-- <input type="text" name="mother_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="mother_url" class="input is-small" placeholder="url" >
                      </td>
                      <td rowspan="4">
                         <!-- <a href="http://www.caninepedigree-dev.com/pedigrees/38af86134b65d0f10fe33d30dd76442e">Leo</a> -->
@@ -196,6 +213,7 @@
                            <option value="F" >Female</option>
                         </select>
                         <!-- <input type="text" name="motherFather_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="motherFather_url" class="input is-small" placeholder="url" >
                      </td>
                      <td rowspan="2">
                         <!-- <a href="http://www.caninepedigree-dev.com/pedigrees/149e9677a5989fd342ae44213df68868">simba</a> -->
@@ -205,6 +223,7 @@
                            <option value="F">Female</option>
                         </select>
                         <!-- <input type="text" name="bisabuelo3_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="bisabuelo3_url" class="input is-small" placeholder="url" >
                      </td>
                      <td>
                         <!-- <a href="http://www.caninepedigree-dev.com/pedigrees/06409663226af2f3114485aa4e0a23b4">Milo</a> -->
@@ -214,6 +233,7 @@
                            <option value="F">Female</option>
                         </select>
                         <!-- <input type="text" name="tatarabuelo5_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="tatarabuelo5_url" class="input is-small" placeholder="url" >
                      </td>
                   </tr>
                   <tr>
@@ -225,6 +245,7 @@
                            <option value="F" selected>Female</option>
                         </select>
                         <!-- <input type="text" name="tatarabuela5_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="tatarabuela5_url" class="input is-small" placeholder="url" >
                      </td>
                   </tr>
                   <tr>
@@ -236,6 +257,7 @@
                            <option value="F" selected>Female</option>
                         </select>
                         <!-- <input type="text" name="bisabuela3_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="bisabuela3_url" class="input is-small" placeholder="url" >
                      </td>
                      <td>
                         <!-- <a href="http://www.caninepedigree-dev.com/pedigrees/b73ce398c39f506af761d2277d853a92">Bingo</a> -->
@@ -245,6 +267,7 @@
                            <option value="F">Female</option>
                         </select>
                         <!-- <input type="text" name="tatarabuelo6_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="tatarabuelo6_url" class="input is-small" placeholder="url" >
                      </td>
                   </tr>
                   <tr>
@@ -256,6 +279,7 @@
                            <option value="F" selected>Female</option>
                         </select>
                         <!-- <input type="text" name="tatarabuela6_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="tatarabuela6_url" class="input is-small" placeholder="url" >
                      </td>
                   </tr>
                   <tr>
@@ -267,6 +291,7 @@
                            <option value="F" selected>Female</option>
                         </select>
                         <!-- <input type="text" name="motherMother_color" class="input is-small" placeholder="Color" > -->
+                         <input type="text" name="motherMother_url" class="input is-small" placeholder="url" >
                      </td>
                      <td rowspan="2">
                         <!-- <a href="http://www.caninepedigree-dev.com/pedigrees/1ff8a7b5dc7a7d1f0ed65aaa29c04b1e">Zeus</a> -->
@@ -276,6 +301,7 @@
                            <option value="F">Female</option>
                         </select>
                         <!-- <input type="text" name="bisabuelo4_color" class="input is-small" placeholder="Color" > -->
+                         <input type="text" name="bisabuelo4_url" class="input is-small" placeholder="url" >
                      </td>
                      <td>
                         <!-- <a href="http://www.caninepedigree-dev.com/pedigrees/82aa4b0af34c2313a562076992e50aa3">Truman</a> -->
@@ -285,6 +311,7 @@
                            <option value="F">Female</option>
                         </select>
                         <!-- <input type="text" name="tatarabuelo7_color" class="input is-small" placeholder="Color" > -->
+                         <input type="text" name="tatarabuelo7_url" class="input is-small" placeholder="url" >
                      </td>
                   </tr>
                   <tr>
@@ -296,6 +323,7 @@
                            <option value="F" selected>Female</option>
                         </select>
                         <!-- <input type="text" name="tatarabuela7_color" class="input is-small" placeholder="Color" > -->
+                        <input type="text" name="tatarabuela7_url" class="input is-small" placeholder="url" >
                      </td>
                   </tr>
                   <tr>
@@ -307,6 +335,7 @@
                            <option value="F" selected>Female</option>
                         </select>
                         <!-- <input type="text" name="bisabuela4_color" class="input is-small" placeholder="Color" > -->
+                         <input type="text" name="bisabuela4_url" class="input is-small" placeholder="url" >
                      </td>
                      <td>
                         <!-- <a href="http://www.caninepedigree-dev.com/pedigrees/fa7cdfad1a5aaf8370ebeda47a1ff1c3">Odie</a> -->
@@ -316,6 +345,7 @@
                            <option value="F">Female</option>
                         </select>
                         <!-- <input type="text" name="tatarabuelo8_color" class="input is-small" placeholder="Color" > -->
+                         <input type="text" name="tatarabuelo8_url" class="input is-small" placeholder="url" >
                      </td>
                   </tr>
                   <tr>
@@ -327,6 +357,7 @@
                            <option value="F" selected>Female</option>
                         </select>
                         <!-- <input type="text" name="tatarabuela8_color" class="input is-small" placeholder="Color" > -->
+                         <input type="text" name="tatarabuela8_url" class="input is-small" placeholder="url" >
                      </td>
                   </tr>
 
@@ -357,7 +388,8 @@
             return {
                name: data.get(campo),
                sex: data.get(`${campo}_sex`),
-               color: 'N/A'
+               color: 'N/A',
+               url:data.get(`${campo}_url`)
             };
          }
          const generations = {

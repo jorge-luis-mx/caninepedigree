@@ -96,6 +96,12 @@
                           <p><label>{{__('messages.main.dogDetails.registered')}}:</label> 
                               <span>{{ \Carbon\Carbon::parse($dog['date'])->format('F d, Y') }}</span>
                           </p>
+
+                          <p>
+                              <label>Link to Public Pedigree:</label>
+                              {!! !empty($dog['url']) ? '<a href="'.$dog['url'].'" target="_blank">'.$dog['url'].'</a>' : '' !!}
+                          </p>
+
                         </div>
                     </div>
               </td>

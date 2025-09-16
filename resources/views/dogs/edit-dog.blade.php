@@ -118,6 +118,21 @@
                            </div>
                         </div>
                      </div>
+
+                     <div class=" columns">
+                        <div class="column">
+                           <div class="field">
+                              <label class="label" for="phone">Url</label>
+                              <div class="control">
+                                 <input
+                                    class="input"
+                                    type="text"
+                                    name="url"
+                                    value="{{$dog->url}}">
+                              </div>
+                           </div>
+                        </div>
+                     </div>
                   </div>
                   <input type="hidden" id="dog_id" value="{{ $dog->dog_id }}">
                   <div class="field mt-4 ml-4 mb-4">

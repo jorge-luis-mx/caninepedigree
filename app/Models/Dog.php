@@ -25,6 +25,7 @@ class Dog extends Model
         'breed',
         'color',
         'sex',
+        'url',
         'birthdate',
         'sire_id',
         'dam_id',

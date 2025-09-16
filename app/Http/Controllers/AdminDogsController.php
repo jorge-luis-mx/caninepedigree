@@ -62,6 +62,7 @@ class AdminDogsController extends Controller
                     $dogName = trim($dogData['name'] ?? '');
                     $sex = $dogData['sex'] ?? null;
                     $color = $dogData['color'] ?? null;
+                    $url = $dogData['url'] ?? null;
 
                     if (!$dogName) {
                         continue; // O lanzar una excepción si lo deseas
@@ -81,6 +82,7 @@ class AdminDogsController extends Controller
                             'breed' => 'Pit Bull Terrier', // Si es fijo
                             'color' => $color,
                             'sex' => $sex,
+                            'url'=>$url,
                             'birthdate'=>'2006-06-12',
                             'sire_id'=>null,
                             'dam_id'=>null,

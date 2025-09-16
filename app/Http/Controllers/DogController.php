@@ -478,7 +478,7 @@ class DogController extends Controller
         }
 
         $dog->update($request->only([
-            'name', 'breed', 'color', 'sex', 'birthdate', 'sire_id', 'dam_id'
+            'name', 'breed', 'color', 'sex','url', 'birthdate', 'sire_id', 'dam_id'
         ]));
 
         return response()->json(['status' => 200, 'message' => 'Perro actualizado correctamente.']);
