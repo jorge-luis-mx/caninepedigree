@@ -242,7 +242,7 @@ Route::get('/send-test', function () {
     // Route::post('/breeding/{breeding}/store-puppies', [PuppyController::class, 'store'])->name('puppies.store');
 
 
-    Route::get('/puppies/register', [PuppyController::class, 'create'])->name('puppies.create');
+    Route::get('/puppies/register', [PuppyController::class, 'index'])->name('puppies.index');
     Route::post('/puppies/validate-breeding', [PuppyController::class, 'validateBreeding'])->name('puppies.validate');
     Route::post('/puppies/register', [PuppyController::class, 'store'])->name('puppies.store');
     

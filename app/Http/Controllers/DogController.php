@@ -47,7 +47,7 @@ class DogController extends Controller
         // $hasPermission = $permissions->contains('name', 'create_post');
 
         $arrayRole =['Admin'];
-        
+
         if (in_array($role->name, $arrayRole)) {
 
             $dogs = Dog::whereIn('dogs.status', ['completed','exempt'])
@@ -68,8 +68,11 @@ class DogController extends Controller
         }
 
         $arrayOwner = ['Administrator','Employee'];
-        $ownerProfile = UserProfile::find(1);
-        $owner = in_array($role->name, $arrayOwner) ? $ownerProfile->profile_id : $profile_id;
+        // $ownerProfile = UserProfile::find(1);
+        // dd($profile);
+        $owner = in_array($role->name, $arrayOwner) ? 2 : $profile_id;
+
+    
 
         $dogs = Dog::where('dogs.current_owner_id', $owner)
             ->whereIn('dogs.status', ['completed','exempt'])

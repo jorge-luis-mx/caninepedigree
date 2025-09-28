@@ -68,10 +68,13 @@ class BreedingRequestController extends Controller
      */
     public function create()
     {
+        
         $user = auth()->user();
         $profile = $user->userprofile;
+        $role = $user->role;
 
-        $dogs = Dog::where('current_owner_id', $profile->profile_id)->where('status','completed')->where('sex','F')->get();
+        $owner = $role->name == 'Admin'? 2 : $profile->profile_id;
+        $dogs = Dog::where('current_owner_id', $owner)->where('status','completed')->where('sex','F')->get();
 
 
         return view('breeding.create-breeding',compact('dogs'));

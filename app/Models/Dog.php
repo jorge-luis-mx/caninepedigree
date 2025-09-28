@@ -31,6 +31,7 @@ class Dog extends Model
         'dam_id',
         'breeder_id',
         'current_owner_id',
+        'created_by_user_id',
         'status',
         'is_puppy',
         'breeding_request_id'

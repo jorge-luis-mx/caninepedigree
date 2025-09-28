@@ -18,7 +18,7 @@ class PuppyController extends Controller
 
     public function index()
     {
-        //
+        return view('puppies.create');
     }
 
     public function register()
@@ -185,7 +185,7 @@ class PuppyController extends Controller
 
     public function create()
     {
-        return view('puppies.create');
+        // return view('puppies.create');
     }
 
 
