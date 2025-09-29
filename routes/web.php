@@ -224,7 +224,7 @@ Route::get('/send-test', function () {
 
     //Route::post('/breeding-request', [BreedingController::class, 'store'])->name('breeding.index');
     Route::get('/breeding/request', [BreedingRequestController::class, 'index'])->name('breeding.index');
-    Route::get('/breeding/request/create', [BreedingRequestController::class, 'create'])->name('breeding.create');
+    Route::get('/breeding/request/create/{id?}', [BreedingRequestController::class, 'create'])->name('breeding.create');
     Route::post('/breeding/request', [BreedingRequestController::class, 'store'])->name('breeding.store');
     Route::post('/breeding/complete/{id}', [BreedingRequestController::class, 'complete'])->name('breeding.complete');
 

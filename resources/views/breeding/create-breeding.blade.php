@@ -15,6 +15,7 @@
                         <div class="columns is-multiline">
 
                             <!-- My dog -->
+                            @isset($dogs)
                             <div class="column">
                                 <div class="field">
                                     <label class="label" for="my_dog_id">Select your registered dog</label>
@@ -34,8 +35,13 @@
                                     
                                 </div>
                             </div>
+                            @else
+                                <div class="column">
+                                    <input type="hidden" name="my_dog_id" value="{{ $dog->dog_id }}" id="my_dog_id">
+                                </div>
+                            @endisset
 
-                            <div class="column">
+                            <div class="column {{ isset($dogs)?'':'is-full'}} ">
                                 <div class="field searchDog">
                                     <label class="label" for="sire">Enter the IDDR number or the dog's name</label>
                                     <div class="is-flex align-items-center">

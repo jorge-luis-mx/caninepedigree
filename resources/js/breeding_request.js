@@ -125,9 +125,6 @@ export  function breedingRequest() {
                     objets.saveBreedingRequest(e, form, serializedData);
                 }
 
-
-               
-                
             });
         }
 

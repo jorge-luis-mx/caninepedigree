@@ -8,8 +8,8 @@
 
    <div class="card is-flex is-flex-direction-row is-justify-content-flex-end mb-4" style="box-shadow: none;">
 
-      <a href="{{ route('puppies.index') }}"><button class="button has-text-white has-background-warning">litters</button></a>
-      <a href="{{ route('breeding.create') }}"><button class="button has-text-white has-background-warning">Breeding</button></a>
+      <a href="{{ route('puppies.index' )}}"><button class="button has-text-white has-background-warning">litters</button></a>
+      <a href="{{ route('breeding.create',['id' => $dog['id']] )}}"><button class="button has-text-white has-background-warning">Breeding</button></a>
 
       @if($dog['sex']==='F')
          <a href="{{ route('puppies.index') }}"><button class="button has-text-white has-background-warning">Add Puppies</button></a>

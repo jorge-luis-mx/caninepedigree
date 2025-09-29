@@ -66,7 +66,7 @@ class BreedingRequestController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($id = null)
     {
         
         $user = auth()->user();
@@ -74,6 +74,14 @@ class BreedingRequestController extends Controller
         $role = $user->role;
 
         $owner = $role->name == 'Admin'? 2 : $profile->profile_id;
+        
+        if($id){
+
+            $dog = Dog::whereRaw('MD5(dog_id) = ?', [$id])->where('status','completed')->where('sex','F')->firstOrFail();
+
+            return view('breeding.create-breeding',compact('dog'));
+        }
+
         $dogs = Dog::where('current_owner_id', $owner)->where('status','completed')->where('sex','F')->get();
 
 
@@ -200,139 +208,6 @@ class BreedingRequestController extends Controller
                 $dataResponse['message'] = 'Crossbreeding request registered successfully';
                 return response()->json($dataResponse,200);
             }
-
-
-
-            
-
-
-
-
-
-            // $myDog = Dog::findOrFail($request->my_dog_id);
-            // $myOwner = auth()->user()->userprofile;
-            
-            // $isMyDogMale = $myDog->sex === 'M';
-            // $otherType = $isMyDogMale ? 'dam' : 'sire';
-            // $token = Str::uuid();
-
-            // // Verificamos si el otro dueño ya tiene cuenta
-            // $otherOwner = UserProfile::where('email', $request->other_owner_email)->first();
-            // $otherDog = null;
-
-            // if ($otherOwner) {
-            //     // Buscamos el perro del otro dueño por nombre, si lo proporciona
-            //     $otherDog = Dog::where('current_owner_id', $otherOwner->profile_id)
-            //     ->where(function ($query) use ($request) {
-            //         $query->where('name', 'LIKE', '%' . $request->other_dog_name . '%')
-            //               ->orWhere('reg_no', 'LIKE', '%' . $request->other_dog_name . '%');
-            //     })
-            //     ->first();
-            
-
-            // }
-
-            // // Validamos que no sean del mismo sexo
-            // if ($otherDog && $otherDog->sex === $myDog->sex) {
-                
-            //     return response()->json([
-            //         'status' => 'error',
-            //         'message' => 'No se puede realizar una cruza entre perros del mismo sexo.',
-            //         'data'=>[],
-            //         'errors' => null,
-            //     ], 422);
-            // }
-
-            // if ($otherOwner && $otherDog) {
-            //     //Escenario 1: Ambos dueños tienen cuenta y ambos perros están registrados
-            //     BreedingRequest::create([
-            //         'female_dog_id' => $myDog->sex === 'F' ? $myDog->dog_id : $otherDog->dog_id,
-            //         'male_dog_id' => $myDog->sex === 'M' ? $myDog->dog_id : $otherDog->dog_id,
-            //         'requester_id'=>$otherOwner->profile_id,
-            //         'owner_id'=> $otherOwner->profile_id,
-            //         'status' => 'pending',
-            //     ]);
-
-            //     $data = [
-            //         'dogName'=>$myDog->name,
-            //         'other_dog_name'=>$otherDog->name,
-            //         'otherType'=>$otherType,
-            //         'token'=>$token,
-            //         'owner'=>$myOwner->name.' '.$myOwner->lastName,
-            //         'subject'=>'Has recibido una solicitud de cruza para tu perro',
-            //         'view'=>'dog_invitation_esc_one',
-            //         'url'=>$baseUrl,
-            //     ];
-
-            //     $this->sendEmail($data,$validatedData);
-
-            //     // enviar el correo de invitacion para la otra persona 
-            //     return response()->json([
-            //         'status' => 'success',
-            //         'message' => 'Solicitud de cruza enviada correctamente.',
-            //         'data'=>[],
-            //         'errors' => null,
-            //     ],200);
-            // }
-
-            // if ($otherOwner && !$otherDog) {
-            //     // Escenario 2: El dueño ya tiene cuenta pero no ha registrado (o mal escrito) su perro
-            //     DogParentRequest::firstOrCreate([
-            //         'dog_id' => $myDog->dog_id,
-            //         'parent_type' => $otherType,
-            //         'email' => $request->other_owner_email,
-            //         'token' => $token,
-            //     ]);
-
-            //     $data = [
-            //         'dogName'=>$myDog->name,
-            //         'other_dog_name'=>$request->other_dog_name,
-            //         'otherType'=>$otherType,
-            //         'token'=>$token,
-            //         'owner'=>$myOwner->name.' '.$myOwner->lastName,
-            //         'subject'=>'Alguien quiere cruzar su perro con el tuyo — Regístralo para continuar',
-            //         'view'=>'dog_invitation_esc_two',
-            //         'url'=>$baseUrl,
-            //     ];
-
-            //     $this->sendEmail($data,$validatedData);
-            //     // enviar el correo de invitacion que registre su perro ya alguien le solicita cruza
-            //     return response()->json([
-            //         'status' => 'success',
-            //         'message' => 'El dueño del otro perro ya tiene cuenta. Se notificará para que registre su mascota.',
-            //         'data'=>[],
-            //         'errors' => null,
-            //     ],200);
-            // }
-
-            // // Crear solicitud de registro del otro perro si no existe aún
-            // DogParentRequest::create([
-            //     'dog_id' => $myDog->dog_id,
-            //     'parent_type' => $otherType,
-            //     'email' => $request->other_owner_email,
-            //     'token' => $token,
-            // ]);
-
-            // $data = [
-            //     'dogName'=>$myDog->name,
-            //     'other_dog_name'=>$request->other_dog_name,
-            //     'otherType'=>$otherType,
-            //     'token'=>$token,
-            //     'owner'=>$myOwner->name.' '.$myOwner->lastName,
-            //     'subject'=>'Invitación para cruzar tu perro — Regístralo en nuestra plataforma',
-            //     'view'=>'dog_invitation_esc_three',
-            //     'url'=>$baseUrl.'register',
-            // ];
-
-            // $this->sendEmail($data,$validatedData);
-
-
-            // return response()->json([
-            //     'status' => 'success',
-            //     'message' => 'Solicitud enviada. El dueño del otro perro debe registrar su mascota para continuar.',
-            //     'data'=>[],
-            //     'errors' => null,
-            // ],200);
             
         } catch (\Exception $e) {
             return response()->json([
@@ -423,13 +298,6 @@ class BreedingRequestController extends Controller
     public function uploadPhotos($breedingId)
     {
         $breeding = BreedingRequest::findOrFail($breedingId);
-
-        
-        // Verificación de dueño
-        // if ($breeding->maleDog->current_owner_id !== auth()->user()->userprofile->profile_id) {
-        //     abort(403, 'No autorizado');
-        // }
-
         return view('breeding.upload-photos', compact('breeding'));
     }
 
