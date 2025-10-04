@@ -198,7 +198,7 @@ class DogController extends Controller
         
         $arrayRole =['Employee','Admin'];
         
-        $ownerProfile = UserProfile::find(1);
+        $ownerProfile = UserProfile::find(2);
         $owner = in_array($role->name, $arrayRole) ? $ownerProfile->profile_id : $profile->profile_id;
 
 
@@ -239,6 +239,7 @@ class DogController extends Controller
                 'dam_id' => $dam_id,
                 'breeder_id' => $owner,
                 'current_owner_id' => $owner,
+                'created_by_user_id'=>$user->user_id,
                 'status'=> in_array($role->name, $dogStatus ) ? 'exempt':'pending'
             ]);
             $dog->save();
