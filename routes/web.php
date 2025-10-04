@@ -83,8 +83,6 @@ Route::get('/admin/dogs', [AdminDogsController::class, 'index'])->name('adminDog
 Route::post('/admin/dogs', [AdminDogsController::class, 'store'])->name('adminDogs.store');
 
 
-
-
 Route::middleware('auth')->group(function () {
 
     Route::get('/admin/pedigree', [AdminDogsController::class, 'pedigree'])->name('adminDogs.pedigree');
@@ -123,104 +121,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/pedigrees/{id}', [PedigreeController::class, 'show'])->name('pedigree.show');
     
 
-Route::get('/send-test', function () {
-    try {
-        // Verificar configuración
-        $fromAddress = config('mail.from.address');
-        $mailer = config('mail.default');
-        $mailgunDomain = config('services.mailgun.domain');
-        
-        // Verificar que el FROM sea del dominio correcto
-        if (!str_contains($fromAddress, 'devscun.com')) {
-            return response()->json([
-                'error' => 'FROM address debe ser del dominio devscun.com',
-                'current_from' => $fromAddress,
-                'expected_domain' => 'devscun.com'
-            ]);
-        }
-        
-        // Verificar que esté usando Mailgun
-        if ($mailer !== 'mailgun') {
-            return response()->json([
-                'error' => 'Mailer debe ser mailgun',
-                'current_mailer' => $mailer,
-                'check_env' => 'Verifica MAIL_MAILER=mailgun en .env'
-            ]);
-        }
-        
-        Mail::raw('Correo de prueba desde Laravel usando Mailgun con el dominio devscun.com', function ($message) {
-            $message->to('jorge06g92@gmail.com')
-                    ->subject('Prueba Mailgun - devscun.com verificado');
-        });
-        
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Correo enviado correctamente con Mailgun',
-            'from_address' => $fromAddress,
-            'mailer' => $mailer,
-            'mailgun_domain' => $mailgunDomain,
-            'timestamp' => now(),
-            'to_email' => 'jorge06g92@gmail.com'
-        ]);
-        
-    } catch (\Exception $e) {
-        return response()->json([
-            'status' => 'error',
-            'message' => $e->getMessage(),
-            'config_debug' => [
-                'mailer' => config('mail.default'),
-                'mailgun_domain' => config('services.mailgun.domain'),
-                'from_address' => config('mail.from.address'),
-                'mailgun_secret_set' => config('services.mailgun.secret') ? 'YES' : 'NO'
-            ]
-        ]);
-    }
-});
-
-
-// Route::get('/send-test', function () {
-//     try {
-//         // Verificar configuración
-//         $fromAddress = config('mail.from.address');
-//         $mailer = config('mail.default');
-        
-//         // Verificar que el FROM sea del subdominio correcto
-//         if (!str_contains($fromAddress, 'devscun.com')) {
-//             return response()->json([
-//                 'error' => 'FROM address debe ser del dominio devscun.com',
-//                 'current_from' => $fromAddress
-//             ]);
-//         }
-        
-//         Mail::raw('Correo de prueba desde el devscun.com usando SendGrid.', function ($message) {
-//             $message->to('jorge06g92@gmail.com')
-//                     ->subject('Prueba desde subdominio autenticado');
-//         });
-        
-//         return response()->json([
-//             'status' => 'success',
-//             'message' => 'Correo enviado correctamente',
-//             'from_address' => $fromAddress,
-//             'mailer' => $mailer
-//         ]);
-//     } catch (\Exception $e) {
-//         return response()->json([
-//             'status' => 'error',
-//             'message' => $e->getMessage(),
-//             'trace' => $e->getTraceAsString()
-//         ]);
-//     }
-// });
-
-
-
     Route::get('/certificates/{id}/pdf/{type}', [CertificateController::class, 'pdf'])->name('certificates.pdf');
 
     // Route::get('/pedigree', [PedigreegController::class, 'index'])->name('pediree.index');
     //  Route::get('/dogs/pedigree/{id}', [DogController::class, 'showPedigree'])->name('pediree.showPedigree');
     // Route::get('/generate-pdf/{id}/{type}', [PedigreegController::class, 'generatePDF'])->name('pediree.generatePDF');
-
-
 
     //Route::post('/breeding-request', [BreedingController::class, 'store'])->name('breeding.index');
     Route::get('/breeding/request', [BreedingRequestController::class, 'index'])->name('breeding.index');
@@ -246,6 +151,60 @@ Route::get('/send-test', function () {
     Route::post('/puppies/validate-breeding', [PuppyController::class, 'validateBreeding'])->name('puppies.validate');
     Route::post('/puppies/register', [PuppyController::class, 'store'])->name('puppies.store');
     
+
+    Route::get('/send-test', function () {
+        try {
+            // Verificar configuración
+            $fromAddress = config('mail.from.address');
+            $mailer = config('mail.default');
+            $mailgunDomain = config('services.mailgun.domain');
+            
+            // Verificar que el FROM sea del dominio correcto
+            if (!str_contains($fromAddress, 'devscun.com')) {
+                return response()->json([
+                    'error' => 'FROM address debe ser del dominio devscun.com',
+                    'current_from' => $fromAddress,
+                    'expected_domain' => 'devscun.com'
+                ]);
+            }
+            
+            // Verificar que esté usando Mailgun
+            if ($mailer !== 'mailgun') {
+                return response()->json([
+                    'error' => 'Mailer debe ser mailgun',
+                    'current_mailer' => $mailer,
+                    'check_env' => 'Verifica MAIL_MAILER=mailgun en .env'
+                ]);
+            }
+            
+            Mail::raw('Correo de prueba desde Laravel usando Mailgun con el dominio devscun.com', function ($message) {
+                $message->to('jorge06g92@gmail.com')
+                        ->subject('Prueba Mailgun - devscun.com verificado');
+            });
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Correo enviado correctamente con Mailgun',
+                'from_address' => $fromAddress,
+                'mailer' => $mailer,
+                'mailgun_domain' => $mailgunDomain,
+                'timestamp' => now(),
+                'to_email' => 'jorge06g92@gmail.com'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'config_debug' => [
+                    'mailer' => config('mail.default'),
+                    'mailgun_domain' => config('services.mailgun.domain'),
+                    'from_address' => config('mail.from.address'),
+                    'mailgun_secret_set' => config('services.mailgun.secret') ? 'YES' : 'NO'
+                ]
+            ]);
+        }
+    });
 
 });
 

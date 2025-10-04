@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
 use App\Validations\BreedingRequestRule;
-
+use Carbon\Carbon;
 
 
 use Illuminate\Http\Request;
@@ -49,15 +49,28 @@ class BreedingRequestController extends Controller
 
     public function complete($id)
     {
-        $breeding = BreedingRequest::findOrFail($id);
 
-        if(auth()->user()->userprofile->profile_id == $breeding->maleDog->current_owner_id ){
+        $breeding = BreedingRequest::findOrFail($id);
+        if(!empty($breeding)){
+
+            $mating = Carbon::now('America/Cancun');
+            $expectedBirth = $mating->copy()->addDays(63);
 
             $breeding->status = 'completed';
+            $breeding->miting_date = $mating->toDateString();
+            $breeding->delivery_date = $expectedBirth->toDateString();
             $breeding->save();
-
             return response()->json(['success' => true]);
         }
+
+
+        // if(auth()->user()->userprofile->profile_id == $breeding->maleDog->current_owner_id ){
+
+        //     $breeding->status = 'completed';
+        //     $breeding->save();
+
+        //     return response()->json(['success' => true]);
+        // }
         
         return response()->json(['success' => false, 'message' => 'No autorizado']);
  
@@ -74,10 +87,13 @@ class BreedingRequestController extends Controller
         $role = $user->role;
 
         $owner = $role->name == 'Admin'? 2 : $profile->profile_id;
-        
+      
         if($id){
 
-            $dog = Dog::whereRaw('MD5(dog_id) = ?', [$id])->where('status','completed')->where('sex','F')->firstOrFail();
+            $dog = Dog::whereRaw('MD5(dog_id) = ?', [$id])
+            ->whereIn('status', ['completed', 'exempt'])
+            ->where('sex', 'F')
+            ->firstOrFail();
 
             return view('breeding.create-breeding',compact('dog'));
         }
@@ -112,102 +128,170 @@ class BreedingRequestController extends Controller
                 $dataRespons['errors'] = $validator->errors();
                 return response()->json($dataRespons, 422);
             }
+
+
             $validatedData = $validator->validated();
-           
-            $myDog = Dog::where('dog_id', $validatedData['my_dog_id'])->first();
-            $myOwner = auth()->user()->userprofile;
-            $isMyDogMale = $myDog->sex === 'M';
-            $otherType = $isMyDogMale ? 'dam' : 'sire';
+
+            // Buscar solicitudes de cría activas para la hembra
+            $hasActiveRequests = BreedingRequest::where('female_dog_id', $validatedData['my_dog_id'])
+                ->whereIn('status', ['pending', 'approved']) // Considerar también 'approved' como activo
+                ->exists();
+            
+            if ($hasActiveRequests) {
+
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'This female dog already has an active breeding request.',
+                ], 403);
+            }
+
+            // Verificar si es la primera cría
+            $isFirstBreeding = BreedingRequest::where('female_dog_id', $validatedData['my_dog_id'])
+                ->whereIn('status', ['completed', 'approved']) // Solo contar las que realmente sucedieron
+                ->doesntExist();
+
+            if ($isFirstBreeding) {
+                // Lógica para primera cría
+                return $this->createBreedingRequest($validatedData);
+            }
+
+            // Para crías subsiguientes, verificar restricciones
+            $dog = Dog::select('breeding_approved', 'next_available_breeding')
+                ->where('dog_id', $validatedData['my_dog_id']) 
+                ->first();
+
+            if (!$dog) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'The specified dog does not exist.',
+                ], 404);
+            }
+
+            // Verificar aprobación para cría
+            if (!$dog->breeding_approved) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Breeding is not approved for this dog.',
+                ], 403);
+            }
+
+            // Verificar disponibilidad por fecha
+            // if ($dog->next_available_breeding) {
+            //     $nextAvailableDate = \Carbon\Carbon::parse($dog->next_available_breeding);
+            //     $today = \Carbon\Carbon::today(); // Usar today() en lugar de now() para comparar solo fechas
+
+            //     if ($today->lessThan($nextAvailableDate)) {
+            //         return response()->json([
+            //             'status' => 'error',
+            //             'message' => 'This dog is not yet available for breeding. Next available date: ' . $nextAvailableDate->toDateString(),
+            //         ], 403);
+            //     }
+            // }
+
+            // Todas las validaciones pasaron - crear la solicitud
+            return $this->createBreedingRequest($validatedData);
+
+
+
+
+
+
+
+
+
+
+            $user = auth()->user();
+            $profile = $user->userprofile;
+
+            $femaleDog = Dog::where('dog_id', $validatedData['my_dog_id'])->first();
+            $sexDog = $femaleDog->sex === 'M'? 'dam':'sire';
+            //get token uuid
             $token = Str::uuid();
 
-            if ($myDog) {
+            if(!empty($femaleDog) ){
                 
-                if($validatedData['dog_id']=='' || $validatedData['dog_id']==null){
-                    $otherOwner = UserProfile::where('email', $validatedData['dog_email'])->first();
-                    if ($otherOwner) {
-    
-                        $data = [
-                            'dogName'=>$myDog->name,
-                            'message'=>$validatedData['dogDetails'],
-                            'subject'=>'You have a new breeding request!',
-                            'view'=>'dog_invitation_esc_three',
-                            'url'=>$baseUrl,
-                        ];
-        
-                        $this->sendEmail($data,$validatedData);
-                        $parentRequest = $this->createParentRequest($myDog,$otherType,$validatedData,$token);
-                        if ($parentRequest) {
-                            $dataResponse['status'] = 'success';
-                            $dataResponse['message'] = 'Your breeding request has been successfully submitted. We have notified the owner of the other dog to continue the process.';
+                if (empty($validatedData['dog_id'])) {
+               
+                    // Dueño del perro con quien se propone la cruza
+                    // $targetOwner = UserProfile::where('email', $validatedData['dog_email'])->first();
 
-                            return response()->json($dataResponse,200);
-                        }
-                        
-                    }
-    
                     $data = [
-                        'dogName'=>$myDog->name,
+                        'dogName'=>$femaleDog->name,
                         'message'=>$validatedData['dogDetails'],
                         'subject'=>'You have a new breeding request!',
-                        'view'=>'dog_invitation_esc_one',
+                        'view'=>'dog_invitation_esc_three',
                         'url'=>$baseUrl,
                     ];
-    
+
                     $this->sendEmail($data,$validatedData);
-                    $parentRequest = $this->createParentRequest($myDog,$otherType,$validatedData,$token);
+                    
+                    $parentRequest = $this->createParentRequest($femaleDog,$sexDog,$validatedData,$token);
+
                     if ($parentRequest) {
                         $dataResponse['status'] = 'success';
                         $dataResponse['message'] = 'Your breeding request has been successfully submitted. We have notified the owner of the other dog to continue the process.';
 
                         return response()->json($dataResponse,200);
                     }
+
+                    // if(empty($targetOwner)){
+
+                    // }
+
+                    // if(!empty($targetOwner)){
+
+                    // }
+                    
+
                 }
-                
-                $otherDog = Dog::where('dog_id',$validatedData['dog_id'])->first();
-                $userProfile = $otherDog->breeder;
-                $owner = $otherDog->currentOwner;
 
-                // Identificar cuál es la hembra
-                $femaleDogId = $myDog->sex === 'F' ? $myDog->dog_id : $otherDog->dog_id;
-
+                $maleDog = Dog::where('dog_id',$validatedData['dog_id'])->first();
+                // Dueño que inicia la solicitud
+                $requesterOwner = $maleDog->currentOwner;
+        
                 // Buscar la última solicitud de cruza (pendiente o completada) para esta perra
-                $lastBreeding = BreedingRequest::where('female_dog_id', $femaleDogId)
-                    ->whereIn('status', ['pending', 'completed'])
-                    ->orderBy('created_at', 'desc')
-                    ->first();
+                $lastBreeding = BreedingRequest::where('female_dog_id', $femaleDog->dog_id)
+                ->whereIn('status', ['pending', 'completed'])
+                ->orderBy('created_at', 'desc')
+                ->first();
 
-                if ($lastBreeding) {
-                    // Si está pendiente, denegar nueva solicitud
-                    if ($lastBreeding->status === 'pending') {
-                        return response()->json([
-                            'status' => 'error',
-                            'message' => 'This female already has a pending breeding request.',
-                        ], 403);
-                    }
 
-                    // Si está completada, verificar si han pasado al menos 12 meses
-                    $monthsSinceLast = $lastBreeding->created_at->diffInMonths(now());
-                    if ($monthsSinceLast < 12) {
+                if (!empty($lastBreeding) && $lastBreeding->status === 'pending') {
+
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'This female already has a pending breeding request.',
+                    ], 403);
+                }
+
+                if (!empty($lastBreeding)&& $lastBreeding->status === 'completed') {
+                    
+                    if ($lastBreeding->created_at->diffInMonths(now()) < 12) {
+
                         return response()->json([
                             'status' => 'error',
                             'message' => 'This female was recently bred. At least 12 months must pass between breedings.',
                         ], 403);
+
                     }
                 }
 
-
+            
                 $breedingRequest = BreedingRequest::create([
-                    'female_dog_id' => $myDog->sex === 'F' ? $myDog->dog_id : $otherDog->dog_id,
-                    'male_dog_id' => $myDog->sex === 'M' ? $myDog->dog_id : $otherDog->dog_id,
-                    'requester_id'=>$myOwner->profile_id, //$userProfile->profile_id,
-                    'owner_id'=> $owner->profile_id,
+                    'female_dog_id' =>$femaleDog->dog_id,
+                    'male_dog_id' => $maleDog->dog_id,
+                    'requester_id'=>$requesterOwner->profile_id,
+                    'owner_id'=>$femaleDog->currentOwner->profile_id,
                     'status' => 'pending',
                 ]);
+
 
                 $dataResponse['status'] = 'success';
                 $dataResponse['message'] = 'Crossbreeding request registered successfully';
                 return response()->json($dataResponse,200);
+
             }
+
             
         } catch (\Exception $e) {
             return response()->json([
@@ -218,6 +302,105 @@ class BreedingRequestController extends Controller
             ], 500);
         }
     }
+
+
+
+    private function createBreedingRequest($validatedData)
+    {
+
+        $baseUrl = config('app.url');
+
+        try {
+ 
+            $user = auth()->user();
+            $profile = $user->userprofile;
+
+            $femaleDog = Dog::where('dog_id', $validatedData['my_dog_id'])->first();
+            $sexDog = $femaleDog->sex === 'M'? 'dam':'sire';
+            //get token uuid
+            $token = Str::uuid();
+
+            if(!empty($femaleDog) ){
+                
+                if (empty($validatedData['dog_id'])) {
+               
+                    $data = [
+                        'dogName'=>$femaleDog->name,
+                        'message'=>$validatedData['dogDetails'],
+                        'subject'=>'You have a new breeding request!',
+                        'view'=>'dog_invitation_esc_three',
+                        'url'=>$baseUrl,
+                    ];
+
+                    $this->sendEmail($data,$validatedData);
+                    
+                    $parentRequest = $this->createParentRequest($femaleDog,$sexDog,$validatedData,$token);
+
+                    if ($parentRequest) {
+                        $dataResponse['status'] = 'success';
+                        $dataResponse['message'] = 'Your breeding request has been successfully submitted. We have notified the owner of the other dog to continue the process.';
+
+                        return response()->json($dataResponse,200);
+                    }
+
+                }
+
+                $maleDog = Dog::where('dog_id',$validatedData['dog_id'])->first();
+                // Dueño que inicia la solicitud
+                $requesterOwner = $maleDog->currentOwner;
+        
+                // Buscar la última solicitud de cruza (pendiente o completada) para esta perra
+                $lastBreeding = BreedingRequest::where('female_dog_id', $femaleDog->dog_id)
+                ->whereIn('status', ['pending', 'completed'])
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+
+                if (!empty($lastBreeding) && $lastBreeding->status === 'pending') {
+
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'This female already has a pending breeding request.',
+                    ], 403);
+                }
+
+                if (!empty($lastBreeding)&& $lastBreeding->status === 'completed') {
+                    
+                    if ($lastBreeding->created_at->diffInMonths(now()) < 12) {
+
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'This female was recently bred. At least 12 months must pass between breedings.',
+                        ], 403);
+
+                    }
+                }
+
+            
+                $breedingRequest = BreedingRequest::create([
+                    'female_dog_id' =>$femaleDog->dog_id,
+                    'male_dog_id' => $maleDog->dog_id,
+                    'requester_id'=>$requesterOwner->profile_id,
+                    'owner_id'=>$femaleDog->currentOwner->profile_id,
+                    'status' => 'pending',
+                ]);
+
+
+                $dataResponse['status'] = 'success';
+                $dataResponse['message'] = 'Crossbreeding request registered successfully';
+                return response()->json($dataResponse,200);
+
+            }
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to create breeding request.',
+            ], 500);
+        }
+    }
+
+
 
     public function sendEmail($data,$validatedData){
 
@@ -232,11 +415,11 @@ class BreedingRequestController extends Controller
     }
 
 
-    public function createParentRequest($myDog,$otherType,$validatedData,$token)
+    public function createParentRequest($femaleDog,$sexDog,$validatedData,$token)
     {
         $dogParentRequest = DogParentRequest::create([
-            'dog_id' => $myDog->dog_id,
-            'parent_type' => $otherType,
+            'dog_id' => $femaleDog->dog_id,
+            'parent_type' => $sexDog,
             'email' => $validatedData['dog_email'],
             'token' => $token,
         ]);
