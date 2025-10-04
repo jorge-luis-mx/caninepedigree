@@ -32,7 +32,7 @@
    <div class="container-search mt-5">
       <div class="field has-addons is-align-items-center">
          <div class="control is-expanded">
-            <input class="input no-radius-right" type="text" name='dog' placeholder="{{__('messages.main.pedigree.placeInput')}}" />
+            <input class="input no-radius-right" type="text" name='dog' placeholder="{{__('messages.main.pedigree.placeInput')}}" autocomplete="off" />
          </div>
          <button class="button btn-search-dog has-text-white no-radius-left" style="background-color: orange;">
             {{__('messages.main.pedigree.btnSearch')}}

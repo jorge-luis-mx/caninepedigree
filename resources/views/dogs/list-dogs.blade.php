@@ -27,7 +27,7 @@
         <div class="field">
             <label class="label">{{__('messages.main.dogs.search')}}</label>
             <div class="control">
-                <input class="input" type="text" id="searchInput" placeholder="{{__('messages.main.dogs.placeholder')}}" oninput="filterDogs()">
+                <input class="input" type="text" id="searchInput" placeholder="{{__('messages.main.dogs.placeholder')}}" oninput="filterDogs()" autocomplete="off">
             </div>
         </div>
         
