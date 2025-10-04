@@ -6,7 +6,7 @@
 
       <div class="column">
          <div class="card" style="box-shadow: none;">
-            <form action="{{ route('dogs.store') }}" method="post" id="dog-form">
+            <form action="{{ route('dogs.store') }}" method="post" id="dog-form" autocomplete="off">
                @csrf
                @method('post')
                
