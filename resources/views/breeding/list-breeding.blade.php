@@ -54,7 +54,7 @@
             row.innerHTML = `
                 <td>${breeding.female_dog.name}</td>
                 <td>${breeding.male_dog.name}</td>
-                <td><button class="button is-success is-small" onclick="completeBreeding(${breeding.request_id})">Complete Breeding</button></td>
+                <td><button class="button has-text-white is-success is-small" onclick="completeBreeding(${breeding.request_id})">Complete Breeding</button></td>
             `;
             tableBody.appendChild(row);
         });
