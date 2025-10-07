@@ -106,7 +106,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/dog/{dog}', [DogController::class, 'update'])->name('dogs.update'); 
     
     //serch
-    Route::get('/dogs/search/{reg_no}/{breedingSearch?}', [DogController::class, 'search'])->name('dogs.search');
+    Route::get('/dogs/search/{reg_no}', [DogController::class, 'search'])->name('dogs.search');
+    Route::get('/dogs/find/{reg_no}/{sex}', [DogController::class, 'find'])->name('dogs.find');
 
     //payments
     Route::get('/payments/pay/{id}/{puppies?}', [PaymentController::class,'pay']);

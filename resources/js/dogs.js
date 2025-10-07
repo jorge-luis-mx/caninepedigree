@@ -11,9 +11,10 @@ export  function dogs() {
             const regNo = input.value.trim();
             
 
-            fetch(`/dogs/search/${regNo}`)
+            fetch(`/dogs/find/${regNo}/${type}`)
                 .then(res => res.json())
                 .then(data => {
+                    
                     
                     if (data.status === 200) {
                         type === 'sire' ? showResults(data.data, form, type) : showResults(data.data, form, type);
@@ -96,17 +97,6 @@ export  function dogs() {
                 }
             });
     
-
-            // dogFormContainer.addEventListener('blur', e => {
-            //     const target = e.target;
-            //     if (target.classList.contains('sire') || target.classList.contains('dam')) {
-            //         if (selectingDog) {
-            //             selectingDog = false;
-            //             return;
-            //         }
-            //         handleSearch(target, target.closest('form'), target.classList.contains('sire') ? 'sire' : 'dam');
-            //     }
-            // }, true);
 
             // Agregar eventos click a los botones Search Sire y Search Dam
             const btnSire = dogFormContainer.querySelector('.btn-search-sire');

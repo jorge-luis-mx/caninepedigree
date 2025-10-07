@@ -222,45 +222,7 @@ function renderPagination(dogsList) {
     paginationContainer.appendChild(nextBtn);
 }
 
-        // function renderPagination(dogsList) {
-        //     const paginationContainer = document.getElementById('pagination');
-        //     paginationContainer.innerHTML = '';
 
-        //     const totalPages = Math.ceil(dogsList.length / dogsPerPage);
-
-        //     if (totalPages <= 1) return; // No mostrar paginación si no es necesario
-
-        //     const prevBtn = document.createElement('button');
-        //     prevBtn.textContent = 'Anterior';
-        //     prevBtn.className = 'button is-small mx-1';
-        //     prevBtn.disabled = currentPage === 1;
-        //     prevBtn.onclick = () => {
-        //         currentPage--;
-        //         populateTable(dogsList);
-        //     };
-        //     paginationContainer.appendChild(prevBtn);
-
-        //     for (let i = 1; i <= totalPages; i++) {
-        //         const pageBtn = document.createElement('button');
-        //         pageBtn.textContent = i;
-        //         pageBtn.className = `button is-small mx-1 ${i === currentPage ? 'is-primary' : ''}`;
-        //         pageBtn.onclick = () => {
-        //             currentPage = i;
-        //             populateTable(dogsList);
-        //         };
-        //         paginationContainer.appendChild(pageBtn);
-        //     }
-
-        //     const nextBtn = document.createElement('button');
-        //     nextBtn.textContent = 'Siguiente';
-        //     nextBtn.className = 'button is-small mx-1';
-        //     nextBtn.disabled = currentPage === totalPages;
-        //     nextBtn.onclick = () => {
-        //         currentPage++;
-        //         populateTable(dogsList);
-        //     };
-        //     paginationContainer.appendChild(nextBtn);
-        // }
 
         window.filterDogs = function () {
             const searchInput = document.getElementById('searchInput');

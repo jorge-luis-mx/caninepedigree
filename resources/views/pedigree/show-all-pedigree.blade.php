@@ -34,7 +34,7 @@
          <div class="control is-expanded">
             <input class="input no-radius-right" type="text" name='dog' placeholder="{{__('messages.main.pedigree.placeInput')}}" autocomplete="off" />
          </div>
-         <button class="button btn-search-dog has-text-white no-radius-left" style="background-color: orange;">
+         <button class="button btn-search-dog-pedigree has-text-white no-radius-left" style="background-color: orange;">
             {{__('messages.main.pedigree.btnSearch')}}
          </button>
       </div>

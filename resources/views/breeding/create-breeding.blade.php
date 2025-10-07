@@ -43,7 +43,7 @@
 
                             <div class="column {{ isset($dogs)?'':'is-full'}} ">
                                 <div class="field searchDog">
-                                    <label class="label" for="sire">Enter the IDDR number or the dog's name</label>
+                                    <label class="label" for="sire">Enter the IDDR number or the dog's name (sire)</label>
                                     <div class="is-flex align-items-center">
                                         <div class="control has-icons-left"  style="width: 100%;">
                                             <input

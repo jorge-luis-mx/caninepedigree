@@ -13,7 +13,7 @@ export  function breedingRequest() {
 
             const regNo = input.value.trim();
 
-            fetch(`/dogs/search/${regNo}/breeding`)
+            fetch(`/dogs/find/${regNo}/${type}`)
                 .then(res => res.json())
                 .then(data => {
                     
@@ -49,7 +49,7 @@ export  function breedingRequest() {
                 const target = e.target;
                 if (target.classList.contains('dog') && e.key === 'Enter') {
                     e.preventDefault();
-                    handleSearch(target, target.closest('form'), 'dog');
+                    handleSearch(target, target.closest('form'), 'sire');
                 }
             });
 
@@ -60,7 +60,7 @@ export  function breedingRequest() {
                     selectingDog = true; // <- evita doble ejecución desde blur
                     const inputDog = formBreeding.querySelector('input.dog');
                     if (inputDog) {
-                        handleSearch(inputDog, inputDog.closest('form'), 'dog');
+                        handleSearch(inputDog, inputDog.closest('form'), 'sire');
                     }
                 });
             }
@@ -102,10 +102,10 @@ export  function breedingRequest() {
         };
         
         const selectDog = (id, name, form, type) => {
-            console.log(type);
-            form.querySelector(`input[name="${type}"]`).value = name;
-            form.querySelector(`input[name="${type}_id"]`).value = id;
-            document.getElementById(`${type}Results`).style.display = 'none';
+            
+            form.querySelector(`input[name="dog"]`).value = name;
+            form.querySelector(`input[name="dog_id"]`).value = id;
+            document.getElementById(`dogResults`).style.display = 'none';
         };
         const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -174,12 +174,6 @@ export  function breedingRequest() {
                     showErrors(form, result.errors);
                 } 
                 
-                
-                // else if (result.errors) {
-                    
-                //     showErrors(form, result.errors);
-                // }
-
                 })
                 .catch(err => {
                     console.error("Error al enviar el formulario:", err);

@@ -98,6 +98,42 @@ class DogController extends Controller
         return view('dogs.create-dog');
     }
 
+    public function find($reg_no,$sex){
+
+        $sex = $sex =='sire'?'M':'F';
+
+        $data = ['status' => 204,'message' => '','data' => [],'errors' => null];
+
+        if (!empty($reg_no)) {
+
+            $dogs = Dog::where('sex', $sex)
+                ->whereIn('status', ['completed', 'exempt'])
+                ->where('name', 'LIKE', "%$reg_no%")
+                ->orderByRaw("
+                    CASE 
+                        WHEN name = ? THEN 1
+                        WHEN name LIKE ? THEN 2
+                        WHEN name LIKE ? THEN 3
+                        ELSE 4
+                    END
+                ", [$reg_no, "$reg_no%", "%$reg_no"])
+                ->get();
+
+
+            if ($dogs->isNotEmpty()) {
+                // Recorre cada perro en la colección $dogs y asigna un valor hash único basado en su dog_id
+                $dogs->each(function ($dog) {
+                    // Genera un hash MD5 de 32 caracteres utilizando el dog_id y lo asigna a la propiedad dog_hash del objeto dog
+                    $dog->dog_hash = md5($dog->dog_id);
+                });
+
+                $data['status'] = 200;
+                $data['data'] = $dogs;
+            }
+        }
+
+        return response()->json($data);
+    }
 
     public function search($reg_no,$breedingSearch=null)
     {

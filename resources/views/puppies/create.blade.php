@@ -19,33 +19,14 @@
                      @csrf
                      @method('post')
 
+
                      <div class="columns is-multiline">
 
-                        <!-- Bloque para Female (Dog) -->
-                        <!-- <div class="column">
-                           <div class="field search-container" data-type="dog">
-                              <label class="label">Enter the IDDR number or the dog's name (Female)</label>
-                              <div class="is-flex align-items-center">
-                                 <div class="control has-icons-left" style="width: 100%;">
-                                    <input class="input dog-search" type="text" name="dog" data-type="dog">
-                                    <input type="hidden" name="dog_id" class="dog-id">
-                                    <small class="error-message"></small>
-                                    <span class="icon is-small is-left">
-                                       
-                                    </span>
-                                 </div>
-                                 <div class="btn-container">
-                                    <button type="button" class="button btn-search" data-type="dog" style="background-color: #fdcd8a;color:#450b03;margin:0!important">
-                                       Search
-                                    </button>
-                                 </div>
-                              </div>
-                           </div>
-                           <div class="results-container" id="dogResults" style="display: none;"></div>
-                        </div> -->
-
-                        <!-- Bloque para Male (Sire) -->
                         <div class="column">
+                           <input type="hidden" name="sire_id" value="{{ $dog->dog_id }}">
+                        </div>
+                        <!-- Bloque para Male (Sire) -->
+                        <div class="column is-full">
                            <div class="field search-container" data-type="sire">
                               <label class="label">Enter the IDDR number or the dog's name (Sire)</label>
                               <div class="is-flex align-items-center">
@@ -69,8 +50,10 @@
                            <div class="results-container" data-type="sire" style="display: none;"></div>
                         </div>
 
+
+
                         <!-- Bloque para Dam (si necesario) -->
-                        <div class="column">
+                        <!-- <div class="column">
                            <div class="field search-container" data-type="dam">
                               <label class="label">Enter the IDDR number or the dog's name (Dam)</label>
                               <div class="is-flex align-items-center">
@@ -92,7 +75,7 @@
                               </div>
                            </div>
                            <div class="results-container" data-type="dam" style="display: none;"></div>
-                        </div>
+                        </div> -->
                      </div>
                      <div id="puppyForm" class="" style="display: none;">
                         <div id="puppyNamesContainer" class="mt-4"></div>

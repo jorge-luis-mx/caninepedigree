@@ -67,7 +67,7 @@
                             </li>
                         </ul>
                         
-                        <ul class="menu-list ">
+                        <!-- <ul class="menu-list ">
                             <li class="nav-drop">
                                 <a href="{{ route('puppies.index') }}" class="nav-link is-flex is-justify-content-space-between">
                                     <div class="is-flex is-justify-content-start is-align-items-center">
@@ -76,7 +76,7 @@
                                     </div>
                                 </a>
                             </li>
-                        </ul>
+                        </ul> -->
 
                         <ul class="menu-list ">
                             <li class="nav-drop">

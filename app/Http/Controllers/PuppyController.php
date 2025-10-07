@@ -16,13 +16,31 @@ use Illuminate\Support\Facades\DB;
 class PuppyController extends Controller
 {
 
-    public function index()
+    public function index($id)
     {
-        return view('puppies.create');
+        $user = auth()->user();
+        $profile = $user->userprofile;
+   
+       
+        $dog = Dog::whereRaw('MD5(dog_id) = ?', [$id])
+            ->whereIn('status', ['completed', 'exempt'])
+            ->where('sex', 'F')
+            ->firstOrFail();
+
+        return view('puppies.create',compact('dog'));
+        
+
+        
+
+
+        // return view('breeding.create-breeding',compact('dogs'));
+   
+        // return view('puppies.create');
     }
 
     public function register()
     {
+
         return view('puppies.register');  // Aquí se pasa directamente la vista del formulario
     }
 

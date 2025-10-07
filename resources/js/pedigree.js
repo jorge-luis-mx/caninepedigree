@@ -3,9 +3,17 @@ import { Utils } from './utils.js';
 export  function pedigree() {
 
    document.addEventListener('DOMContentLoaded', function () {
+      
+    // 🔸 Verifica si esta vista tiene los elementos del módulo
+    const searchBtn = document.querySelector('.btn-search-dog-pedigree');
+    const inputField = document.querySelector('input[name="dog"]');
+    const container = document.getElementById("list-dogs");
 
-      const searchBtn = document.querySelector('.btn-search-dog');
-      const inputField = document.querySelector('input[name="dog"]');
+    // Si no hay ninguno, no ejecutes el código
+    if (!searchBtn || !inputField || !container) return;
+
+      // const searchBtn = document.querySelector('.btn-search-dog-pedigree');
+      // const inputField = document.querySelector('input[name="dog"]');
 
 
       function handleSearchEvent(e) {
@@ -78,7 +86,7 @@ export  function pedigree() {
                }
                 
             })
-            .catch(err => console.error(`Error al buscar ${type}:`, err));
+            .catch(err => console.error(`Error al buscar`, err));
          },
 
 
