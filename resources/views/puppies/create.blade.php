@@ -23,7 +23,7 @@
                      <div class="columns is-multiline">
 
                         <div class="column">
-                           <input type="hidden" name="sire_id" value="{{ $dog->dog_id }}">
+                           <input type="hidden" name="dam_id" value="{{ $dog->dog_id }}">
                         </div>
                         <!-- Bloque para Male (Sire) -->
                         <div class="column is-full">
@@ -31,8 +31,8 @@
                               <label class="label">Enter the IDDR number or the dog's name (Sire)</label>
                               <div class="is-flex align-items-center">
                                  <div class="control has-icons-left" style="width: 100%;">
-                                    <input class="input dog-search" type="text" name="sire" data-type="sire">
-                                    <input type="hidden" name="sire_id" class="sire-id">
+                                    <input class="input dog"  type="text" name="dog" id="dog">
+                                    <input type="hidden" class="dog_id" name="dog_id" id="dog_id">
                                     <small class="error-message"></small>
                                     <span class="icon is-small is-left">
                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
@@ -41,14 +41,16 @@
                                     </span>
                                  </div>
                                  <div class="btn-container">
-                                    <button type="button" class="button btn-search-dog" data-type="sire" style="background-color: #fdcd8a;color:#450b03;margin:0!important">
+                                    <button type="button" class="button btn-search-dog-pupies" data-type="sire" style="background-color: #fdcd8a;color:#450b03;margin:0!important">
                                        Search
                                     </button>
                                  </div>
                               </div>
                            </div>
-                           <div class="results-container" data-type="sire" style="display: none;"></div>
+                           <div id="dogResults" style="display: none;"></div>
                         </div>
+                        <!-- Contenedor para mostrar los resultados de la búsqueda -->
+                        
 
 
 
@@ -96,6 +98,113 @@
    <script>
    document.addEventListener('DOMContentLoaded', () => {
 
+        const formPuppies = document.getElementById('formPuppies');
+        
+        let selectingDog = false;
+
+        const handleSearch = (input, form, type) => {
+
+            const regNo = input.value.trim();
+
+            fetch(`/dogs/find/${regNo}/${type}`)
+                .then(res => res.json())
+                .then(data => {
+                    
+                    if (data.status === 200) {
+                        showResults(data.data, form, type);
+                    }else{
+                        Swal.fire({
+                            title: 'No results found',
+                            text: 'Would you like to search in another way?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes',
+                            cancelButtonText: 'No',
+                            backdrop: true,
+                            allowOutsideClick: false
+                        }).then(result => {
+                            if (!result.isConfirmed) {
+                                
+                                form.querySelector(`.${type}Email`).classList.remove('is-hidden');
+                                form.querySelector(`.search${capitalize(type)}`).classList.add('is-hidden');
+                            }
+                        });
+
+                    }
+                })
+                .catch(err => console.error(`Error al buscar ${type}:`, err));
+        };
+        
+        if (formPuppies) {
+
+    
+            formPuppies.addEventListener('keydown', e => {
+                const target = e.target;
+                if (target.classList.contains('dog') && e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSearch(target, target.closest('form'), 'sire');
+                }
+            });
+
+            // Agregar eventos click a los botones Search Sire y Search Dam
+            const btnDog = formPuppies.querySelector('.btn-search-dog-pupies');
+            if (btnDog) {
+                btnDog.addEventListener('click', () => {
+                  
+                    selectingDog = true; // <- evita doble ejecución desde blur
+                    const inputDog = formPuppies.querySelector('input.dog');
+                    if (inputDog) {
+                        handleSearch(inputDog, inputDog.closest('form'), 'sire');
+                    }
+                });
+            }
+            
+        }
+
+        const showResults = (dogs, form, type) => {
+            
+            const container = document.getElementById(`dogResults`);
+            container.innerHTML = '';
+            
+
+            if (!Array.isArray(dogs)) dogs = [dogs];
+        
+            if (!dogs.length) {
+                container.innerHTML = '<div class="no-results">No dogs found.</div>';
+                container.style.display = 'block';
+                return;
+            }
+            
+            dogs.forEach(dog => {
+                const item = document.createElement('div');
+                item.className = 'result-item';
+                item.textContent = dog.name;
+                item.dataset.dogId = dog.dog_id;
+        
+                // Maneja el clic correctamente
+                item.addEventListener('mousedown', () => {
+                    selectingDog = true;
+                    // Usamos 'mousedown' en lugar de 'click' para que se registre antes de que el input pierda el foco
+                    selectDog(dog.dog_id, dog.name, form, type);
+                    
+                });
+        
+                container.appendChild(item);
+            });
+            container.style.display = 'block';
+            
+        };
+        
+        const selectDog = (id, name, form, type) => {
+            
+            form.querySelector(`input[name="dog"]`).value = name;
+            form.querySelector(`input[name="dog_id"]`).value = id;
+            document.getElementById(`dogResults`).style.display = 'none';
+        };
+        const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
+
+
+
       agregarListenersInputs();
       
       const saved = sessionStorage.getItem('puppiesTemp');
@@ -124,9 +233,6 @@
          saveBtn.addEventListener('click', async (e) => {
             e.preventDefault();
             
-            if (!validarFormularioCompleto()) {
-               return; // Detiene si hay errores
-            }
 
             const formData = capturarDatosCompletos();
 

@@ -20,6 +20,8 @@ use App\Models\DogParentRequest;
 use App\Models\BreedingRequest;
 
 use App\Models\BreedingPhoto;
+use App\Models\Litter;
+
 
 //traits
 use App\Traits\Pedigree;
@@ -384,6 +386,19 @@ class BreedingRequestController extends Controller
                     'owner_id'=>$femaleDog->currentOwner->profile_id,
                     'status' => 'pending',
                 ]);
+
+                // $breedingRequestId = $breedingRequest->request_id;
+
+                // $litter = Litter::create([
+                //     'breeding_request_id' => $breedingRequestId,
+                //     'dam_id'              => $femaleDog->dog_id,
+                //     'sire_id'             => $maleDog->dog_id,
+                //     'birth_date'          => null, // aún no nacen
+                //     'total_puppies'       => null, // aún no se sabe
+                //     'surviving_puppies'   => null, // aún no se sabe
+                //     'notes'               => null,
+                //     'created_at'          => now(),
+                // ]);
 
 
                 $dataResponse['status'] = 'success';

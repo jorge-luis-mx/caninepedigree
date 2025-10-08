@@ -10,7 +10,7 @@ use App\Models\Dog;
 use App\Models\Payment;
 use App\Models\DogPayment;
 use App\Models\UserProfile;
-
+use App\Models\Litter;
 use Illuminate\Support\Facades\DB;
 
 class PuppyController extends Controller
@@ -66,7 +66,7 @@ class PuppyController extends Controller
         
         $arrayRole =['Employee','Admin'];
         
-        $ownerProfile = UserProfile::find(1);
+        $ownerProfile = UserProfile::find(2);
         $owner = in_array($role->name, $arrayRole) ? $ownerProfile->profile_id : $profile->profile_id;
 
         // Limpiar todos los campos (incluso los anidados dentro de 'puppies')
@@ -115,6 +115,38 @@ class PuppyController extends Controller
             $paymentProtected['id_hash'] = md5($payment->payment_id);
             $paymentProtected['rol'] = $role->name;
 
+            $dam_id = $validated['dam_id'];
+            $sire_id = $validated['dog_id'];
+
+            //Buscar camada pendiente existente
+            $litter = Litter::where('dam_id', $dam_id)
+                                ->where('sire_id', $sire_id)
+                                ->whereNull('birth_date')
+                                ->first();
+
+            //Si no existe, crear nueva camada
+            if (!$litter) {
+                
+                // Opcional: calcular el número de camada
+                $lastLitter = Litter::where('dam_id', $validated['dam_id'])
+                                    ->orderBy('litter_number', 'desc')
+                                    ->first();
+              
+                $litterNumber = $lastLitter ? $lastLitter->litter_number + 1 : 1;
+
+                $litter = Litter::create([
+                    'breeding_request_id' => null, // si quieres vincular a solicitud, pasa $request_id
+                    'dam_id'              => $dam_id,
+                    'sire_id'             => $sire_id,
+                    'birth_date'          => $validated['puppies'][0]['birthdate'],
+                    'total_puppies'       => count($validated['puppies']),
+                    'surviving_puppies'   => count($validated['puppies']),
+                    'litter_number'       => $litterNumber,
+                    'created_at'          => now(),
+                ]);
+                
+            }
+
             foreach ($validated['puppies'] as $puppy) {
 
                 $dog = Dog::create([
@@ -124,10 +156,11 @@ class PuppyController extends Controller
                     'color'     => $puppy['color'],
                     'sex'       => $puppy['sex'],
                     'birthdate' => $puppy['birthdate'],
-                    'sire_id'   => $validated['sire_id'], 
-                    'dam_id'    => $validated['dam_id'], 
+                    'sire_id'   => $sire_id, 
+                    'dam_id'    => $dam_id, 
                     'breeder_id'=>$owner,
                     'current_owner_id'=>$owner,
+                    'created_by_user_id'=>$profile->profile_id,
                     'is_puppy'    => 1, 
                     'status'=> in_array($role->name, $dogStatus ) ? 'exempt':'pending'
                 ]);
@@ -157,36 +190,6 @@ class PuppyController extends Controller
             ], 500);
         }
 
-
-
-        // $breeding = BreedingRequest::findOrFail($breedingId);
-
-        // if ($breeding->maleDog->current_owner_id !== auth()->user()->userprofile->profile_id) {
-        
-        //     abort(403, 'No autorizado');
-        // }
-
-        // $request->validate([
-        //     'puppies' => 'required|array|min:1',
-        //     'puppies.*' => 'required|string|max:255',
-        // ]);
-
-        // $puppies = $request->puppies;
-        // $totalAmount = count($puppies) * 100;
-
-        // Aquí simulas el pago.
-        // Puedes integrar real pago con PayPal, Stripe o similar.
-
-        // foreach ($puppies as $puppyName) {
-        //     Puppy::create([
-        //         'name' => $puppyName,
-        //         'breeding_id' => $breeding->request_id,
-        //         'female_dog_id' => $breeding->female_dog_id,
-        //         'male_dog_id' => $breeding->male_dog_id,
-        //     ]);
-        // }
-
-        // return response()->json(['success' => true]);
     }
 
     public function getOrderReference(){

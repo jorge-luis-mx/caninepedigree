@@ -11,9 +11,9 @@ class PuppiesValidations
         $rules = [
             // Validar campos del padre y madre
             'totalPuppies'=>'required',
-            'sire' => 'required|regex:/^[\pL0-9\s\'\(\)]+$/u',
-            'sire_id' => 'required|integer',
-            'dam' => 'required|regex:/^[\pL0-9\s\'\(\)]+$/u',
+            'dog' => 'required|regex:/^[\pL0-9\s\'\(\)]+$/u',
+            'dog_id' => 'required|integer',
+            // 'dam' => 'required|regex:/^[\pL0-9\s\'\(\)]+$/u',
             'dam_id' => 'required|integer',
 
             // Validar el array de cachorros
@@ -31,8 +31,8 @@ class PuppiesValidations
             'sire_id.required' => 'The sire ID is required.',
             'sire_id.integer' => 'The sire ID must be a valid number.',
 
-            'dam.required' => 'The dam field is required.',
-            'dam.regex' => 'The dam name may only contain letters, numbers, spaces, apostrophes, and parentheses.',
+            // 'dam.required' => 'The dam field is required.',
+            // 'dam.regex' => 'The dam name may only contain letters, numbers, spaces, apostrophes, and parentheses.',
             'dam_id.required' => 'The dam ID is required.',
             'dam_id.integer' => 'The dam ID must be a valid number.',
 
