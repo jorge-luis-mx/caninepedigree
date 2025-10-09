@@ -69,6 +69,6 @@ class BreedingRequest extends Model
 
     public function photos()
     {
-        return $this->hasMany(BreedingPhoto::class);
+        return $this->hasMany(BreedingPhoto::class,'breeding_request_id','request_id');
     }
 }

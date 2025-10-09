@@ -44,7 +44,7 @@
                 <td>${breeding.female_dog.name}</td>
                 <td>${breeding.male_dog.name}</td>
                 <td>
-                    <a href="/breeding/${breeding.request_id}/upload-photos" class="button is-link is-small has-text-white">
+                    <a href="/breeding/${breeding.hash_id}/upload-photos" class="button is-link is-small has-text-white">
                         Upload Breeding Photos 
                     </a>
                 </td>

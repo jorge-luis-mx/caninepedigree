@@ -480,14 +480,28 @@ class BreedingRequestController extends Controller
     {
         $user = auth()->user();
         $profile = $user->userprofile;
+        $role = $user->role;
 
-        $breedings = BreedingRequest::whereHas('maleDog', function($query) use ($profile) {
-                $query->where('requester_id', $profile->profile_id);
+        $arrayRole =['Employee','Admin'];
+        
+       //Dueño que inicia la solicitud
+        $requester_id = in_array($role->name, $arrayRole) ? 3 : $profile->profile_id;
+
+
+        $breedings = BreedingRequest::whereHas('maleDog', function ($query) use ($requester_id) {
+                $query->where('requester_id', $requester_id);
             })
             ->where('status', 'completed')
+            ->whereDoesntHave('photos') // 🔹 Solo los que NO tienen fotos
             ->with(['femaleDog', 'maleDog'])
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->get()
+            ->map(function ($item) {
+                $item->hash_id = md5($item->request_id);
+                return $item;
+            });
+        
+       
 
         return view('breeding.completed', compact('breedings'));
     }
@@ -495,7 +509,12 @@ class BreedingRequestController extends Controller
     // Mostrar formulario para subir fotos de una cruza
     public function uploadPhotos($breedingId)
     {
-        $breeding = BreedingRequest::findOrFail($breedingId);
+        
+        $breeding = BreedingRequest::whereRaw('MD5(request_id) = ?', [$breedingId])
+        ->with(['femaleDog', 'maleDog'])
+        ->firstOrFail();
+
+
         return view('breeding.upload-photos', compact('breeding'));
     }
 
