@@ -382,7 +382,7 @@ class BreedingRequestController extends Controller
                 $breedingRequest = BreedingRequest::create([
                     'female_dog_id' =>$femaleDog->dog_id,
                     'male_dog_id' => $maleDog->dog_id,
-                    'requester_id'=>$requesterOwner->profile_id,
+                    'requester_id'=>$femaleDog->currentOwner->profile_id,
                     'owner_id'=>$femaleDog->currentOwner->profile_id,
                     'status' => 'pending',
                 ]);
@@ -485,7 +485,7 @@ class BreedingRequestController extends Controller
         $arrayRole =['Employee','Admin'];
         
        //Dueño que inicia la solicitud
-        $requester_id = in_array($role->name, $arrayRole) ? 3 : $profile->profile_id;
+        $requester_id = in_array($role->name, $arrayRole) ? 2 : $profile->profile_id;
 
 
         $breedings = BreedingRequest::whereHas('maleDog', function ($query) use ($requester_id) {
@@ -501,7 +501,6 @@ class BreedingRequestController extends Controller
                 return $item;
             });
         
-       
 
         return view('breeding.completed', compact('breedings'));
     }
