@@ -49,36 +49,19 @@
                            </div>
                            <div id="dogResults" style="display: none;"></div>
                         </div>
-                        <!-- Contenedor para mostrar los resultados de la búsqueda -->
-                        
-
-
-
-                        <!-- Bloque para Dam (si necesario) -->
-                        <!-- <div class="column">
-                           <div class="field search-container" data-type="dam">
-                              <label class="label">Enter the IDDR number or the dog's name (Dam)</label>
-                              <div class="is-flex align-items-center">
-                                 <div class="control has-icons-left" style="width: 100%;">
-                                    <input class="input dog-search" type="text" name="dam" data-type="dam">
-                                    <input type="hidden" name="dam_id" class="dam-id">
-                                    <small class="error-message"></small>
-                                    <span class="icon is-small is-left">
-                                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-                                          <path fill="currentColor" d="M10 2a8 8 0 1 1-5.293 14.293l-3.147 3.147a1 1 0 0 1-1.415-1.414l3.147-3.147A8 8 0 0 1 10 2zm0 2a6 6 0 1 0 0 12A6 6 0 0 0 10 4z" />
-                                       </svg>
-                                    </span>
-                                 </div>
-                                 <div class="btn-container">
-                                    <button type="button" class="button btn-search-dog" data-type="dam" style="background-color: #fdcd8a;color:#450b03;margin:0!important">
-                                       Search
-                                    </button>
-                                 </div>
-                              </div>
-                           </div>
-                           <div class="results-container" data-type="dam" style="display: none;"></div>
-                        </div> -->
                      </div>
+                     <!-- aqui la ninea -->
+                     <hr style="background-color: #d3d3d3; height: 1px;   margin: 1rem -1.5rem;margin-bottom:2rem;">
+
+                     <div class="column">
+                        <div class="field">
+                           <label class="label">Date of Birth</label>
+                           <div class="control">
+                              <input class="input puppy-birthdate" type="date" name="date" required>
+                           </div>
+                        </div>
+                     </div>
+                     
                      <div id="puppyForm" class="" style="display: none;">
                         <div id="puppyNamesContainer" class="mt-4"></div>
                      </div>
@@ -297,8 +280,8 @@
                   }
 
              } catch (err) {
-                console.error('Error en fetch:', err);
-                alert('Error de red o servidor');
+               console.error('Error en fetch:', err);
+                
              }
          });
       }
@@ -389,14 +372,7 @@
                         </div>
                      </div>
                   </div>
-                  <div class="column">
-                     <div class="field">
-                        <label class="label">Date of Birth</label>
-                        <div class="control">
-                           <input class="input puppy-birthdate" type="date" value="${cachorro.birthdate || ''}" required>
-                        </div>
-                     </div>
-                  </div>
+
                </div>
             </div>
          `;
@@ -436,12 +412,16 @@
       const puppies = [];
       const cards = document.querySelectorAll('#puppyNamesContainer .card');
 
+      const form = document.getElementById('formPuppies');
+      const formData = new FormData(form);
+      const birthdate_ = formData.get('date');
+
       cards.forEach(card => {
          puppies.push({
             name: card.querySelector('.puppy-name').value,
             sex: card.querySelector('.puppy-sex').value,
             color: card.querySelector('.puppy-color').value,
-            birthdate: card.querySelector('.puppy-birthdate').value
+            birthdate: birthdate_
          });
       });
 
@@ -522,12 +502,12 @@ function validarFormularioCompleto() {
          limpiarError(color);
       }
 
-      if (birthdate && birthdate.value.trim() === '') {
-         mostrarError(birthdate, `Puppy ${index + 1} birth date is required`);
-         valido = false;
-      } else if (birthdate) {
-         limpiarError(birthdate);
-      }
+      // if (birthdate && birthdate.value.trim() === '') {
+      //    mostrarError(birthdate, `Puppy ${index + 1} birth date is required`);
+      //    valido = false;
+      // } else if (birthdate) {
+      //    limpiarError(birthdate);
+      // }
    });
 
    return valido;
@@ -537,6 +517,7 @@ function capturarDatosCompletos() {
 
    const form = document.getElementById('formPuppies');
    const formData = new FormData(form);
+   const birthdate_ = formData.get('date');
 
    // Convertir los datos generales a objeto plano
    const datosGenerales = {};
@@ -559,7 +540,7 @@ function capturarDatosCompletos() {
          name: card.querySelector('.puppy-name')?.value || '',
          sex: card.querySelector('.puppy-sex')?.value || '',
          color: card.querySelector('.puppy-color')?.value || '',
-         birthdate: card.querySelector('.puppy-birthdate')?.value || ''
+         birthdate: birthdate_
       });
    });
 
