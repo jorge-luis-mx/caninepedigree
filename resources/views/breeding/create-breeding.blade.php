@@ -42,7 +42,7 @@
                             @endisset
 
                             <div class="column {{ isset($dogs)?'':'is-full'}} ">
-                                <div class="field searchDog">
+                                <div class="field searchSire">
                                     <label class="label" for="sire">Enter the IDDR number or the dog's name (sire)</label>
                                     <div class="is-flex align-items-center">
                                         <div class="control has-icons-left"  style="width: 100%;">
@@ -72,7 +72,7 @@
                                 <!-- Contenedor para mostrar los resultados de la búsqueda -->
                                 <div id="dogResults" style="display: none;"></div>
 
-                                <div class="is-hidden dogEmail">
+                                <div class="is-hidden sireEmail">
                                     <!-- Email sire dog -->
                                     <div class="field">
                                         <label class="label" for="dog_email">Enter Email</label>

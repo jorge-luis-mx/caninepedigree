@@ -31,7 +31,7 @@ export  function breedingRequest() {
                             allowOutsideClick: false
                         }).then(result => {
                             if (!result.isConfirmed) {
-                                
+                                console.log(type);
                                 form.querySelector(`.${type}Email`).classList.remove('is-hidden');
                                 form.querySelector(`.search${capitalize(type)}`).classList.add('is-hidden');
                             }
