@@ -76,6 +76,7 @@ class DogController extends Controller
 
         $dogs = Dog::where('dogs.current_owner_id', $owner)
             ->whereIn('dogs.status', ['completed','exempt'])
+            ->where('transfer_pending', false)
             ->leftJoin('dog_payments', 'dogs.dog_id', '=', 'dog_payments.dog_id')
             ->leftJoin('payments', 'dog_payments.payment_id', '=', 'payments.payment_id')
             ->select(

@@ -5,7 +5,10 @@
             
             <form method="POST" action="{{ route('register') }}" class="w-full">
                 @csrf
-
+                
+                @if (request()->has('dog_sale'))
+                    <input type="hidden" name="dog_sale" value="{{ request()->get('dog_sale') }}">
+                @endif
                 <!-- Name -->
                 <div class="mb-1">
                     <x-input-label for="name" :value="__('Name')" />

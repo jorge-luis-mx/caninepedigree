@@ -8,13 +8,10 @@
 
    <div class="card is-flex is-flex-direction-row is-justify-content-flex-end mb-4" style="box-shadow: none;">
 
+      <a href="{{ route('dog.sales.create',['id' => $dog['id']])}}"><button class="button has-text-white has-background-warning">Dog sale</button></a>
       @if($dog['sex']==='F')
-
-         <!-- <a href="{{ route('puppies.index' )}}"><button class="button has-text-white has-background-warning">litters</button></a> -->
          <a href="{{ route('puppies.index',['id' => $dog['id']] )}}"><button class="button has-text-white has-background-warning">Add Puppies</button></a>
          <a href="{{ route('breeding.create',['id' => $dog['id']] )}}"><button class="button has-text-white has-background-warning">Add Breeding</button></a>
-     
-         
       @endif
       <a target="_blank" href="{{ route('certificates.pdf', ['id' => $dog['id'],'type'=>'registration']) }}"><button class="button has-text-white has-background-warning">{{__('messages.main.dogDetails.btnRegistration')}}</button></a>
       <a target="_blank" href="{{ route('certificates.pdf', ['id' => $dog['id'],'type'=>'pedigree']) }}"><button class="button has-text-white has-background-warning">{{__('messages.main.dogDetails.btnPedigree')}}</button></a>

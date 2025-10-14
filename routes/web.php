@@ -28,6 +28,7 @@ use App\Http\Controllers\BreedingRequestController;
 use App\Http\Controllers\PedigreegController;
 use App\Http\Controllers\PedigreeController;
 use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\DogSaleController;
 
 
 use App\Http\Controllers\AdminDogsController;
@@ -152,6 +153,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/puppies/validate-breeding', [PuppyController::class, 'validateBreeding'])->name('puppies.validate');
     Route::post('/puppies/register', [PuppyController::class, 'store'])->name('puppies.store');
     
+    //sales
+    Route::get('/dogs/sell/{id}', [DogSaleController::class, 'create'])->name('dog.sales.create');
+    Route::post('/dogs/sell', [DogSaleController::class, 'store'])->name('dog.sales.store');
+    
+
 
     Route::get('/send-test', function () {
         try {

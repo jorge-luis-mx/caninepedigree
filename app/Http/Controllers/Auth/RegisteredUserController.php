@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Models\UserProfile;
+
 
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -14,8 +13,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 
-
+use App\Models\DogSale;
+use App\Models\User;
+use App\Models\UserProfile;
+use App\Models\Dog;
 
 use Illuminate\Support\Str;
 
@@ -37,47 +41,75 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-
-       
         $validated = $request->validate([
             'role' => ['nullable', 'string', 'in:admin', 'regex:/^\S+$/'],
             'name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:user_profiles,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'dog_sale' => ['nullable', 'string'], // 🆕 agregar este campo opcional
         ]);
+
         $role = $validated['role'] ?? null;
         $text = preg_split('/\s+/', $request->last_name);
 
-
-        // 1️⃣ Insertar en la tabla `user_profile` y obtener el ID generado
+        // 1️⃣ Crear el perfil del usuario
         $userProfile = UserProfile::create([
             'first_name' => $request->name,
-            'last_name'=>count($text)> 0 ? $text[0] : null,
+            'last_name' => count($text) > 0 ? $text[0] : null,
             'email' => $request->email,
             'status' => 1,
         ]);
- 
+
         // 2️⃣ Generar un username único
         $username = $this->generateUniqueUsername($request->name);
-    
-        // 3️⃣ Insertar en la tabla `users` usando el `user_profile_id`
+
+        // 3️⃣ Crear el usuario
         $user = User::create([
-            'profile_id' => $userProfile['profile_id'],  // Relacionar con `user_profile`
+            'profile_id' => $userProfile->profile_id,
             'user_name' => $username,
             'password' => Hash::make($request->password),
-            'role_id'=>$role === 'admin'? 3: 4,
-            'status' => 1, 
+            'role_id' => $role === 'admin' ? 3 : 4,
+            'status' => 1,
         ]);
-    
-        // 4️⃣ Registrar evento y autenticar usuario
+
+        // 4️⃣ Verificar si viene un enlace de venta (dog_sale)
+        if ($request->filled('dog_sale')) {
+            try {
+                // Si usas Crypt
+                $saleId = Crypt::decrypt($request->dog_sale);
+
+                // Si usas md5, usa:
+                // $sale = DogSale::whereRaw('MD5(sale_id) = ?', [$request->dog_sale])->first();
+
+                $sale = DogSale::find($saleId);
+              
+                if ($sale && $sale->status === 'pending') {
+                    // Actualizar comprador y marcar como completada
+                    $sale->update([
+                        'buyer_id' => $userProfile->profile_id,
+                        'status' => 'completed',
+                        'sale_date' => now(), // 🆕 registrar fecha automática
+                    ]);
+
+                    // Cambiar el dueño del perro
+                    Dog::where('dog_id', $sale->dog_id)
+                        ->update([
+                                'current_owner_id' => $userProfile->profile_id,
+                                'transfer_pending' => false
+                            ]);
+                }
+
+            } catch (\Exception $e) {
+                Log::error('Error processing dog sale during registration: ' . $e->getMessage());
+            }
+        }
+        
+        // 5️⃣ Autenticar y redirigir
         event(new Registered($user));
         Auth::login($user);
-    
+
         return redirect(RouteServiceProvider::HOME);
-
-        
-
     }
 
 
