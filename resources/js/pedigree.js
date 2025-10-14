@@ -58,6 +58,10 @@ export  function pedigree() {
                   }
                 
                   dogs.forEach(dog => {
+
+                     let sex = dog.sex == 'M' ? 'Male' : 'Female';
+                     let dogName = `${dog.name} <span class="dog-sex is-size-7">(${sex})</span>`;
+                     
                      const li = document.createElement('li');
                      li.classList.add('dog-item'); // esta clase la usaremos para estilo
                    
@@ -66,7 +70,7 @@ export  function pedigree() {
                        window.location.href = `/pedigrees/${dog.dog_hash}`;
                      });
                    
-                     li.textContent = dog.name; // Texto directamente en el li
+                     li.innerHTML = dogName; // Texto directamente en el li
                      container.appendChild(li);
                    });
                    

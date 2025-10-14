@@ -80,12 +80,15 @@
             const paginatedDogs = dogsToDisplay.slice(start, end);
 
             paginatedDogs.forEach((dog) => {
-                let sex = dog.sex == 'M' ? 'Male' : 'Female';
-                const row = document.createElement('tr');
 
+                let sex = dog.sex == 'M' ? 'Male' : 'Female';
+                let dogName = `${dog.name} <span class="dog-sex is-size-7">(${sex})</span>`;
+
+                const row = document.createElement('tr');
+                
                 // Crear el td con data-href
                 const td = document.createElement('td');
-                td.textContent = dog.name;
+                td.innerHTML = dogName;
                 td.dataset.href = `/dogs/show/${dog.dog_hash}`;
                 td.style.cursor = 'pointer'; // Para que se vea como un link
                 td.classList.add('clickable-td');
@@ -106,17 +109,6 @@
                         deleteDog(dog.dog_hash);
                     });
                     actionTd.appendChild(deleteBtn);
-
-                    // Botón Editar
-                    // const editBtn = document.createElement('button');
-                    // editBtn.textContent = 'Editar Pedigree';
-                    // editBtn.className = 'button is-warning is-small';
-                    // editBtn.addEventListener('click', (e) => {
-                    //     e.stopPropagation(); // Evita que el clic afecte al evento del td
-                    //     editPedigree(dog.dog_hash);
-                    // });
-                    // actionTd.appendChild(editBtn);
-
 
                     // Botón Editar
                     const editBtnDog = document.createElement('button');

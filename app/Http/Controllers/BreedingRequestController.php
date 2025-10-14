@@ -65,15 +65,6 @@ class BreedingRequestController extends Controller
             return response()->json(['success' => true]);
         }
 
-
-        // if(auth()->user()->userprofile->profile_id == $breeding->maleDog->current_owner_id ){
-
-        //     $breeding->status = 'completed';
-        //     $breeding->save();
-
-        //     return response()->json(['success' => true]);
-        // }
-        
         return response()->json(['success' => false, 'message' => 'No autorizado']);
  
     }

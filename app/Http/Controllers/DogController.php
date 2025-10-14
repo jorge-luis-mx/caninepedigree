@@ -43,8 +43,6 @@ class DogController extends Controller
 
         $role = $user->role;
         $permissions = $role->permissions->where('pivot.status', 1);
-        // $permissions = $user->role->permissions; // Permisos del rol del usuario
-        // $hasPermission = $permissions->contains('name', 'create_post');
 
         $arrayRole =['Admin'];
 
@@ -56,8 +54,11 @@ class DogController extends Controller
             ->select(
                     'dogs.dog_id',
                     DB::raw('MD5(dogs.dog_id) as dog_hash'),
-                    'dogs.name',
-                    'dogs.status',
+                        'dogs.name',
+                        'dogs.breed',
+                        'dogs.color',
+                        'dogs.sex',
+                        'dogs.status',
                     DB::raw('COALESCE(SUM(payments.amount), 0) as total_paid'),
                     DB::raw('100 - COALESCE(SUM(payments.amount), 0) as amount_due')
                 )
@@ -68,11 +69,7 @@ class DogController extends Controller
         }
 
         $arrayOwner = ['Administrator','Employee'];
-        // $ownerProfile = UserProfile::find(1);
-        // dd($profile);
         $owner = in_array($role->name, $arrayOwner) ? 2 : $profile_id;
-
-    
 
         $dogs = Dog::where('dogs.current_owner_id', $owner)
             ->whereIn('dogs.status', ['completed','exempt'])
@@ -82,8 +79,11 @@ class DogController extends Controller
             ->select(
                     'dogs.dog_id',
                     DB::raw('MD5(dogs.dog_id) as dog_hash'),
-                    'dogs.name',
-                    'dogs.status',
+                        'dogs.name',
+                        'dogs.breed',
+                        'dogs.color',
+                        'dogs.sex',
+                        'dogs.status',
                     DB::raw('COALESCE(SUM(payments.amount), 0) as total_paid'),
                     DB::raw('100 - COALESCE(SUM(payments.amount), 0) as amount_due')
                 )
