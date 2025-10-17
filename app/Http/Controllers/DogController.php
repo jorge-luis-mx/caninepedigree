@@ -287,7 +287,7 @@ class DogController extends Controller
             ]);
 
 
-            if ($sire_id == null ) {
+            if ( empty($sire_id)) {
 
                 try {
 
@@ -344,7 +344,7 @@ class DogController extends Controller
     
             }
 
-            if ($dam_id == null ) {
+            if (empty($dam_id)) {
 
                 try {
                     $damEmail = $validatedData['dam_email'];
