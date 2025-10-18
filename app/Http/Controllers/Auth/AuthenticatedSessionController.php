@@ -18,8 +18,22 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): View
+    public function create(Request $request)
     {
+
+        // Si el usuario YA está autenticado...
+        if (Auth::check()) {
+
+            // ... y viene un token por la URL
+            if ($request->filled('token')) {
+                // Redirigir directamente al formulario de registro del perro
+                return redirect()->route('dogs.create', ['token' => $request->input('token')]);
+            }
+
+            // Si no hay token → ir al dashboard normal
+            return redirect()->intended(RouteServiceProvider::HOME);
+        }
+        
         return view('auth.login');
     }
 
@@ -28,14 +42,27 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+       
         $request->authenticate();
 
         $request->session()->regenerate();
         $user = auth()->user();
         if ($user->username =='admin' && $user->role =='admin') {
             // Redirige a ruta personalizada (por ejemplo: /admin/dashboard)
+            // Si viene token, redirigir después del login
+            if ($request->filled('token')) {
+                session(['pending_invite_token' => $request->input('token')]);
+                return redirect()->route('dogs.create', ['token' => $request->input('token')]);
+            }
             return redirect('/admin/dogs');
         }
+
+        // Si viene token, redirigir después del login
+        if ($request->filled('token')) {
+            session(['pending_invite_token' => $request->input('token')]);
+            return redirect()->route('dogs.create', ['token' => $request->input('token')]);
+        }
+
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 

@@ -10,8 +10,12 @@
                @csrf
                @method('post')
                
-               
                   <div class="card-content">
+
+                     @if(!empty($pending_token))
+                        <input type="hidden" name="pending_token" value="{{ $pending_token }}">
+                     @endif
+
                      <div class="columns is-multiline">
                         <div class="column">
                            <div class="field mb-4">

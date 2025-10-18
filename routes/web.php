@@ -99,7 +99,7 @@ Route::middleware('auth')->group(function () {
 
     //Register a Dog
     Route::get('/dogs', [DogController::class, 'index'])->name('dogs.index');
-    Route::get('/dogs/create', [DogController::class, 'create'])->name('dogs.create');
+    Route::get('/dogs/create/{token?}', [DogController::class, 'create'])->name('dogs.create');
     Route::post('/dogs', [DogController::class, 'store'])->name('dogs.store');
     Route::get('/dogs/show/{dog}', [DogController::class, 'show'])->name('dogs.show');
     Route::delete('/dogs/{dog}', [DogController::class, 'destroy'])->name('dogs.destroy');

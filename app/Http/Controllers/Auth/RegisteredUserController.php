@@ -20,6 +20,7 @@ use App\Models\DogSale;
 use App\Models\User;
 use App\Models\UserProfile;
 use App\Models\Dog;
+use App\Models\PendingDogRelation;
 
 use Illuminate\Support\Str;
 
@@ -49,6 +50,32 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'dog_sale' => ['nullable', 'string'], // 🆕 agregar este campo opcional
         ]);
+
+        // Verificar si viene token en la URL
+        if ($request->filled('token')) {
+            $token = $request->input('token');
+
+            // Buscar registro pendiente
+            $pending = PendingDogRelation::where('token', $token)->first();
+
+            if (!$pending) {
+                abort(404, 'Invalid or expired registration token.');
+            }
+            
+            // Si hay sesión iniciada, usar el email del usuario actual
+            if (auth()->check()) {
+                $user = auth()->user();
+                $profile = $user->userprofile;
+                
+                if (strtolower($profile->email) !== strtolower($pending->pending_email)) {
+                    abort(403, 'You are not authorized to register this dog.');
+                }
+            }
+            // Guardar token en sesión para usar después (tras crear usuario si es necesario)
+            // session(['pending_invite_token' => $token]);
+        }
+
+
 
         $role = $validated['role'] ?? null;
         $text = preg_split('/\s+/', $request->last_name);
@@ -109,6 +136,16 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
         Auth::login($user);
 
+        // Si el registro viene de una invitación pendiente
+        if ($request->filled('token')) {
+            // Guardar el token en la sesión para usarlo después si es necesario
+            session(['pending_invite_token' => $request->input('token')]);
+           
+            // Redirigir al formulario de registro del perro con el token
+            return redirect()->route('dogs.create', ['token' => $request->input('token')]);
+        }
+        
+        // Si no hay invitación pendiente, ir al dashboard (HOME)
         return redirect(RouteServiceProvider::HOME);
     }
 

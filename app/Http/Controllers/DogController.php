@@ -11,6 +11,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Log;
 use Exception;
 use RuntimeException;
+use Illuminate\Support\Str;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\sendEmailDogs;
@@ -23,6 +24,7 @@ use App\Models\DogPayment;
 use App\Models\UserProfile;
 use App\Models\DogParentRequest;
 use App\Models\BreedingRequest;
+use App\Models\PendingDogRelation;
 
 //Traits
 use App\Traits\Pedigree;
@@ -94,8 +96,38 @@ class DogController extends Controller
     }
 
 
-    public function create()
+    public function create(Request $request)
     {
+        $user = auth()->user();
+        $profile = $user->userprofile;
+        
+        $token = $request->get('token') ?? session('pending_invite_token');
+
+        if ($token) {
+            $pending = PendingDogRelation::where('token', $token)->first();
+
+            if (!$pending) {
+                abort(404, 'Invalid or expired registration token.');
+            }
+
+            // Si el usuario no está autenticado, redirige al login con el token
+            if (!auth()->check()) {
+                return redirect()->route('login', ['token' => $token]);
+            }
+
+            // Verifica que el email del usuario coincida con el correo pendiente
+            if ($profile->email !== $pending->pending_email) {
+                abort(403, 'You are not authorized to register this dog.');
+            }
+
+            // Renderiza la vista con los datos del registro pendiente
+            return view('dogs.create-dog', [
+                'pending_token' => $token,
+                'pending_name' => $pending->temp_dog_name,
+                'relation_type' => $pending->relation_type,
+            ]);
+        }
+
         return view('dogs.create-dog');
     }
 
@@ -205,7 +237,7 @@ class DogController extends Controller
     
         $data = [
             'status' => null,
-            'message' => 'Failed to insert the airport. Please check the data and try again',
+            'message' => 'Failed to insert the dog. Please check the data and try again',
             'data'=>[],
             'errors' => null,
         ];
@@ -215,6 +247,7 @@ class DogController extends Controller
             $data['errors'] = $validator->errors();
             return response()->json($data, 422);
         }
+
         $validatedData = $validator->validated();
         
         $dog = Dog::whereRaw('LOWER(name) = ?', [strtolower($validatedData['name'])])->first();
@@ -281,13 +314,31 @@ class DogController extends Controller
             ]);
             $dog->save();
 
+            // Si viene desde una invitación
+            if ($request->filled('pending_token')) {
+                $pending = PendingDogRelation::where('token', $request->pending_token)->first();
+
+                if ($pending) {
+                    // Actualiza la relación del perro principal
+                    Dog::where('dog_id', $pending->main_dog_id)->update([
+                        $pending->relation_type . '_id' => $dog->dog_id,
+                    ]);
+
+                    // Marca la relación pendiente como completada
+                    $pending->update([
+                        'status' => 'completed',
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+            
             DogPayment::create([
                 'dog_id' => $dog->dog_id,
                 'payment_id' => $payment->payment_id
             ]);
 
 
-            if ( empty($sire_id)) {
+            if ($sire_id==null) {
 
                 try {
 
@@ -304,19 +355,21 @@ class DogController extends Controller
                         'from' => config('mail.from.address'),
                         'from_name' => config('mail.from.name', 'Canine'),
                         'subject' => 'Dog registration request',
-                        'url' => config('app.url') . 'register',
+                        'url' => '',
                         'dog' => $dog,
                         'description' => $descriptionSire
                     ];
 
+                    $this->createPendingRelation($emailData,'sire',$sireEmail);
+
                     // Send email with error handling
-                    Mail::to($sireEmail)->send(new SendEmailDogs($emailData));
+                    // Mail::to($sireEmail)->send(new SendEmailDogs($emailData));
 
                     // Log successful sending
-                    Log::info('Dog registration email sent successfully', [
-                        'recipient' => $sireEmail,
-                        'dog_id' => $dog->id ?? null
-                    ]);
+                    // Log::info('Dog registration email sent successfully', [
+                    //     'recipient' => $sireEmail,
+                    //     'dog_id' => $dog->id ?? null
+                    // ]);
 
                 } catch (Exception $e) {
                         // Log the error
@@ -329,24 +382,13 @@ class DogController extends Controller
                         // Optional: throw custom exception or handle error according to requirements
                         throw new RuntimeException('Could not send notification email', 0, $e);
                 }
-
-                // $sireEmail = $validatedData['sire_email'];
-                // $descriptionSire = $validatedData['descriptionSire'];
-
-                // //send mails
-                // $datos = [
-                //     'from'=>'info@devscun.com',
-                //     'subject' => 'Dog registration request',
-                //     'url'=>'http://www.caninepedigree-dev.com/register',
-                //     'dog'=>$dog
-                // ];
-                // Mail::to($sireEmail)->send(new sendEmailDogs($datos));
     
             }
 
-            if (empty($dam_id)) {
+            if ($dam_id==null) {
 
                 try {
+                    
                     $damEmail = $validatedData['dam_email'];
                     $descriptionDam = $validatedData['descriptionDam'] ?? '';
 
@@ -360,19 +402,20 @@ class DogController extends Controller
                         'from' => config('mail.from.address', 'info@devscun.com'),
                         'from_name' => config('mail.from.name', 'Canine'),
                         'subject' => 'Dog registration request',
-                        'url' => config('app.url') . 'register',
+                        'url' =>'',
                         'dog' => $dog,
                         'description' => $descriptionDam
                     ];
 
+                    $this->createPendingRelation($emailData,'dam',$damEmail);
                     // Send email with error handling
-                    Mail::to($damEmail)->send(new SendEmailDogs($emailData));
+                    // Mail::to($damEmail)->send(new SendEmailDogs($emailData));
                     
                     // Log successful sending
-                    Log::info('Dog registration email sent successfully to dam', [
-                        'recipient' => $damEmail,
-                        'dog_id' => $dog->id ?? null
-                    ]);
+                    // Log::info('Dog registration email sent successfully to dam', [
+                    //     'recipient' => $damEmail,
+                    //     'dog_id' => $dog->id ?? null
+                    // ]);
 
                 } catch (Exception $e) {
                     // Log the error
@@ -386,17 +429,6 @@ class DogController extends Controller
                     throw new RuntimeException('Could not send notification email to dam', 0, $e);
                 }
 
-                // $damEmail = $validatedData['dam_email'];
-                // $descriptionDam = $validatedData['descriptionDam'];
-
-                // //send mails
-                // $datos = [
-                //     'from'=>'info@devscun.com',
-                //     'subject' => 'Dog registration request',
-                //     'url'=>'http://www.caninepedigree-dev.com/register',
-                //     'dog'=>$dog
-                // ];
-                // Mail::to($damEmail)->send(new sendEmailDogs($datos));
             }
 
             $dog->dog_id_md = md5($dog->dog_id);
@@ -407,8 +439,8 @@ class DogController extends Controller
 
             // Verificamos si hay una solicitud de cruza pendiente para este usuario
             $parentRequest = DogParentRequest::where('email', $profile->email)
-                            ->where('parent_type',$parent_type)
-                            ->first();
+                ->where('parent_type',$parent_type)
+                ->first();
 
             if ($parentRequest) {
                 // Crear la solicitud de cruza automáticamente
@@ -423,9 +455,6 @@ class DogController extends Controller
                 // Eliminar solicitud previa
                 $parentRequest->delete();
 
-                // (Opcional) Notificar al solicitante original
-                // $requestingUser = Dog::find($parentRequest->dog_id)->user;
-                // Mail::to($requestingUser->email)->send(new Breeding($dog));
             }
 
             $data['message'] = 'CANINE inserted successfully';
@@ -445,6 +474,37 @@ class DogController extends Controller
         
         return response()->json($data);
     }
+
+    private function createPendingRelation($emailData, $relationType, $email)
+    {
+        try {
+
+            $token = \Illuminate\Support\Str::random(40);
+
+            PendingDogRelation::create([
+                'main_dog_id'   => $emailData['dog']->dog_id,
+                'relation_type' => $relationType,
+                'pending_email' => $email,
+                'temp_dog_name' => null,
+                'token'         => $token,
+                'status'        => 'pending',
+            ]);
+            // Verificar si el correo ya tiene cuenta
+            $userExists = UserProfile::where('email', $email)->exists();
+
+            $url = $userExists
+                ? url(config('app.url') . "?token={$token}") 
+                : url(config('app.url') . "register?token={$token}");
+            $emailData['url'] = $url;
+            // Enviar correo
+            Mail::to($email)->send(new SendEmailDogs($emailData));
+            return true;
+        } catch (\Exception $e) {
+            Log::error("Error in createPendingRelation: " . $e->getMessage());
+            return false;
+        }
+    }
+
 
 
     public function generarCodigoRegistro() {
@@ -479,7 +539,6 @@ class DogController extends Controller
         return $orderReference;
     }
 
-
     public function show(string $id)
     {
         
@@ -501,14 +560,12 @@ class DogController extends Controller
         return view('dogs/show-dog',compact('dog'));
     }
 
-
     public function edit(string $id)
     {
         $dog = Dog::whereRaw('MD5(dog_id) = ?', $id)->firstOrFail();
         $dogs =  $dogs = Dog::all(); 
         return view('dogs.edit-dog', compact('dog','dogs'));
     }
-
 
     public function update(Request $request, string $id)
     {
@@ -525,7 +582,6 @@ class DogController extends Controller
         return response()->json(['status' => 200, 'message' => 'Perro actualizado correctamente.']);
     }
 
-
     public function destroy(string $id)
     {
 
@@ -541,8 +597,6 @@ class DogController extends Controller
         return response()->json(['success' => false], 400);
         
     }
-
-
 
     public function showPedigree($id)
     {

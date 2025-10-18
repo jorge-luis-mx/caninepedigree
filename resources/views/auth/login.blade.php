@@ -20,9 +20,9 @@
                     Welcome to 
                 </h1>
 
-                <!-- <h3 class="text-xl font-medium text-gray-700 mt-3">
-                    Provider Dashboard
-                </h3> -->
+                @if(request()->has('token'))
+                    <input type="hidden" name="token" value="{{ request()->input('token') }}">
+                @endif
 
                 <!-- Login Input -->
                 <div class="mt-5">
