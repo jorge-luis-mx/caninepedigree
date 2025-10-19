@@ -130,6 +130,9 @@ Route::middleware('auth')->group(function () {
     // Route::get('/generate-pdf/{id}/{type}', [PedigreegController::class, 'generatePDF'])->name('pediree.generatePDF');
 
     //Route::post('/breeding-request', [BreedingController::class, 'store'])->name('breeding.index');
+    Route::get('/breeding/receibed', [BreedingRequestController::class, 'receibed'])->name('breeding.receibed');
+    Route::post('/breeding/receibed/confirm', [BreedingRequestController::class, 'confirm'])->name('breeding.confirm');
+
     Route::get('/breeding/request', [BreedingRequestController::class, 'index'])->name('breeding.index');
     Route::get('/breeding/request/create/{id?}', [BreedingRequestController::class, 'create'])->name('breeding.create');
     Route::post('/breeding/request', [BreedingRequestController::class, 'store'])->name('breeding.store');

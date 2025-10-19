@@ -228,4 +228,28 @@ textarea.input-error {
   display: block;
 }
 
+.tag.is-pending {
+  background-color: #FB8C00;
+  color: #fff;
+}
+
+.tag.is-approved {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+.tag.is-rejected {
+  background-color: #E53935;
+  color: #fff;
+}
+
+.tag.is-cancelled {
+  background-color: #757575;
+  color: #fff;
+}
+
+.tag.is-completed {
+  background-color: #1E88E5;
+  color: #fff;
+}
 

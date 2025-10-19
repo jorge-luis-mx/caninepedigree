@@ -2,7 +2,7 @@
 <x-app-layout>
 
 
-    <h1 class="is-size-4">Complete Breeding</h1>
+    <h1 class="is-size-4">Receibed Breeding</h1>
 
    <div class="container mt-6">
         
@@ -12,12 +12,12 @@
             <table class="table is-striped is-fullwidth mt-4">
                 <thead>
                     <tr>
-                        <th>Female</th>
                         <th>Male</th>
+                        <th>Female</th>
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="breedingTableBody"></tbody>
+                <tbody id="breedingReceibed"></tbody>
             </table>
             <div id="pagination" class="mt-4"></div>
 
@@ -42,7 +42,7 @@
     let currentSearchTerm = '';
 
     function populateTable(breedingsToDisplay) {
-        const tableBody = document.getElementById('breedingTableBody');
+        const tableBody = document.getElementById('breedingReceibed');
         tableBody.innerHTML = '';
 
         const start = (currentPage - 1) * breedingsPerPage;
@@ -52,9 +52,13 @@
         paginatedBreedings.forEach((breeding) => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${breeding.female_dog.name}</td>
+                
                 <td>${breeding.male_dog.name}</td>
-                <td><button class="button has-text-white is-link is-small" onclick="completeBreeding(${breeding.request_id})">Complete Breeding</button></td>
+                <td>${breeding.female_dog.name}</td>
+                <td>
+                  <button class="button has-text-white is-success is-small" onclick="receibed(${breeding.request_id},'approved')">Aprobar</button>
+                  <button class="button has-text-white is-danger is-small" onclick="receibed(${breeding.request_id},'rejected')">Rechazar</button>
+                </td>
             `;
             tableBody.appendChild(row);
         });
@@ -70,8 +74,6 @@
 
         if (totalPages <= 1) return;
 
-        // Generar botones...
-        // [Puedes reutilizar tu lógica anterior aquí]
     }
 
     window.filterBreedings = function() {
@@ -83,22 +85,29 @@
         populateTable(filtered);
     };
 
-    window.completeBreeding = function(requestId) {
-        if (confirm('¿Deseas completar esta cruza?')) {
-            fetch(`/breeding/complete/${requestId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
+   window.receibed = function(requestId, receibedStatus) {
+
+      if (confirm('¿Deseas completar esta cruza?')) {
+
+         fetch(`/breeding/receibed/confirm`, {
+               method: 'POST',
+               headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRF-TOKEN': '{{ csrf_token() }}'
+               },
+               body: JSON.stringify({
+                  request_id: requestId,
+                  status: receibedStatus
+               })
+         })
+         .then(response => response.json())
+         .then(data => {
+
                 if (data.success) {
 
                     Swal.fire({
-                        title: 'Breeding Completed!',
-                        text: 'The breeding request has been successfully registered.',
+                        title: 'Breeding Approbed!',
+                        text: data.message,
                         icon: 'success',
                         confirmButtonText: 'Got it',
                         confirmButtonColor: '#28a745',
@@ -110,31 +119,33 @@
                         timerProgressBar: true
                     });
 
-                    
                     breedings = breedings.filter(b => b.request_id !== requestId);
                     populateTable(breedings);
 
                 } else {
 
-                Swal.fire({
-                    title: 'Oops!',
-                    text: data.message || 'Something went wrong. Please try again.',
-                    icon: 'warning',
-                    confirmButtonText: 'Understood',
-                    confirmButtonColor: '#e6a100', // warm yellow tone
-                    background: '#fffbea',
-                    iconColor: '#e6a100',
-                    allowOutsideClick: false,
-                    backdrop: true,
-                    timer: 4000,
-                    timerProgressBar: true
-                });
-
+                    Swal.fire({
+                        title: 'Oops!',
+                        text: data.message || 'Something went wrong. Please try again.',
+                        icon: 'warning',
+                        confirmButtonText: 'Understood',
+                        confirmButtonColor: '#e6a100', // warm yellow tone
+                        background: '#fffbea',
+                        iconColor: '#e6a100',
+                        allowOutsideClick: false,
+                        backdrop: true,
+                        timer: 4000,
+                        timerProgressBar: true
+                    });
 
                 }
-            });
-        }
-    }
+         })
+         .catch(error => {
+               console.error('Error al enviar los datos:', error);
+         });
+      }
+   }
+
 
     document.addEventListener('DOMContentLoaded', () => {
         populateTable(breedings);

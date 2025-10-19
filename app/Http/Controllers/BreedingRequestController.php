@@ -37,6 +37,22 @@ class BreedingRequestController extends Controller
         $profile = $user->userprofile;
 
         $breedings = BreedingRequest::whereHas('maleDog', function($query) use ($profile) {
+            $query->where('requester_id', $profile->profile_id);
+        })
+        ->where('status', 'approved')
+        ->orderBy('created_at', 'desc')
+        ->with(['femaleDog', 'maleDog']) // Carga la perra y el perro
+        ->get();
+
+        return view('breeding.list-breeding', compact('breedings'));
+        
+    }
+    public function receibed()
+    {
+        $user = auth()->user();
+        $profile = $user->userprofile;
+
+        $breedings = BreedingRequest::whereHas('maleDog', function($query) use ($profile) {
             $query->where('owner_id', $profile->profile_id);
         })
         ->where('status', 'pending')
@@ -44,37 +60,35 @@ class BreedingRequestController extends Controller
         ->with(['femaleDog', 'maleDog']) // Carga la perra y el perro
         ->get();
 
-        return view('breeding.list-breeding', compact('breedings'));
+    
+        return view('breeding.receibed', compact('breedings'));
         
-
     }
 
-    public function complete($id)
+    public function confirm(Request $request)
     {
 
-        $breeding = BreedingRequest::findOrFail($id);
-        if(!empty($breeding)){
+        $post = $request->all();
 
-            $mating = Carbon::now('America/Cancun');
-            $expectedBirth = $mating->copy()->addDays(63);
+        BreedingRequest::where('request_id', $post['request_id'])
+            ->update(['status' => $post['status']]);
 
-            $breeding->status = 'completed';
-            $breeding->miting_date = $mating->toDateString();
-            $breeding->delivery_date = $expectedBirth->toDateString();
-            $breeding->save();
-            return response()->json(['success' => true]);
-        }
+        // Mensajes según el estado
+        $message = match ($post['status']) {
+            'approved' => 'The request has been approved successfully.',
+            'rejected' => 'The request has been rejected successfully.',
+            default => 'Status updated successfully.'
+        };
 
-        return response()->json(['success' => false, 'message' => 'No autorizado']);
- 
+        return response()->json(['success' => true,'message'=>$message]);
+        
     }
-
     /**
      * Show the form for creating a new resource.
      */
     public function create($id = null)
     {
-        
+
         $user = auth()->user();
         $profile = $user->userprofile;
         $role = $user->role;
@@ -184,107 +198,6 @@ class BreedingRequestController extends Controller
             // Todas las validaciones pasaron - crear la solicitud
             return $this->createBreedingRequest($validatedData);
 
-
-
-
-
-
-
-
-
-
-            $user = auth()->user();
-            $profile = $user->userprofile;
-
-            $femaleDog = Dog::where('dog_id', $validatedData['my_dog_id'])->first();
-            $sexDog = $femaleDog->sex === 'M'? 'dam':'sire';
-            //get token uuid
-            $token = Str::uuid();
-
-            if(!empty($femaleDog) ){
-                
-                if (empty($validatedData['dog_id'])) {
-               
-                    // Dueño del perro con quien se propone la cruza
-                    // $targetOwner = UserProfile::where('email', $validatedData['dog_email'])->first();
-
-                    $data = [
-                        'dogName'=>$femaleDog->name,
-                        'message'=>$validatedData['dogDetails'],
-                        'subject'=>'You have a new breeding request!',
-                        'view'=>'dog_invitation_esc_three',
-                        'url'=>$baseUrl,
-                    ];
-
-                    $this->sendEmail($data,$validatedData);
-                    
-                    $parentRequest = $this->createParentRequest($femaleDog,$sexDog,$validatedData,$token);
-
-                    if ($parentRequest) {
-                        $dataResponse['status'] = 'success';
-                        $dataResponse['message'] = 'Your breeding request has been successfully submitted. We have notified the owner of the other dog to continue the process.';
-
-                        return response()->json($dataResponse,200);
-                    }
-
-                    // if(empty($targetOwner)){
-
-                    // }
-
-                    // if(!empty($targetOwner)){
-
-                    // }
-                    
-
-                }
-
-                $maleDog = Dog::where('dog_id',$validatedData['dog_id'])->first();
-                // Dueño que inicia la solicitud
-                $requesterOwner = $maleDog->currentOwner;
-        
-                // Buscar la última solicitud de cruza (pendiente o completada) para esta perra
-                $lastBreeding = BreedingRequest::where('female_dog_id', $femaleDog->dog_id)
-                ->whereIn('status', ['pending', 'completed'])
-                ->orderBy('created_at', 'desc')
-                ->first();
-
-
-                if (!empty($lastBreeding) && $lastBreeding->status === 'pending') {
-
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'This female already has a pending breeding request.',
-                    ], 403);
-                }
-
-                if (!empty($lastBreeding)&& $lastBreeding->status === 'completed') {
-                    
-                    if ($lastBreeding->created_at->diffInMonths(now()) < 12) {
-
-                        return response()->json([
-                            'status' => 'error',
-                            'message' => 'This female was recently bred. At least 12 months must pass between breedings.',
-                        ], 403);
-
-                    }
-                }
-
-            
-                $breedingRequest = BreedingRequest::create([
-                    'female_dog_id' =>$femaleDog->dog_id,
-                    'male_dog_id' => $maleDog->dog_id,
-                    'requester_id'=>$requesterOwner->profile_id,
-                    'owner_id'=>$femaleDog->currentOwner->profile_id,
-                    'status' => 'pending',
-                ]);
-
-
-                $dataResponse['status'] = 'success';
-                $dataResponse['message'] = 'Crossbreeding request registered successfully';
-                return response()->json($dataResponse,200);
-
-            }
-
             
         } catch (\Exception $e) {
             return response()->json([
@@ -296,7 +209,25 @@ class BreedingRequestController extends Controller
         }
     }
 
+    public function complete($id)
+    {
 
+        $breeding = BreedingRequest::findOrFail($id);
+        if(!empty($breeding)){
+
+            $mating = Carbon::now('America/Cancun');
+            $expectedBirth = $mating->copy()->addDays(63);
+
+            $breeding->status = 'completed';
+            $breeding->miting_date = $mating->toDateString();
+            $breeding->delivery_date = $expectedBirth->toDateString();
+            $breeding->save();
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'No autorizado']);
+ 
+    }
 
     private function createBreedingRequest($validatedData)
     {
@@ -339,9 +270,7 @@ class BreedingRequestController extends Controller
                 }
 
                 $maleDog = Dog::where('dog_id',$validatedData['dog_id'])->first();
-                // Dueño que inicia la solicitud
-                $requesterOwner = $maleDog->currentOwner;
-        
+
                 // Buscar la última solicitud de cruza (pendiente o completada) para esta perra
                 $lastBreeding = BreedingRequest::where('female_dog_id', $femaleDog->dog_id)
                 ->whereIn('status', ['pending', 'completed'])
@@ -374,22 +303,9 @@ class BreedingRequestController extends Controller
                     'female_dog_id' =>$femaleDog->dog_id,
                     'male_dog_id' => $maleDog->dog_id,
                     'requester_id'=>$femaleDog->currentOwner->profile_id,
-                    'owner_id'=>$femaleDog->currentOwner->profile_id,
+                    'owner_id'=>$maleDog->currentOwner->profile_id,
                     'status' => 'pending',
                 ]);
-
-                // $breedingRequestId = $breedingRequest->request_id;
-
-                // $litter = Litter::create([
-                //     'breeding_request_id' => $breedingRequestId,
-                //     'dam_id'              => $femaleDog->dog_id,
-                //     'sire_id'             => $maleDog->dog_id,
-                //     'birth_date'          => null, // aún no nacen
-                //     'total_puppies'       => null, // aún no se sabe
-                //     'surviving_puppies'   => null, // aún no se sabe
-                //     'notes'               => null,
-                //     'created_at'          => now(),
-                // ]);
 
 
                 $dataResponse['status'] = 'success';
@@ -423,6 +339,7 @@ class BreedingRequestController extends Controller
 
     public function createParentRequest($femaleDog,$sexDog,$validatedData,$token)
     {
+        
         $dogParentRequest = DogParentRequest::create([
             'dog_id' => $femaleDog->dog_id,
             'parent_type' => $sexDog,
@@ -541,7 +458,16 @@ class BreedingRequestController extends Controller
 
     public function listSent(){
 
-        $send_request = BreedingRequest::with(['femaleDog', 'maleDog'])->where('status', 'pending')->get();
+        $user = auth()->user();
+        $profile = $user->userprofile;
+
+        $send_request = BreedingRequest::where('requester_id', $profile->profile_id)
+            ->orderBy('created_at', 'desc')
+            ->with(['maleDog', 'femaleDog', 'owner'])
+            ->get();
+
+
+        // $send_request = BreedingRequest::with(['femaleDog', 'maleDog'])->get();
         return view('breeding.list-sent-request', compact('send_request'));
     }
 

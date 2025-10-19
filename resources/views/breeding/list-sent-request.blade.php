@@ -9,8 +9,10 @@
             <table class="table is-striped is-fullwidth mt-4">
                 <thead>
                     <tr>
-                        <th>Female Dog</th>
-                        <th>Your Male Dog</th>
+                        <th>Female</th>
+                        <th>Male</th>
+                        <th>Status</th>
+                        <th>Request Date</th>
                     </tr>
                 </thead>
                 <tbody id="sentTableBody"></tbody>
@@ -35,6 +37,7 @@
         let currentSearch = '';
 
         function populateSentTable(requestsToShow) {
+            console.log(requestsToShow);
             const tableBody = document.getElementById('sentTableBody');
             tableBody.innerHTML = '';
 
@@ -44,9 +47,30 @@
 
             paginated.forEach(request => {
                 const row = document.createElement('tr');
+
+                // Formatear fecha: YYYY-MM-DD
+                const date = new Date(request.created_at);
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() empieza en 0
+                const day = String(date.getDate()).padStart(2, '0');
+                const formattedDate = `${year}-${month}-${day}`;
+
                 row.innerHTML = `
                     <td>${request.female_dog.name}</td>
                     <td>${request.male_dog.name}</td>
+                    <td>
+                        <span class="tag ${
+                            request.status === 'pending' ? 'is-pending' :
+                            request.status === 'approved' ? 'is-approved' :
+                            request.status === 'rejected' ? 'is-rejected' :
+                            request.status === 'cancelled' ? 'is-cancelled' :
+                            request.status === 'completed' ? 'is-completed' :
+                            'is-light'
+                            }">
+                            ${request.status}
+                        </span>
+                    </td>
+                    <td>${formattedDate}</td>
                 `;
                 tableBody.appendChild(row);
             });

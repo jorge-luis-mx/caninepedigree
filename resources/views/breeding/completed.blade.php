@@ -1,6 +1,6 @@
 <x-app-layout>
 
-<h1 class="is-size-4">Confirmed Request</h1>
+<h1 class="is-size-4">Breeding Records</h1>
 
 <div class="container mt-6">
     
@@ -10,8 +10,8 @@
     <table class="table is-striped is-fullwidth mt-4">
         <thead>
             <tr>
-                <th>Female Dog</th>
-                <th>Your Male Dog</th>
+                <th>Female</th>
+                <th>Male</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -45,7 +45,7 @@
                 <td>${breeding.male_dog.name}</td>
                 <td>
                     <a href="/breeding/${breeding.hash_id}/upload-photos" class="button is-link is-small has-text-white">
-                        Upload Breeding Photos 
+                        Upload Photos 
                     </a>
                 </td>
             `;
