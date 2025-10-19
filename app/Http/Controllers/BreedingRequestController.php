@@ -209,23 +209,25 @@ class BreedingRequestController extends Controller
         }
     }
 
-    public function complete($id)
+    public function complete(Request $request)
     {
 
-        $breeding = BreedingRequest::findOrFail($id);
-        if(!empty($breeding)){
+        $post = $request->all();
+        $mating = Carbon::now('America/Cancun');
+        $expectedBirth = $mating->copy()->addDays(63);
 
-            $mating = Carbon::now('America/Cancun');
-            $expectedBirth = $mating->copy()->addDays(63);
+        BreedingRequest::where('request_id', $post['request_id'])
+            ->update(['status' => $post['status'],'miting_date'=>$mating->toDateString(),'delivery_date'=>$expectedBirth->toDateString()]);
 
-            $breeding->status = 'completed';
-            $breeding->miting_date = $mating->toDateString();
-            $breeding->delivery_date = $expectedBirth->toDateString();
-            $breeding->save();
-            return response()->json(['success' => true]);
-        }
+        // Mensajes según el estado
+        $message = match ($post['status']) {
+            'completed' => 'The request has been completed successfully.',
+            'cancelled' => 'The request has been cancelled successfully.',
+            default => 'Status updated successfully.'
+        };
 
-        return response()->json(['success' => false, 'message' => 'No autorizado']);
+        return response()->json(['success' => true,'message'=>$message]);
+
  
     }
 

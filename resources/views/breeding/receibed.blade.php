@@ -85,66 +85,66 @@
         populateTable(filtered);
     };
 
-   window.receibed = function(requestId, receibedStatus) {
+    window.receibed = function(requestId, receibedStatus) {
 
-      if (confirm('¿Deseas completar esta cruza?')) {
+        if (confirm('¿Deseas completar esta cruza?')) {
 
-         fetch(`/breeding/receibed/confirm`, {
-               method: 'POST',
-               headers: {
-                  'Content-Type': 'application/json',
-                  'X-CSRF-TOKEN': '{{ csrf_token() }}'
-               },
-               body: JSON.stringify({
-                  request_id: requestId,
-                  status: receibedStatus
-               })
-         })
-         .then(response => response.json())
-         .then(data => {
+            fetch(`/breeding/receibed/confirm`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    request_id: requestId,
+                    status: receibedStatus
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
 
-                if (data.success) {
+                    if (data.success) {
 
-                    Swal.fire({
-                        title: 'Breeding Approbed!',
-                        text: data.message,
-                        icon: 'success',
-                        confirmButtonText: 'Got it',
-                        confirmButtonColor: '#28a745',
-                        background: '#f0fff5',
-                        iconColor: '#28a745',
-                        allowOutsideClick: false,
-                        backdrop: true,
-                        timer: 3500,
-                        timerProgressBar: true
-                    });
+                        Swal.fire({
+                            title: 'Breeding Approbed!',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: 'Got it',
+                            confirmButtonColor: '#28a745',
+                            background: '#f0fff5',
+                            iconColor: '#28a745',
+                            allowOutsideClick: false,
+                            backdrop: true,
+                            timer: 3500,
+                            timerProgressBar: true
+                        });
 
-                    breedings = breedings.filter(b => b.request_id !== requestId);
-                    populateTable(breedings);
+                        breedings = breedings.filter(b => b.request_id !== requestId);
+                        populateTable(breedings);
 
-                } else {
+                    } else {
 
-                    Swal.fire({
-                        title: 'Oops!',
-                        text: data.message || 'Something went wrong. Please try again.',
-                        icon: 'warning',
-                        confirmButtonText: 'Understood',
-                        confirmButtonColor: '#e6a100', // warm yellow tone
-                        background: '#fffbea',
-                        iconColor: '#e6a100',
-                        allowOutsideClick: false,
-                        backdrop: true,
-                        timer: 4000,
-                        timerProgressBar: true
-                    });
+                        Swal.fire({
+                            title: 'Oops!',
+                            text: data.message || 'Something went wrong. Please try again.',
+                            icon: 'warning',
+                            confirmButtonText: 'Understood',
+                            confirmButtonColor: '#e6a100', // warm yellow tone
+                            background: '#fffbea',
+                            iconColor: '#e6a100',
+                            allowOutsideClick: false,
+                            backdrop: true,
+                            timer: 4000,
+                            timerProgressBar: true
+                        });
 
-                }
-         })
-         .catch(error => {
-               console.error('Error al enviar los datos:', error);
-         });
-      }
-   }
+                    }
+            })
+            .catch(error => {
+                console.error('Error al enviar los datos:', error);
+            });
+        }
+    }
 
 
     document.addEventListener('DOMContentLoaded', () => {

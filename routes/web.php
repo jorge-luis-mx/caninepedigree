@@ -136,7 +136,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/breeding/request', [BreedingRequestController::class, 'index'])->name('breeding.index');
     Route::get('/breeding/request/create/{id?}', [BreedingRequestController::class, 'create'])->name('breeding.create');
     Route::post('/breeding/request', [BreedingRequestController::class, 'store'])->name('breeding.store');
-    Route::post('/breeding/complete/{id}', [BreedingRequestController::class, 'complete'])->name('breeding.complete');
+    Route::post('/breeding/complete', [BreedingRequestController::class, 'complete'])->name('breeding.complete');
 
     
     // Listar completadas
