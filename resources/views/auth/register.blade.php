@@ -6,6 +6,10 @@
             <form method="POST" action="{{ route('register') }}" class="w-full">
                 @csrf
                 
+                @if(request()->has('invoice'))
+                    <input type="hidden" name="invoice" value="{{ request()->input('invoice') }}">
+                @endif
+
                 @if(request()->has('token'))
                     <input type="hidden" name="token" value="{{ request()->input('token') }}">
                 @endif

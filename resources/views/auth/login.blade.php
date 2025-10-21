@@ -24,6 +24,10 @@
                     <input type="hidden" name="token" value="{{ request()->input('token') }}">
                 @endif
 
+                @if(request()->has('invoice'))
+                    <input type="hidden" name="invoice" value="{{ request()->input('invoice') }}">
+                @endif
+
                 <!-- Login Input -->
                 <div class="mt-5">
                     <x-input-label for="login" :value="__('Email (Username)')" />

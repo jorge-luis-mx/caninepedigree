@@ -34,6 +34,8 @@ export  function breedingRequest() {
                                 console.log(type);
                                 form.querySelector(`.${type}Email`).classList.remove('is-hidden');
                                 form.querySelector(`.search${capitalize(type)}`).classList.add('is-hidden');
+                                const container = document.getElementById('listNewbreeding');
+                                container.innerHTML = '';
                             }
                         });
 
@@ -69,7 +71,7 @@ export  function breedingRequest() {
 
         const showResults = (dogs, form, type) => {
             
-            const container = document.getElementById(`dogResults`);
+            const container = document.getElementById(`listNewbreeding`);
             container.innerHTML = '';
             
 
@@ -105,7 +107,7 @@ export  function breedingRequest() {
             
             form.querySelector(`input[name="dog"]`).value = name;
             form.querySelector(`input[name="dog_id"]`).value = id;
-            document.getElementById(`dogResults`).style.display = 'none';
+            document.getElementById(`listNewbreeding`).style.display = 'none';
         };
         const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -147,7 +149,7 @@ export  function breedingRequest() {
                 .then(res => res.json())
 
                 .then(result => {
-
+               
                 // Limpiar errores previos
                 // clearErrors(form);
                 if (result.status === 'success') {

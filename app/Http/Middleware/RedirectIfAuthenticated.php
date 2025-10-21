@@ -28,6 +28,15 @@ class RedirectIfAuthenticated
                     //Redirigir con token
                     return redirect()->route('dogs.create', ['token' => $request->input('token')]);
                 }
+
+                // Si viene un token en la URL
+                if ($request->filled('invoice')) {
+                    //Guardar token en sesión
+                    session(['pending_invite_invoice' => $request->input('invoice')]);
+                    //Redirigir con token
+                    return redirect()->route('dogs.create', ['invoice' => $request->input('invoice')]);
+                }
+
                 return redirect(RouteServiceProvider::HOME);
             }
         }

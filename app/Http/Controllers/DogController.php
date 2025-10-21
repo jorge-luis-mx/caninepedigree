@@ -98,10 +98,12 @@ class DogController extends Controller
 
     public function create(Request $request)
     {
+       
         $user = auth()->user();
         $profile = $user->userprofile;
         
         $token = $request->get('token') ?? session('pending_invite_token');
+        $invoice = $request->get('invoice') ?? session('pending_invite_invoice');
 
         if ($token) {
             $pending = PendingDogRelation::where('token', $token)->first();
@@ -119,7 +121,9 @@ class DogController extends Controller
             if ($profile->email !== $pending->pending_email) {
                 abort(403, 'You are not authorized to register this dog.');
             }
-
+            if (session()->has('pending_invite_token')) {
+                session()->forget('pending_invite_token');
+            }
             // Renderiza la vista con los datos del registro pendiente
             return view('dogs.create-dog', [
                 'pending_token' => $token,
@@ -127,6 +131,34 @@ class DogController extends Controller
                 'relation_type' => $pending->relation_type,
             ]);
         }
+
+
+        if ($invoice) {
+            
+            $parentRequest = DogParentRequest::where('token', $invoice)->first();
+           
+            if (!$parentRequest) {
+                abort(404, 'Invalid or expired registration invoice.');
+            }
+            // Si el usuario no está autenticado, redirige al login con el token
+            if (!auth()->check()) {
+                return redirect()->route('login', ['invoice' => $invoice]);
+            }
+            // Verifica que el email del usuario coincida con el correo pendiente
+            if ($profile->email !== $parentRequest->email) {
+                abort(403, 'You are not authorized to register this dog.');
+            }
+            if (session()->has('pending_invite_invoice')) {
+                session()->forget('pending_invite_invoice');
+            }
+            // Renderiza la vista con los datos del registro pendiente
+            return view('dogs.create-dog', [
+                'pending_invoice' => $invoice,
+                'pending_name' => null,
+                'relation_type' => $parentRequest->parent_type,
+            ]);
+        }
+
 
         return view('dogs.create-dog');
     }
@@ -331,7 +363,7 @@ class DogController extends Controller
                     ]);
                 }
             }
-            
+
             DogPayment::create([
                 'dog_id' => $dog->dog_id,
                 'payment_id' => $payment->payment_id
@@ -437,25 +469,44 @@ class DogController extends Controller
             
             $parent_type = $request->sex === 'M' ? 'sire' : 'dam';
 
-            // Verificamos si hay una solicitud de cruza pendiente para este usuario
-            $parentRequest = DogParentRequest::where('email', $profile->email)
-                ->where('parent_type',$parent_type)
-                ->first();
-
-            if ($parentRequest) {
-                // Crear la solicitud de cruza automáticamente
-                BreedingRequest::create([
-                    'female_dog_id' => $request->sex === 'F' ? $dog->dog_id : $parentRequest->dog_id,
-                    'male_dog_id' => $request->sex === 'M' ? $dog->dog_id : $parentRequest->dog_id,
-                    'requester_id'=>$profile->profile_id,
-                    'owner_id'=>$profile->profile_id,
-                    'status' =>$role->name == 'Admin'? 'completed':'pending',
-                ]);
-
-                // Eliminar solicitud previa
-                $parentRequest->delete();
-
+            // Si viene desde una invitación
+            if ($request->filled('pending_invoice')) {
+                $parentRequest = DogParentRequest::where('token', $request->pending_invoice)->first();
+                
+                $userExists = UserProfile::where('email', $parentRequest->email)->first();
+                if ($parentRequest) {
+                    // Crear la solicitud de cruza automáticamente
+                    BreedingRequest::create([
+                        'female_dog_id' => $request->sex === 'F' ? $dog->dog_id : $parentRequest->dog_id,
+                        'male_dog_id' => $request->sex === 'M' ? $dog->dog_id : $parentRequest->dog_id,
+                        'requester_id'=>$profile->profile_id,
+                        'owner_id'=>$userExists->profile_id,
+                        'status' =>$role->name == 'Admin'? 'completed':'pending',
+                    ]);
+                    $parentRequest->delete();
+                }
             }
+
+
+            // Verificamos si hay una solicitud de cruza pendiente para este usuario
+            // $parentRequest = DogParentRequest::where('email', $profile->email)
+            //     ->where('parent_type',$parent_type)
+            //     ->first();
+
+            // if ($parentRequest) {
+            //     // Crear la solicitud de cruza automáticamente
+            //     BreedingRequest::create([
+            //         'female_dog_id' => $request->sex === 'F' ? $dog->dog_id : $parentRequest->dog_id,
+            //         'male_dog_id' => $request->sex === 'M' ? $dog->dog_id : $parentRequest->dog_id,
+            //         'requester_id'=>$profile->profile_id,
+            //         'owner_id'=>$profile->profile_id,
+            //         'status' =>$role->name == 'Admin'? 'completed':'pending',
+            //     ]);
+
+            //     // Eliminar solicitud previa
+            //     $parentRequest->delete();
+
+            // }
 
             $data['message'] = 'CANINE inserted successfully';
             $data['status'] = 200;

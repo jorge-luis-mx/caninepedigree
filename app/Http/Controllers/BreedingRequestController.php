@@ -250,15 +250,7 @@ class BreedingRequestController extends Controller
                 
                 if (empty($validatedData['dog_id'])) {
                
-                    $data = [
-                        'dogName'=>$femaleDog->name,
-                        'message'=>$validatedData['dogDetails'],
-                        'subject'=>'You have a new breeding request!',
-                        'view'=>'dog_invitation_esc_three',
-                        'url'=>$baseUrl,
-                    ];
-
-                    $this->sendEmail($data,$validatedData);
+                    $this->sendEmail($validatedData,$femaleDog,$token);
                     
                     $parentRequest = $this->createParentRequest($femaleDog,$sexDog,$validatedData,$token);
 
@@ -326,16 +318,29 @@ class BreedingRequestController extends Controller
 
 
 
-    public function sendEmail($data,$validatedData){
+    public function sendEmail($validatedData,$dog,$token){
 
-        $array = [
-                'from'=>'canine@aquacaribbeantravel.com',
-                'subject' => $data['subject'],
-                'view'=>$data['view'],
-                'data'=>$data,
+        // Configure email data
+        $emailData = [
+            'from' => config('mail.from.address', 'info@devscun.com'),
+            'from_name' => config('mail.from.name', 'Canine'),
+            'subject' => 'You have a new breeding request!',
+            'url' =>null,
+            'dog' => $dog,
+            'description' => $validatedData['dogDetails']
         ];
+        // Verificar si el correo ya tiene cuenta
+        $userExists = UserProfile::where('email', $validatedData['dog_email'])->exists();
 
-        Mail::to($validatedData['dog_email'])->send(new DogInvitationMail($array));
+
+        $url = $userExists
+            ? url(config('app.url') . "?invoice={$token}") 
+            : url(config('app.url') . "register?invoice={$token}");
+        $emailData['url'] = $url;
+        // Enviar correo
+        Mail::to($validatedData['dog_email'])->send(new DogInvitationMail($emailData));
+
+
     }
 
 

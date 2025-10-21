@@ -30,11 +30,18 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->route('dogs.create', ['token' => $request->input('token')]);
             }
 
+            if ($request->filled('invoice')) {
+                
+                // Redirigir directamente al formulario de registro del perro
+                return redirect()->route('dogs.create', ['invoice' => $request->input('invoice')]);
+            }
+
             // Si no hay token → ir al dashboard normal
             return redirect()->intended(RouteServiceProvider::HOME);
         }
+
         
-        return view('auth.login');
+        return view('auth.login',['token' => $request->input('token'),'invoice' => $request->input('invoice')]);
     }
 
     /**
@@ -61,6 +68,11 @@ class AuthenticatedSessionController extends Controller
         if ($request->filled('token')) {
             session(['pending_invite_token' => $request->input('token')]);
             return redirect()->route('dogs.create', ['token' => $request->input('token')]);
+        }
+
+        if ($request->filled('invoice')) {
+            session(['pending_invite_invoice' => $request->input('invoice')]);
+            return redirect()->route('dogs.create', ['invoice' => $request->input('invoice')]);
         }
 
         return redirect()->intended(RouteServiceProvider::HOME);

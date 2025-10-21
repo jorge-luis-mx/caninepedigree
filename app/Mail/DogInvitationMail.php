@@ -22,6 +22,7 @@ class DogInvitationMail extends Mailable
      */
     public function __construct($array)
     {
+
         $this->datos = $array;
 
     }
@@ -42,8 +43,9 @@ class DogInvitationMail extends Mailable
      */
     public function content(): Content
     {
+
         return new Content(
-            view: 'emails.'.$this->datos['view'],
+            view: 'emails.dog_invitation_esc_three',
             with: ['datos' => $this->datos]
         );
     }

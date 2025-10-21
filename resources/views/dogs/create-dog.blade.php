@@ -16,6 +16,10 @@
                         <input type="hidden" name="pending_token" value="{{ $pending_token }}">
                      @endif
 
+                     @if(!empty($pending_invoice))
+                        <input type="hidden" name="pending_invoice" value="{{ $pending_invoice }}">
+                     @endif
+
                      <div class="columns is-multiline">
                         <div class="column">
                            <div class="field mb-4">

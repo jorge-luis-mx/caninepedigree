@@ -70,7 +70,7 @@
                                     </div>
                                 </div>
                                 <!-- Contenedor para mostrar los resultados de la búsqueda -->
-                                <div id="dogResults" style="display: none;"></div>
+                                <div id="listNewbreeding" style="display: none;"></div>
 
                                 <div class="is-hidden sireEmail">
                                     <!-- Email sire dog -->

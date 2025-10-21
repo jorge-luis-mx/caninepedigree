@@ -21,6 +21,7 @@ use App\Models\User;
 use App\Models\UserProfile;
 use App\Models\Dog;
 use App\Models\PendingDogRelation;
+use App\Models\DogParentRequest;
 
 use Illuminate\Support\Str;
 
@@ -75,7 +76,28 @@ class RegisteredUserController extends Controller
             // session(['pending_invite_token' => $token]);
         }
 
+        // Verificar si viene token en la URL
+        if ($request->filled('invoice')) {
+            $token = $request->input('invoice');
 
+            // Buscar registro pendiente
+            $parentRequest = DogParentRequest::where('token', $token)->first();
+
+            if (!$parentRequest) {
+                abort(404, 'Invalid or expired registration token.');
+            }
+            
+            // Si hay sesión iniciada, usar el email del usuario actual
+            if (auth()->check()) {
+                $user = auth()->user();
+                $profile = $user->userprofile;
+                
+                if (strtolower($profile->email) !== strtolower($parentRequest->email)) {
+                    abort(403, 'You are not authorized to register this dog.');
+                }
+            }
+
+        }
 
         $role = $validated['role'] ?? null;
         $text = preg_split('/\s+/', $request->last_name);
@@ -105,9 +127,6 @@ class RegisteredUserController extends Controller
             try {
                 // Si usas Crypt
                 $saleId = Crypt::decrypt($request->dog_sale);
-
-                // Si usas md5, usa:
-                // $sale = DogSale::whereRaw('MD5(sale_id) = ?', [$request->dog_sale])->first();
 
                 $sale = DogSale::find($saleId);
               
@@ -140,9 +159,17 @@ class RegisteredUserController extends Controller
         if ($request->filled('token')) {
             // Guardar el token en la sesión para usarlo después si es necesario
             session(['pending_invite_token' => $request->input('token')]);
-           
             // Redirigir al formulario de registro del perro con el token
             return redirect()->route('dogs.create', ['token' => $request->input('token')]);
+        }
+
+
+        // Si el registro viene con invoice
+        if ($request->filled('invoice')) {
+            // Guardar el invoice en la sesión para usarlo después si es necesario
+            session(['pending_invite_invoice' => $request->input('invoice')]);
+            // Redirigir al formulario de registro del perro con el invoice
+            return redirect()->route('dogs.create', ['invoice' => $request->input('invoice')]);
         }
         
         // Si no hay invitación pendiente, ir al dashboard (HOME)
