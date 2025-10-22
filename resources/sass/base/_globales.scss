@@ -253,3 +253,29 @@ textarea.input-error {
   color: #fff;
 }
 
+
+.buttons-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  box-shadow: none;
+  overflow-x: auto; /* Scroll horizontal */
+  padding-bottom: 8px;
+}
+
+.buttons-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.buttons-container::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+@media (max-width: 1024px) {
+  .buttons-container {
+    justify-content: flex-start;
+  }
+}
+
