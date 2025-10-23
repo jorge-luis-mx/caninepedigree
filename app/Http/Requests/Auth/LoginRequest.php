@@ -164,6 +164,19 @@ class LoginRequest extends FormRequest
         
         $user = Auth::user();
 
+        $pendingCount = \App\Models\BreedingRequest::where('owner_id', $user->userprofile->profile_id)
+            ->where('status', 'pending')
+            ->count();
+
+        if ($pendingCount > 0) {
+            $url = route('breeding.receibed');
+            $message = "You have <strong>{$pendingCount}</strong> pending breeding request" . ($pendingCount > 1 ? 's' : '') . 
+                        " waiting for your response. <a href='{$url}' class='has-text-link'>View requests</a>";
+
+            session()->flash('warning', $message);
+        }
+
+
         if (!$user->userprofile || (int) $user->userprofile->status !== 1) {
             Auth::logout();
             throw ValidationException::withMessages([

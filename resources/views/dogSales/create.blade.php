@@ -28,7 +28,7 @@
                   <div class="select is-fullwidth">
                      <select name="payment_method" required>
                         <option value="cash">Cash</option>
-                        <option value="online">Online</option>
+                        <!-- <option value="online">Online</option> -->
                         <option value="transfer">Bank Transfer</option>
                      </select>
                   </div>

@@ -1,4 +1,18 @@
 <x-app-layout>
+@if(session('warning'))
+    <div class="notification is-warning has-text-dark is-light">
+        {!! session('warning') !!}
+    </div>
+@elseif($pendingRequests->count() > 0)
+    <div class="notification is-warning has-text-dark is-light">
+        🔔 You have <strong>{{ $pendingRequests->count() }}</strong> pending breeding request{{ $pendingRequests->count() > 1 ? 's' : '' }} waiting for your response.
+        <a href="{{ route('breeding.receibed') }}" class="has-text-link has-text-weight-bold">View requests</a>
+    </div>
+@endif
+
+
+
+
 
     <h1 class="is-size-4">{{__('messages.main.dogs.title')}}</h1>
 

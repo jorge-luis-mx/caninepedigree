@@ -91,8 +91,11 @@ class DogController extends Controller
                 )
             ->groupBy('dogs.dog_id', 'dogs.name', 'dogs.breed', 'dogs.color', 'dogs.sex', 'dogs.status')
             ->get();
-
-        return view('dogs.list-dogs',compact('dogs','role','permissions'));
+        $pendingRequests = BreedingRequest::where('owner_id', auth()->id())
+            ->where('status', 'pending')
+            ->with(['femaleDog', 'maleDog']) // si tienes relaciones definidas
+            ->get();
+        return view('dogs.list-dogs',compact('dogs','role','permissions','pendingRequests'));
     }
 
 
