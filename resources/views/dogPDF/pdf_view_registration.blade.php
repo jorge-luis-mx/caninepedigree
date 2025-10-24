@@ -113,7 +113,9 @@
     <table class="info-table">
       <tr>
         <td><strong>Name:</strong></td>
-        <td>{{$dog['name']}}</td>
+        <td>
+          {{ $includeFlag && !empty($dog['owner']['kennel_name']) ? $dog['owner']['kennel_name'] : $dog['name'] }}
+        </td>
         <td><strong>Breed:</strong></td>
         <td>{{$dog['breed']}}</td>
       </tr>

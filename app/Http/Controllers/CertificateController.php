@@ -22,7 +22,7 @@ class CertificateController extends Controller
         //
     }
 
-    public function pdf($id,$type)
+    public function pdf($id,$type, Request $request)
     {
  
         $dog = Dog::whereRaw('MD5(dog_id) = ?', [$id])
@@ -37,16 +37,24 @@ class CertificateController extends Controller
             ])
         ->firstOrFail();
     
+        $user = auth()->user();
+        $profile = $user->userprofile;
+
+        if ($dog->current_owner_id !== $profile->profile_id) {
+            abort(403, 'Unauthorized access.');
+        }
+
         $pedigree = $this->findPedigree($dog);
     
         if ($type =='pedigree') {
-
-            $pdf = PDF::loadView('dogPDF.pdf_view_pedigree',  compact('pedigree')); 
+            $includeFlag = $request->query('flag', 0);
+            $pdf = PDF::loadView('dogPDF.pdf_view_pedigree',  compact('pedigree','includeFlag')); 
             $pdf->setPaper('a4', 'portrait');
             
         }else{
-    
-            $pdf = PDF::loadView('dogPDF.pdf_view_registration',  compact('pedigree')); 
+
+            $includeFlag = $request->query('flag', 0);
+            $pdf = PDF::loadView('dogPDF.pdf_view_registration',  compact('pedigree','includeFlag')); 
             $pdf->setPaper('a4', 'landscape');
         }
     

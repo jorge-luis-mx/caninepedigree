@@ -52,7 +52,8 @@
 
     .table td {
       padding: 8px;
-      padding-left: 101px;
+      padding-left: 20px;
+      text-decoration: underline;
     }
 
     .table a {
@@ -147,7 +148,7 @@
     <table class="info-table">
       <tr>
         <td><strong>Name:</strong></td>
-        <td>{{$dog['name']}}</td>
+        <td> {{ $includeFlag && !empty($dog['owner']['kennel_name']) ? $dog['owner']['kennel_name'] : $dog['name'] }}</td>
         <td><strong>Breed:</strong></td>
         <td>{{$dog['breed']}}</td>
       </tr>

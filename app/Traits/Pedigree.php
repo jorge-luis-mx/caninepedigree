@@ -37,6 +37,7 @@ trait Pedigree
                     'id' => $dog->currentOwner->profile_id,  // Asumimos que currentOwner es la relación al modelo UserProfile
                     'name' => $dog->currentOwner->first_name,  // Nombre del propietario
                     'last_name'=>$dog->currentOwner->last_name,
+                    'kennel_name'=>$dog->currentOwner->kennel_name,
                     'middle_name'=>$dog->currentOwner->middle_name,
                     'phone'=>$dog->currentOwner->phone,
                     'address'=>$dog->currentOwner->address,

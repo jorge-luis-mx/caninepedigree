@@ -32,11 +32,11 @@
                 </div>
 
                 <!-- First Name -->
-                <!-- <div class="mb-1">
-                    <x-input-label for="first_name" :value="__('Middle Name')" />
-                    <x-text-input id="first_name" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" type="text" name="first_name" :value="old('first_name')" required autofocus autocomplete="given-name" />
-                    <x-input-error :messages="$errors->get('first_name')" class="mt-2" />
-                </div> -->
+                <div class="mb-1">
+                    <x-input-label for="kennel_name" :value="__('Kennel Name')" />
+                    <x-text-input id="kennel_name" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" type="text" name="kennel_name" :value="old('kennel_name')" autofocus/>
+                    <x-input-error :messages="$errors->get('kennel_name')" class="mt-2" />
+                </div>
 
                 <!-- Email Address -->
                 <div class="mb-1">

@@ -47,6 +47,12 @@ class RegisteredUserController extends Controller
             'role' => ['nullable', 'string', 'in:admin', 'regex:/^\S+$/'],
             'name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
+            'kennel_name' => [
+                'nullable',
+                'string',
+                'max:255',
+                'regex:/^[A-Za-z0-9\s]+$/u'  // Solo letras, números y espacios
+            ],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:user_profiles,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'dog_sale' => ['nullable', 'string'], // 🆕 agregar este campo opcional
@@ -106,6 +112,7 @@ class RegisteredUserController extends Controller
         $userProfile = UserProfile::create([
             'first_name' => $request->name,
             'last_name' => count($text) > 0 ? $text[0] : null,
+            'kennel_name'=>$request->kennel_name,
             'email' => $request->email,
             'status' => 1,
         ]);
