@@ -17,7 +17,7 @@ class Dog extends Model
     public $incrementing = true; 
     protected $casts = [
         'birthdate' => 'datetime',  // Esto convierte op_date a un objeto Carbon
-
+        'current_owner_id' => 'integer',
     ];
     protected $fillable = [
         'reg_no',

@@ -1,6 +1,16 @@
 <x-app-layout>
    <div class="container">
-      
+@if ($errors->any())
+    <div class="notification is-danger">
+        <strong>There were problems with your upload:</strong>
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
       <h1 class="is-size-4">Upload Photos for the Breeding of {{ $breeding->femaleDog->name }} and {{ $breeding->maleDog->name }}</h1>
       <form id="photo-upload-form" action="{{ route('breeding.storePhotos', $breeding->request_id) }}" method="POST" enctype="multipart/form-data">
          @csrf
@@ -98,8 +108,16 @@
          updateFileList();   // Asegura que input.files esté sincronizado
 
          if (filesArray.length === 0) {
-            alert('Debes seleccionar al menos una imagen.');
-            return; // No hace submit
+            alert('You must select at least one image.');
+            return;
+         }
+
+         // Check size limit (2MB per file)
+         for (let file of filesArray) {
+            if (file.size > 2 * 1024 * 1024) {
+                  alert(`The file "${file.name}" exceeds 2 MB.`);
+                  return;
+            }
          }
 
          this.submit(); // Si hay al menos una imagen, ahora sí envía el formulario

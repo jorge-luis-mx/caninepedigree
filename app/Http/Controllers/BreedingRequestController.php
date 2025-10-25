@@ -439,10 +439,21 @@ class BreedingRequestController extends Controller
         $breeding = BreedingRequest::findOrFail($breedingId);
 
         // Validar que se envíen fotos (array) y cada una sea imagen < 2MB
+        // $request->validate([
+        //     'photos' => 'required|array',
+        //     'photos.*' => 'image|max:2048',
+        // ]);
+
         $request->validate([
             'photos' => 'required|array',
             'photos.*' => 'image|max:2048',
+        ], [
+            'photos.required' => 'You must select at least one image.',
+            'photos.array' => 'The photos must be sent in a valid format.',
+            'photos.*.image' => 'Each file must be a valid image (JPG, PNG, etc.).',
+            'photos.*.max' => 'Each image must not exceed 2 MB.',
         ]);
+
 
         // Verificar si ya existe foto principal para esta cruza
         $hasMain = BreedingPhoto::where('breeding_request_id', $breedingId)
