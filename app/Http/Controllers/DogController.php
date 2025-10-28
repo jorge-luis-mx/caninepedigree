@@ -607,11 +607,23 @@ class DogController extends Controller
             'dam.dam.sire', 'dam.dam.dam',
         ])
         ->firstOrFail();
+        
+        // Todas las cruzas completadas (como macho o hembra)
+        $completedBreedings = BreedingRequest::with(['photos', 'maleDog', 'femaleDog'])
+            ->where(function ($q) use ($dog) {
+                $q->where('male_dog_id', $dog->dog_id)
+                ->orWhere('female_dog_id', $dog->dog_id);
+            })
+            ->where('status', 'completed')
+            ->orderBy('created_at', 'desc') // opcional, para mostrar primero las más recientes
+            ->get();
+
         $pedigree = $this->findPedigree($dog);
         $dog = $pedigree['dog'];
 
 
-        return view('dogs/show-dog',compact('dog'));
+
+        return view('dogs/show-dog',compact('dog','completedBreedings'));
     }
 
     public function edit(string $id)

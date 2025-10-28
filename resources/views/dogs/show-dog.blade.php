@@ -47,6 +47,37 @@
       No dog information available.
    </div>
    @endif
+   
+   @if($completedBreedings->count())
+      <h3 class="title is-5 mt-4">Cruzamientos completados</h3>
+      @foreach($completedBreedings as $breeding)
+         <div class="box mb-3">
+
+               <ul class="is-flex is-listless is-gap-4 align-items-center">
+                  <li>
+                     @if($breeding->photos->count())
+                        <img src="{{ asset($breeding->photos->first()->photo_url) }}" 
+                              alt="Foto de la cruza" 
+                              style="max-width:250px; border-radius:10px;">
+                     @else
+                        <p class="has-text-grey">Sin foto registrada.</p>
+                     @endif
+                  </li>
+                  <li>
+                     @if($breeding->male_dog_id === $dog['dog_id'])
+                        <a href="/pedigrees/{{$dog['id']}}"><strong>Con la perra:</strong> {{ $breeding->femaleDog->name ?? 'Desconocida' }}</a>
+                        
+                     @else
+                        <p><strong>Con el perro:</strong> {{ $breeding->maleDog->name ?? 'Desconocido' }}</p>
+                     @endif
+                  </li>
+                  <li>
+                     <p><strong>Fecha de la cruza:</strong> {{ $breeding->created_at->format('d/m/Y') }}</p>
+                  </li>
+               </ul>
+         </div>
+      @endforeach
+   @endif
 
 <script>
 function generateCertificateFromData(el) {

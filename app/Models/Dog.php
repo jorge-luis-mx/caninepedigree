@@ -65,4 +65,22 @@ class Dog extends Model
         return $this->belongsToMany(Payment::class, 'dog_payments', 'dog_id', 'payment_id');
     }
 
+
+    // Cruzamientos donde el perro fue el macho
+    public function breedingsAsMale()
+    {
+        return $this->hasMany(BreedingRequest::class, 'male_dog_id');
+    }
+
+    // Cruzamientos donde el perro fue la hembra
+    public function breedingsAsFemale()
+    {
+        return $this->hasMany(BreedingRequest::class, 'female_dog_id');
+    }
+
+    // Si este perro es un cachorro, de qué cruza proviene
+    public function breedingRequest()
+    {
+        return $this->belongsTo(BreedingRequest::class, 'breeding_request_id');
+    }
 }

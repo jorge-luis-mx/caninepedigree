@@ -22,6 +22,7 @@ trait Pedigree
 
         return [
             'dog' => [
+                'dog_id'=>$dog->dog_id,
                 'id' => md5($dog->dog_id),
                 'number'=>$dog->reg_no,
                 'name' => $dog->name,

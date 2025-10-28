@@ -71,4 +71,9 @@ class BreedingRequest extends Model
     {
         return $this->hasMany(BreedingPhoto::class,'breeding_request_id','request_id');
     }
+
+    public function puppies()
+    {
+        return $this->hasMany(Dog::class, 'breeding_request_id', 'request_id');
+    }
 }

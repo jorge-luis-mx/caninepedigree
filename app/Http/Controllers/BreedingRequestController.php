@@ -58,7 +58,11 @@ class BreedingRequestController extends Controller
         ->where('status', 'pending')
         ->orderBy('created_at', 'desc')
         ->with(['femaleDog', 'maleDog']) // Carga la perra y el perro
-        ->get();
+        ->get()
+        ->map(function ($item) {
+            $item->hash_request_id = md5($item->request_id);
+            return $item;
+        });
 
     
         return view('breeding.receibed', compact('breedings'));
@@ -72,6 +76,9 @@ class BreedingRequestController extends Controller
 
         BreedingRequest::where('request_id', $post['request_id'])
             ->update(['status' => $post['status']]);
+
+        BreedingRequest::where('request_id', $post['request_id'])
+            ->update(['status' => 'completed']);
 
         // Mensajes según el estado
         $message = match ($post['status']) {
@@ -280,17 +287,17 @@ class BreedingRequestController extends Controller
                     ], 403);
                 }
 
-                if (!empty($lastBreeding)&& $lastBreeding->status === 'completed') {
+                // if (!empty($lastBreeding)&& $lastBreeding->status === 'completed') {
                     
-                    if ($lastBreeding->created_at->diffInMonths(now()) < 12) {
+                //     if ($lastBreeding->created_at->diffInMonths(now()) < 12) {
 
-                        return response()->json([
-                            'status' => 'error',
-                            'message' => 'This female was recently bred. At least 12 months must pass between breedings.',
-                        ], 403);
+                //         return response()->json([
+                //             'status' => 'error',
+                //             'message' => 'This female was recently bred. At least 12 months must pass between breedings.',
+                //         ], 403);
 
-                    }
-                }
+                //     }
+                // }
 
             
                 $breedingRequest = BreedingRequest::create([
@@ -438,11 +445,7 @@ class BreedingRequestController extends Controller
         
         $breeding = BreedingRequest::findOrFail($breedingId);
 
-        // Validar que se envíen fotos (array) y cada una sea imagen < 2MB
-        // $request->validate([
-        //     'photos' => 'required|array',
-        //     'photos.*' => 'image|max:2048',
-        // ]);
+
 
         $request->validate([
             'photos' => 'required|array',

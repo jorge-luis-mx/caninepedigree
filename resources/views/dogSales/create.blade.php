@@ -11,25 +11,25 @@
             <div class="field">
                <label class="label">Email of new owner</label>
                <div class="control">
-                  <input class="input" type="email" name="buyer_email" placeholder="e.g. buyer@example.com" required>
+                  <input class="input" type="email" name="buyer_email" placeholder="buyer@example.com" required>
                </div>
             </div>
 
-            <div class="field">
+            <div class="field is-hidden">
                <label class="label">Price (optional)</label>
                <div class="control">
-                  <input class="input" type="number" name="price" step="0.01" placeholder="0.00" min="0">
+                  <input class="input" type="hidden" name="price" step="0.01" placeholder="0.00" min="0">
                </div>
             </div>
 
-            <div class="field">
+            <div class="field is-hidden">
                <label class="label">Payment method</label>
                <div class="control">
                   <div class="select is-fullwidth">
                      <select name="payment_method" required>
                         <option value="cash">Cash</option>
                         <!-- <option value="online">Online</option> -->
-                        <option value="transfer">Bank Transfer</option>
+                        <option value="transfer" selected>Bank Transfer</option>
                      </select>
                   </div>
                </div>
@@ -45,7 +45,7 @@
                         <circle cx="30" cy="6" r="5" fill="#fff" class="clr-i-outline--badged clr-i-outline-path-4--badged clr-i-badge" />
                         <path fill="none" d="M0 0h36v36H0z" />
                      </svg>
-                     <span class="ml-1">Confirm sale</span>
+                     <span class="ml-1">Transfer Registration</span>
                   </button>
                </div>
             </div>
