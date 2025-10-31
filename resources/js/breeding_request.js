@@ -16,7 +16,12 @@ export  function breedingRequest() {
             fetch(`/dogs/find/${regNo}/${type}`)
                 .then(res => res.json())
                 .then(data => {
-                    
+                    // Mostrar el botón correspondiente (por ejemplo .damButtonWrapper o .sireButtonWrapper)
+                    const buttonWrapper = document.querySelector(`.${type}ButtonWrapper`);
+                    if (buttonWrapper) {
+                        buttonWrapper.classList.remove('is-hidden');
+                    }
+
                     if (data.status === 200) {
                         showResults(data.data, form, type);
                     }else{
@@ -262,6 +267,28 @@ export  function breedingRequest() {
     }
     
 
+    document.querySelectorAll('.toggle-btn_').forEach(button => {
+        button.addEventListener('click', () => {
+            const type = button.dataset.type; // "sire" o "dam"
 
+            // Mostrar el formulario (por ejemplo .sireMail o .damMail)
+            const mailForm = document.querySelector(`.${type}Email`);
+            mailForm.classList.remove('is-hidden');
+
+            // Ocultar el buscador (por ejemplo .search-sire o .search-dam)
+            const searchSection = document.querySelector(`.search${capitalize(type)}`);
+            searchSection.classList.add('is-hidden');
+
+            // // Limpiar los resultados
+            const container = document.getElementById("listNewbreeding");
+            container.innerHTML = '';
+
+        });
+    });
+
+
+    function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+    }
    
 }

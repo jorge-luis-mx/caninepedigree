@@ -3,6 +3,13 @@
    <!-- Search sire dog -->
    <div class="field searchSire">
       <label class="label" for="sire">{{__('messages.main.formDog.sire')}}</label>
+      <div class="is-flex is-justify-content-flex-end">
+         <div class="sireButtonWrapper is-hidden">
+            <button type="button" class="button fancy-btn toggle-btn" data-type="sire">
+               <span>➕ Not In PB (Sire)</span>
+            </button>
+         </div>
+      </div>
       <div class="search-sire is-flex is-align-items-center">
          <div class="control has-icons-left"  style="width: 100%;">
             <input

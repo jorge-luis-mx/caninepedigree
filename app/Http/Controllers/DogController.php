@@ -342,7 +342,7 @@ class DogController extends Controller
                 'birthdate' => $validatedData['birthdate'],
                 'sire_id' => $sire_id,
                 'dam_id' => $dam_id,
-                'breeder_id' => $owner,
+                'breeder_id' => $ownerProfile->profile_id,
                 'current_owner_id' => $owner,
                 'created_by_user_id'=>$user->user_id,
                 'status'=> in_array($role->name, $dogStatus ) ? 'exempt':'pending'

@@ -15,6 +15,11 @@ export  function dogs() {
                 .then(res => res.json())
                 .then(data => {
                     
+                    // Mostrar el botón correspondiente (por ejemplo .damButtonWrapper o .sireButtonWrapper)
+                    const buttonWrapper = document.querySelector(`.${type}ButtonWrapper`);
+                    if (buttonWrapper) {
+                        buttonWrapper.classList.remove('is-hidden');
+                    }
                     
                     if (data.status === 200) {
                         type === 'sire' ? showResults(data.data, form, type) : showResults(data.data, form, type);
@@ -258,5 +263,30 @@ document.addEventListener("input", function(e) {
         }
     }
 });
+
+document.querySelectorAll('.toggle-btn').forEach(button => {
+  button.addEventListener('click', () => {
+    const type = button.dataset.type; // "sire" o "dam"
+
+    // Mostrar el formulario (por ejemplo .sireMail o .damMail)
+    const mailForm = document.querySelector(`.${type}Mail`);
+    mailForm.classList.remove('is-hidden');
+
+    // Ocultar el buscador (por ejemplo .search-sire o .search-dam)
+    const searchSection = document.querySelector(`.search${capitalize(type)}`);
+    searchSection.classList.add('is-hidden');
+
+    // Limpiar los resultados
+    const container = document.getElementById(`${type}Results`);
+    container.innerHTML = '';
+    // document.querySelector(`input[name="${type}"]`).value = '';
+  });
+});
+
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 
 }

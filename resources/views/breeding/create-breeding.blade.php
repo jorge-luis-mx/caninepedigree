@@ -44,6 +44,13 @@
                             <div class="column {{ isset($dogs)?'':'is-full'}} ">
                                 <div class="field searchSire">
                                     <label class="label" for="sire">Enter the IDDR number or the dog's name (sire)</label>
+                                    <div class="is-flex is-justify-content-flex-end">
+                                        <div class="sireButtonWrapper is-hidden">
+                                            <button type="button" class="button fancy-btn toggle-btn_" data-type="sire">
+                                            <span>➕ Not In PB (Sire)</span>
+                                            </button>
+                                        </div>
+                                    </div>
                                     <div class="is-flex align-items-center">
                                         <div class="control has-icons-left"  style="width: 100%;">
                                             <input

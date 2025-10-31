@@ -2,6 +2,13 @@
    <!-- Serch dam dog -->
    <div class="field searchDam">
       <label class="label" for="dam">{{__('messages.main.formDog.dam')}}</label>
+      <div class="is-flex is-justify-content-flex-end mt-2">
+         <div class="is-hidden damButtonWrapper">
+            <button type="button" class="button fancy-btn toggle-btn" data-type="dam">
+               <span>➕ Not In PB (Dam)</span>
+            </button>
+         </div>
+      </div>
       <div class="search-dam is-flex is-align-items-center">
          <div class="control has-icons-left"  style="width: 100%;">
             <input

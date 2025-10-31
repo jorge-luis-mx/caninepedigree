@@ -49,32 +49,50 @@
    @endif
    
    @if($completedBreedings->count())
-      <h3 class="title is-5 mt-4">Cruzamientos completados</h3>
+      <h3 class="title is-5 mt-4">Completed Breedings</h3>
       @foreach($completedBreedings as $breeding)
-         <div class="box mb-3">
-
-               <ul class="is-flex is-listless is-gap-4 align-items-center">
-                  <li>
-                     @if($breeding->photos->count())
+         <div class="box mb-4" style="border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.08);">
+            <ul class="is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap" style="list-style: none; padding: 0; margin: 0;">
+               <li>
+                  @if($breeding->photos->count())
+                     <figure class="image is-4by3" style="max-width: 250px;">
                         <img src="{{ asset($breeding->photos->first()->photo_url) }}" 
-                              alt="Foto de la cruza" 
-                              style="max-width:250px; border-radius:10px;">
-                     @else
-                        <p class="has-text-grey">Sin foto registrada.</p>
-                     @endif
-                  </li>
-                  <li>
-                     @if($breeding->male_dog_id === $dog['dog_id'])
-                        <a href="/pedigrees/{{$dog['id']}}"><strong>Con la perra:</strong> {{ $breeding->femaleDog->name ?? 'Desconocida' }}</a>
-                        
-                     @else
-                        <p><strong>Con el perro:</strong> {{ $breeding->maleDog->name ?? 'Desconocido' }}</p>
-                     @endif
-                  </li>
-                  <li>
-                     <p><strong>Fecha de la cruza:</strong> {{ $breeding->created_at->format('d/m/Y') }}</p>
-                  </li>
-               </ul>
+                           alt="Breeding photo" 
+                           style="border-radius: 10px; object-fit: cover; width: 100%; height: 100%;">
+                     </figure>
+                  @else
+                     <p class="has-text-grey-light is-italic">No photo available</p>
+                  @endif
+               </li>
+
+               <li>
+                  @if($breeding->male_dog_id === $dog['dog_id'])
+                     <p class="mb-1 is-flex is-flex-direction-column">
+                        <strong>With female:</strong>
+                        <a href="/pedigrees/{{ $breeding->femaleDog->dog_id ?? '' }}" 
+                           class="has-text-link has-text-weight-semibold">
+                           {{ $breeding->femaleDog->name ?? 'Unknown' }}
+                        </a>
+                     </p>
+                  @else
+                     <p class="mb-1 is-flex is-flex-direction-column">
+                        <strong>With male:</strong>
+                        <span class="has-text-dark">
+                           {{ $breeding->maleDog->name ?? 'Unknown' }}
+                        </span>
+                     </p>
+                  @endif
+               </li>
+
+               <li>
+                  <p class="mb-0 is-flex is-flex-direction-column">
+                     <strong>Breeding date:</strong>
+                     <span class="has-text-grey-dark">
+                        {{ $breeding->created_at->format('d/m/Y') }}
+                     </span>
+                  </p>
+               </li>
+            </ul>
          </div>
       @endforeach
    @endif

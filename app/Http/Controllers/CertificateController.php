@@ -40,6 +40,9 @@ class CertificateController extends Controller
         $user = auth()->user();
         $profile = $user->userprofile;
 
+        $creatorProfile = $dog->creator?->userprofile;
+        $creatorKennelName = $creatorProfile->kennel_name;
+
         if ($dog->current_owner_id !== $profile->profile_id) {
             abort(403, 'Unauthorized access.');
         }
@@ -47,14 +50,15 @@ class CertificateController extends Controller
         $pedigree = $this->findPedigree($dog);
     
         if ($type =='pedigree') {
+
             $includeFlag = $request->query('flag', 0);
-            $pdf = PDF::loadView('dogPDF.pdf_view_pedigree',  compact('pedigree','includeFlag')); 
+            $pdf = PDF::loadView('dogPDF.pdf_view_pedigree',  compact('pedigree','includeFlag','creatorKennelName')); 
             $pdf->setPaper('a4', 'portrait');
             
         }else{
 
             $includeFlag = $request->query('flag', 0);
-            $pdf = PDF::loadView('dogPDF.pdf_view_registration',  compact('pedigree','includeFlag')); 
+            $pdf = PDF::loadView('dogPDF.pdf_view_registration',  compact('pedigree','includeFlag','creatorKennelName')); 
             $pdf->setPaper('a4', 'landscape');
         }
     

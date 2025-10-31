@@ -83,4 +83,9 @@ class Dog extends Model
     {
         return $this->belongsTo(BreedingRequest::class, 'breeding_request_id');
     }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by_user_id');
+    }
 }
