@@ -56,7 +56,15 @@
                 <td>${breeding.male_dog.name}</td>
                 <td>${breeding.female_dog.name}</td>
                 <td>
-                  <button class="button has-text-white is-success is-small" onclick="receibed(${breeding.request_id},'approved','${breeding.hash_request_id}')">Aprobar</button>
+                <button class="button has-text-white is-success is-small" 
+                    onclick="receibed(
+                        ${breeding.request_id},
+                        'approved',
+                        '${breeding.hash_request_id}',
+                        '${breeding.hash_maleDog_id}'
+                    )">
+                    Aprobar
+                </button>
                 </td>
             `;
             // <button class="button has-text-white is-danger is-small" onclick="receibed(${breeding.request_id},'rejected')">Rechazar</button>
@@ -85,7 +93,7 @@
         populateTable(filtered);
     };
 
-    window.receibed = function(requestId, receibedStatus,hash_request_id) {
+    window.receibed = function(requestId, receibedStatus,hash_request_id,dog_id) {
 
         if (confirm('¿Deseas completar esta cruza?')) {
 
@@ -119,7 +127,9 @@
                             timerProgressBar: true
                         }).then(() => {
                              
-                            window.location.href = `/breeding/${hash_request_id}/upload-photos`;
+                            //window.location.href = `/breeding/${hash_request_id}/upload-photos`;
+                            window.location.href = `/dogs/show/${dog_id}`;
+                            
                         });
 
                         breedings = breedings.filter(b => b.request_id !== requestId);

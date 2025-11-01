@@ -52,19 +52,23 @@ class BreedingRequestController extends Controller
         $user = auth()->user();
         $profile = $user->userprofile;
 
-        $breedings = BreedingRequest::whereHas('maleDog', function($query) use ($profile) {
-            $query->where('owner_id', $profile->profile_id);
-        })
-        ->where('status', 'pending')
-        ->orderBy('created_at', 'desc')
-        ->with(['femaleDog', 'maleDog']) // Carga la perra y el perro
-        ->get()
-        ->map(function ($item) {
-            $item->hash_request_id = md5($item->request_id);
-            return $item;
-        });
+        $breedings = BreedingRequest::whereHas('maleDog', function($query) use ($profile) { 
+                $query->where('owner_id', $profile->profile_id);
+            })
+            ->where('status', 'pending')
+            ->orderBy('created_at', 'desc')
+            ->with(['femaleDog', 'maleDog']) // Carga la perra y el perro
+            ->get()
+            ->map(function ($item) {
+                $item->hash_request_id = md5($item->request_id);
 
-    
+                // Verificar que maleDog exista
+                $item->hash_maleDog_id = $item->maleDog ? md5($item->maleDog->dog_id) : null;
+
+                return $item;
+            });
+
+
         return view('breeding.receibed', compact('breedings'));
         
     }
@@ -151,13 +155,13 @@ class BreedingRequestController extends Controller
                 ->whereIn('status', ['pending', 'approved']) // Considerar también 'approved' como activo
                 ->exists();
             
-            if ($hasActiveRequests) {
+            // if ($hasActiveRequests) {
 
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'This female dog already has an active breeding request.',
-                ], 403);
-            }
+            //     return response()->json([
+            //         'status' => 'error',
+            //         'message' => 'This female dog already has an active breeding request.',
+            //     ], 403);
+            // }
 
             // Verificar si es la primera cría
             $isFirstBreeding = BreedingRequest::where('female_dog_id', $validatedData['my_dog_id'])
@@ -279,13 +283,13 @@ class BreedingRequestController extends Controller
                 ->first();
 
 
-                if (!empty($lastBreeding) && $lastBreeding->status === 'pending') {
+                // if (!empty($lastBreeding) && $lastBreeding->status === 'pending') {
 
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'This female already has a pending breeding request.',
-                    ], 403);
-                }
+                //     return response()->json([
+                //         'status' => 'error',
+                //         'message' => 'This female already has a pending breeding request.',
+                //     ], 403);
+                // }
 
                 // if (!empty($lastBreeding)&& $lastBreeding->status === 'completed') {
                     
