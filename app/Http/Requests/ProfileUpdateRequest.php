@@ -18,6 +18,8 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'first_name' => ['required', 'string', 'max:255','regex:/^[\pL\pN\s\-\.]+$/u'],
+            'kennel_name' => ['required', 'string', 'max:255','regex:/^[\pL\pN\s\-\.]+$/u'],
+            
             'last_name' => ['required', 'string', 'max:255','regex:/^[\pL\pN\s\-\.]+$/u'],
             'middle_name' => ['required', 'string', 'max:255','regex:/^[\pL\pN\s\-\.]+$/u'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 
@@ -38,6 +40,11 @@ class ProfileUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'kennel_name.required' => 'The provider name is required.',
+            'kennel_name.string' => 'The provider name must be a string.',
+            'kennel_name.max' => 'The provider name must not exceed 255 characters.',
+            'kennel_name.regex' => 'El nombre de la empresa solo puede contener letras, espacios y "&". No se permiten números ni caracteres especiales.',
+
             'fullname.required' => 'The provider name is required.',
             'fullname.string' => 'The provider name must be a string.',
             'fullname.max' => 'The provider name must not exceed 255 characters.',

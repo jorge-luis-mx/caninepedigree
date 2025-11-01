@@ -79,6 +79,7 @@ return [
             'middle_name'=>'Middle Name',
             'email'=>'Email',
             'phone'=>'Phone Number',
+            'kennel_name'=>'Kennel Name',
 
         ],
 

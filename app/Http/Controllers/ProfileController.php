@@ -57,7 +57,8 @@ class ProfileController extends Controller
                 'last_name' => $validatedData['last_name'] ?? $userProfile->last_name,
                 'middle_name' => $validatedData['middle_name'] ?? $userProfile->middle_name,
                 'email' => $validatedData['email'] ?? $userProfile->email,
-                'phone' => $validatedData['phone'] ?? $userProfile->phone
+                'phone' => $validatedData['phone'] ?? $userProfile->phone,
+                'kennel_name' => $validatedData['kennel_name'] ?? $userProfile->kennel_name
             ]);
     
             // Guardar los cambios en la base de datos

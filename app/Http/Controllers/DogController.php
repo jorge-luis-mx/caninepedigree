@@ -397,14 +397,11 @@ class DogController extends Controller
 
                     $this->createPendingRelation($emailData,'sire',$sireEmail);
 
-                    // Send email with error handling
-                    // Mail::to($sireEmail)->send(new SendEmailDogs($emailData));
-
-                    // Log successful sending
-                    // Log::info('Dog registration email sent successfully', [
-                    //     'recipient' => $sireEmail,
-                    //     'dog_id' => $dog->id ?? null
-                    // ]);
+                    //Log successful sending
+                    Log::info('Dog registration email sent successfully', [
+                        'recipient' => $sireEmail,
+                        'dog_id' => $dog->id ?? null
+                    ]);
 
                 } catch (Exception $e) {
                         // Log the error

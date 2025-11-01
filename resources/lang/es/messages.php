@@ -80,6 +80,7 @@ return [
             'middle_name'=>'Apellido Materno',
             'email'=>'Correo Electronico',
             'phone'=>'Numero de Telefono',
+            'kennel_name'=>'Nombre Criadero',
         ],
 
 

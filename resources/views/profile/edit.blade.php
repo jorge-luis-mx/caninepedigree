@@ -68,6 +68,21 @@
                         <div class="columns is-multiline">
 
                             <div class="column">
+                                <div class="field mb-4">
+                                    <label class="label" for="first_name">{{__('messages.main.profile.kennel_name')}}</label>
+                                    <div class="control">
+                                        <input
+                                            class="input"
+                                            type="text"
+                                            name="kennel_name"
+                                            value="{{$profileUser->kennel_name}}"
+                                            >
+                                    </div>
+                                    <x-input-error class="mt-2" :messages="$errors->get('name')" />
+                                </div>
+                            </div>
+
+                            <div class="column">
                                 <div class="field">
                                     <label class="label" for="email">{{__('messages.main.profile.email')}}</label>
                                     <div class="control">
