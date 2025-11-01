@@ -446,8 +446,11 @@ class BreedingRequestController extends Controller
     // Guardar las fotos
     public function storePhotos(Request $request, $breedingId)
     {
-        
-        $breeding = BreedingRequest::findOrFail($breedingId);
+        $breeding = BreedingRequest::whereRaw('request_id =?', $breedingId)
+        ->with(['femaleDog', 'maleDog'])
+        ->firstOrFail();
+        //$breeding = BreedingRequest::findOrFail($breedingId);
+        $femaleDog = $breeding->maleDog; 
 
 
 
@@ -468,17 +471,27 @@ class BreedingRequestController extends Controller
             ->exists();
 
         foreach ($request->file('photos') as $index => $photo) {
-            $path = $photo->store('breeding_photos', 'public');
-
+            //$path = $photo->store('breeding_photos', 'public');
+            
+            $filename = $photo->hashName(); // nombre único
+            $photo->move(base_path('breeding_photos'), $filename); // base_path apunta a /canine.devscun.com
             BreedingPhoto::create([
                 'breeding_request_id' => $breedingId,
-                'photo_url' => $path,
-                // Si no hay principal y esta es la PRIMERA foto (index=0), marcar como principal
+                'photo_url' => 'breeding_photos/' . $filename, // relativa a la raíz del subdominio
                 'is_main' => (!$hasMain && $index === 0) ? 1 : 0,
             ]);
+            // BreedingPhoto::create([
+            //     'breeding_request_id' => $breedingId,
+            //     'photo_url' => $path,
+            //     // Si no hay principal y esta es la PRIMERA foto (index=0), marcar como principal
+            //     'is_main' => (!$hasMain && $index === 0) ? 1 : 0,
+            // ]);
         }
+        return redirect()->route('dogs.show', ['dog' => md5($femaleDog->dog_id)])
+            ->with('success', 'Fotos subidas correctamente.');
 
-        return redirect()->route('breeding.listCompleted')->with('success', 'Fotos subidas correctamente.');
+
+        // return redirect()->route('breeding.listCompleted')->with('success', 'Fotos subidas correctamente.');
     }
 
     public function listSent(){

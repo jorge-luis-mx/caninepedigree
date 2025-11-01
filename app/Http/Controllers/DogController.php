@@ -557,7 +557,6 @@ class DogController extends Controller
     }
 
 
-
     public function generarCodigoRegistro() {
         $letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         $numeros = "0123456789";

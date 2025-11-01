@@ -94,69 +94,143 @@
     };
 
     window.receibed = function(requestId, receibedStatus,hash_request_id,dog_id) {
-
-        if (confirm('¿Deseas completar esta cruza?')) {
-
-            fetch(`/breeding/receibed/confirm`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    request_id: requestId,
-                    status: receibedStatus
+ 
+ 
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to complete this breeding?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, complete it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/breeding/receibed/confirm`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        request_id: requestId,
+                        status: receibedStatus
+                    })
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
+                .then(response => response.json())
+                .then(data => {
 
-                    if (data.success) {
+                        if (data.success) {
 
-                        Swal.fire({
-                            title: 'Breeding Approbed!',
-                            text: data.message,
-                            icon: 'success',
-                            confirmButtonText: 'Got it',
-                            confirmButtonColor: '#28a745',
-                            background: '#f0fff5',
-                            iconColor: '#28a745',
-                            allowOutsideClick: false,
-                            backdrop: true,
-                            timer: 3500,
-                            timerProgressBar: true
-                        }).then(() => {
+                            Swal.fire({
+                                title: 'Breeding Approbed!',
+                                text: data.message,
+                                icon: 'success',
+                                confirmButtonText: 'Got it',
+                                confirmButtonColor: '#28a745',
+                                background: '#f0fff5',
+                                iconColor: '#28a745',
+                                allowOutsideClick: false,
+                                backdrop: true,
+                                timer: 3500,
+                                timerProgressBar: true
+                            }).then(() => {
+                                
+                                window.location.href = `/breeding/${hash_request_id}/upload-photos`;
+                                
+                            });
+
+                            breedings = breedings.filter(b => b.request_id !== requestId);
+                            populateTable(breedings);
+
+                        } else {
+
+                            Swal.fire({
+                                title: 'Oops!',
+                                text: data.message || 'Something went wrong. Please try again.',
+                                icon: 'warning',
+                                confirmButtonText: 'Understood',
+                                confirmButtonColor: '#e6a100', // warm yellow tone
+                                background: '#fffbea',
+                                iconColor: '#e6a100',
+                                allowOutsideClick: false,
+                                backdrop: true,
+                                timer: 4000,
+                                timerProgressBar: true
+                            });
+
+                        }
+                })
+                .catch(error => {
+                    console.error('Error al enviar los datos:', error);
+                });
+            }
+        });
+
+
+        // if (confirm('¿Deseas completar esta cruza?')) {
+
+        //     fetch(`/breeding/receibed/confirm`, {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        //         },
+        //         body: JSON.stringify({
+        //             request_id: requestId,
+        //             status: receibedStatus
+        //         })
+        //     })
+        //     .then(response => response.json())
+        //     .then(data => {
+
+        //             if (data.success) {
+
+        //                 Swal.fire({
+        //                     title: 'Breeding Approbed!',
+        //                     text: data.message,
+        //                     icon: 'success',
+        //                     confirmButtonText: 'Got it',
+        //                     confirmButtonColor: '#28a745',
+        //                     background: '#f0fff5',
+        //                     iconColor: '#28a745',
+        //                     allowOutsideClick: false,
+        //                     backdrop: true,
+        //                     timer: 3500,
+        //                     timerProgressBar: true
+        //                 }).then(() => {
                              
-                            //window.location.href = `/breeding/${hash_request_id}/upload-photos`;
-                            window.location.href = `/dogs/show/${dog_id}`;
+        //                     window.location.href = `/breeding/${hash_request_id}/upload-photos`;
+        //                     //window.location.href = `/dogs/show/${dog_id}`;
                             
-                        });
+        //                 });
 
-                        breedings = breedings.filter(b => b.request_id !== requestId);
-                        populateTable(breedings);
+        //                 breedings = breedings.filter(b => b.request_id !== requestId);
+        //                 populateTable(breedings);
 
-                    } else {
+        //             } else {
 
-                        Swal.fire({
-                            title: 'Oops!',
-                            text: data.message || 'Something went wrong. Please try again.',
-                            icon: 'warning',
-                            confirmButtonText: 'Understood',
-                            confirmButtonColor: '#e6a100', // warm yellow tone
-                            background: '#fffbea',
-                            iconColor: '#e6a100',
-                            allowOutsideClick: false,
-                            backdrop: true,
-                            timer: 4000,
-                            timerProgressBar: true
-                        });
+        //                 Swal.fire({
+        //                     title: 'Oops!',
+        //                     text: data.message || 'Something went wrong. Please try again.',
+        //                     icon: 'warning',
+        //                     confirmButtonText: 'Understood',
+        //                     confirmButtonColor: '#e6a100', // warm yellow tone
+        //                     background: '#fffbea',
+        //                     iconColor: '#e6a100',
+        //                     allowOutsideClick: false,
+        //                     backdrop: true,
+        //                     timer: 4000,
+        //                     timerProgressBar: true
+        //                 });
 
-                    }
-            })
-            .catch(error => {
-                console.error('Error al enviar los datos:', error);
-            });
-        }
+        //             }
+        //     })
+        //     .catch(error => {
+        //         console.error('Error al enviar los datos:', error);
+        //     });
+        // }
     }
 
 

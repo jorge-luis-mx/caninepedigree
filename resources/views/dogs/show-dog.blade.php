@@ -55,11 +55,25 @@
             <ul class="is-flex is-align-items-center is-justify-content-space-between is-flex-wrap-wrap" style="list-style: none; padding: 0; margin: 0;">
                <li>
                   @if($breeding->photos->count())
-                     <figure class="image is-4by3" style="max-width: 250px;">
-                        <img src="{{ asset($breeding->photos->first()->photo_url) }}" 
-                           alt="Breeding photo" 
-                           style="border-radius: 10px; object-fit: cover; width: 100%; height: 100%;">
+                     @php
+                      $dog_id = ($breeding->male_dog_id === $dog['dog_id'])
+                        ? ($breeding->femaleDog->dog_id ?? $breeding->maleDog->dog_id)
+                        : ($breeding->maleDog->dog_id ?? $breeding->femaleDog->dog_id);
+
+                        $dogPedigree = md5($dog_id);
+                        $male = md5($breeding->male_dog_id);
+                        $female = md5($breeding->femaleDog->dog_id)
+                     @endphp
+                  <a href="/pedigrees/{{ $dogPedigree}}">
+                     <figure class="image" style="max-width: 130px;border: 1px solid #ddd; ">
+                        @if ($mainPhoto = $breeding->photos->firstWhere('is_main', 1))
+                           <img src="{{ asset($mainPhoto->photo_url) }}" 
+                                 alt="Foto principal" 
+                                 style="border-radius: 10px; width: 100%; height: auto; display: block;padding: 10px;">
+                        @endif
                      </figure>
+                  </a>
+
                   @else
                      <p class="has-text-grey-light is-italic">No photo available</p>
                   @endif
@@ -67,21 +81,46 @@
 
                <li>
                   @if($breeding->male_dog_id === $dog['dog_id'])
-                     <p class="mb-1 is-flex is-flex-direction-column">
-                        <strong>With female:</strong>
-                        <a href="/pedigrees/{{ $breeding->femaleDog->dog_id ?? '' }}" 
-                           class="has-text-link has-text-weight-semibold">
+                     <!-- <p class="has-text-link mb-1 is-flex is-flex-direction-column">
+                        <strong>Female:</strong>
+                        <a href="/pedigrees/{{ $female}}" 
+                           class="has-text-link has-text-weight-semibold is-underlined">
                            {{ $breeding->femaleDog->name ?? 'Unknown' }}
                         </a>
-                     </p>
+                     </p> -->
                   @else
-                     <p class="mb-1 is-flex is-flex-direction-column">
-                        <strong>With male:</strong>
-                        <span class="has-text-dark">
+                     <!-- <p class="has-text-link mb-1 is-flex is-flex-direction-column">
+                        <strong>Male:</strong>
+                        <a href="/pedigrees/{{ $male }}" 
+                           class="has-text-link has-text-weight-semibold is-underlined">
+                           <span class="has-text-link">
+                              {{ $breeding->maleDog->name ?? 'Unknown' }}
+                           </span>
+                        </a>
+                     </p> -->
+                  @endif
+               </li>
+
+               <li>
+                  <p class="has-text-link mb-1 is-flex is-flex-direction-column">
+                     <strong>Female:</strong>
+                     <a href="/pedigrees/{{ $female}}" 
+                        class="has-text-link has-text-weight-semibold is-underlined">
+                        {{ $breeding->femaleDog->name ?? 'Unknown' }}
+                     </a>
+                  </p>
+               </li>
+
+               <li>
+                  <p class="has-text-link mb-1 is-flex is-flex-direction-column">
+                     <strong>Male:</strong>
+                     <a href="/pedigrees/{{ $male }}" 
+                        class="has-text-link has-text-weight-semibold is-underlined">
+                        <span class="has-text-link">
                            {{ $breeding->maleDog->name ?? 'Unknown' }}
                         </span>
-                     </p>
-                  @endif
+                     </a>
+                  </p>
                </li>
 
                <li>
