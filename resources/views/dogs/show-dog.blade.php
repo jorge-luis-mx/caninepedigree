@@ -56,9 +56,10 @@
                <li>
                   @if($breeding->photos->count())
                      @php
-                      $dog_id = ($breeding->male_dog_id === $dog['dog_id'])
-                        ? ($breeding->femaleDog->dog_id ?? $breeding->maleDog->dog_id)
-                        : ($breeding->maleDog->dog_id ?? $breeding->femaleDog->dog_id);
+
+                        $dog_id = ($breeding->male_dog_id === $dog['dog_id'])
+                           ? ($breeding->maleDog?->dog_id)
+                           : ($breeding->femaleDog?->dog_id);
 
                         $dogPedigree = md5($dog_id);
                         $male = md5($breeding->male_dog_id);

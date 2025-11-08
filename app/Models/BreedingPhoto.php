@@ -16,6 +16,7 @@ class BreedingPhoto extends Model
     protected $fillable = [
         'breeding_request_id',
         'photo_url',
+        'photo_public_id', // Agregar esta línea
         'is_main',
     ];
 

@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\DogInvitationMail;
 use Illuminate\Support\Str;
-
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 //model
 use App\Models\Dog;
 use App\Models\UserProfile;
@@ -454,9 +454,19 @@ class BreedingRequestController extends Controller
 
 
 
+        // $request->validate([
+        //     'photos' => 'required|array',
+        //     'photos.*' => 'image|max:2048',
+        // ], [
+        //     'photos.required' => 'You must select at least one image.',
+        //     'photos.array' => 'The photos must be sent in a valid format.',
+        //     'photos.*.image' => 'Each file must be a valid image (JPG, PNG, etc.).',
+        //     'photos.*.max' => 'Each image must not exceed 2 MB.',
+        // ]);
+
         $request->validate([
             'photos' => 'required|array',
-            'photos.*' => 'image|max:2048',
+            'photos.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ], [
             'photos.required' => 'You must select at least one image.',
             'photos.array' => 'The photos must be sent in a valid format.',
@@ -464,34 +474,61 @@ class BreedingRequestController extends Controller
             'photos.*.max' => 'Each image must not exceed 2 MB.',
         ]);
 
-
         // Verificar si ya existe foto principal para esta cruza
         $hasMain = BreedingPhoto::where('breeding_request_id', $breedingId)
             ->where('is_main', 1)
             ->exists();
 
-        foreach ($request->file('photos') as $index => $photo) {
-            //$path = $photo->store('breeding_photos', 'public');
-            
-            $filename = $photo->hashName(); // nombre único
-            $photo->move(base_path('breeding_photos'), $filename); // base_path apunta a /canine.devscun.com
-            BreedingPhoto::create([
-                'breeding_request_id' => $breedingId,
-                'photo_url' => 'breeding_photos/' . $filename, // relativa a la raíz del subdominio
-                'is_main' => (!$hasMain && $index === 0) ? 1 : 0,
-            ]);
-            // BreedingPhoto::create([
-            //     'breeding_request_id' => $breedingId,
-            //     'photo_url' => $path,
-            //     // Si no hay principal y esta es la PRIMERA foto (index=0), marcar como principal
-            //     'is_main' => (!$hasMain && $index === 0) ? 1 : 0,
-            // ]);
+        try {
+            foreach ($request->file('photos') as $index => $photo) {
+                // Subir a Cloudinary en la carpeta específica
+                $result = Cloudinary::upload($photo->getRealPath(), [
+                    'folder' => 'breeding_photos', // Tu carpeta específica en Cloudinary
+                    'transformation' => [
+                        'quality' => 'auto',
+                        'fetch_format' => 'auto'
+                    ]
+                ]);
+
+                // Guardar en la base de datos
+                BreedingPhoto::create([
+                    'breeding_request_id' => $breedingId,
+                    'photo_url' => $result->getSecurePath(), // URL completa de Cloudinary
+                    'photo_public_id' => $result->getPublicId(), // Para poder eliminar después
+                    'is_main' => (!$hasMain && $index === 0) ? 1 : 0,
+                ]);
+            }
+
+            return redirect()
+                ->route('dogs.show', ['dog' => md5($femaleDog->dog_id)])
+                ->with('success', 'Fotos subidas correctamente a Cloudinary.');
+
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Error al subir las fotos: ' . $e->getMessage()])
+                ->withInput();
         }
-        return redirect()->route('dogs.show', ['dog' => md5($femaleDog->dog_id)])
-            ->with('success', 'Fotos subidas correctamente.');
 
 
-        // return redirect()->route('breeding.listCompleted')->with('success', 'Fotos subidas correctamente.');
+        // foreach ($request->file('photos') as $index => $photo) {
+        //     //$path = $photo->store('breeding_photos', 'public');
+            
+        //     $filename = $photo->hashName(); // nombre único
+        //     $photo->move(base_path('breeding_photos'), $filename); // base_path apunta a /canine.devscun.com
+        //     BreedingPhoto::create([
+        //         'breeding_request_id' => $breedingId,
+        //         'photo_url' => 'breeding_photos/' . $filename, // relativa a la raíz del subdominio
+        //         'is_main' => (!$hasMain && $index === 0) ? 1 : 0,
+        //     ]);
+
+        // }
+
+        // return redirect()->route('dogs.show', ['dog' => md5($femaleDog->dog_id)])
+        //     ->with('success', 'Fotos subidas correctamente.');
+
+
+
     }
 
     public function listSent(){

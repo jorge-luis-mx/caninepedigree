@@ -224,9 +224,17 @@
 
     <table class="footer-table" style="width: 100%; margin-top: 60px; font-size: 14px;">
       <tr>
-        <td style="width: 50%; text-align: left;">
+        <!-- <td style="width: 50%; text-align: left;">
           <div style="width: 80%; margin-bottom: 5px; border-top: 1px solid #000; margin-left: 0;"></div>
           <div style="text-align: center; width: 80%;">Signed</div>
+        </td> -->
+        <td style="width: 50%; text-align: left;">
+          <div style="text-align: center;">
+            <img src="{{ public_path('assets/img/firma.png') }}" 
+                style="width: 120px; display: inline-block;">
+          </div>
+          <div style="width: 80%; margin: 5px auto; border-top: 1px solid #000;"></div>
+          <div style="text-align: center;">Signed</div>
         </td>
         <td style="width: 50%; text-align: right;">
           Register Number: {{$dog['number']}}<br>
