@@ -160,6 +160,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dogs/sell/{id}', [DogSaleController::class, 'create'])->name('dog.sales.create');
     Route::post('/dogs/sell', [DogSaleController::class, 'store'])->name('dog.sales.store');
     
+    Route::get('/sales/dogs/register', [DogSaleController::class, 'index'])->name('salesDogs.index');
+    Route::post('/sales/register/owner/ship/dogs', [DogSaleController::class, 'registerOwnership'])->name('salesDogs.registerOwnership');
 
 
     Route::get('/send-test', function () {

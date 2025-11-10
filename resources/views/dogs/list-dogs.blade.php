@@ -3,15 +3,21 @@
     <div class="notification is-warning has-text-dark is-light">
         {!! session('warning') !!}
     </div>
-@elseif($pendingRequests->count() > 0)
-    <div class="notification is-warning has-text-dark is-light">
-        🔔 You have <strong>{{ $pendingRequests->count() }}</strong> pending breeding request{{ $pendingRequests->count() > 1 ? 's' : '' }} waiting for your response.
-        <a href="{{ route('breeding.receibed') }}" class="has-text-link has-text-weight-bold">View requests</a>
-    </div>
-@endif
+    @elseif($pendingRequests->count() > 0)
+        <div class="notification is-warning has-text-dark is-light">
+            🔔 You have <strong>{{ $pendingRequests->count() }}</strong> pending breeding request{{ $pendingRequests->count() > 1 ? 's' : '' }} waiting for your response.
+            <a href="{{ route('breeding.receibed') }}" class="has-text-link has-text-weight-bold">View requests</a>
+        </div>
+    @endif
 
+    @if(!empty($pendingSale->count() > 0))
 
+        <div class="notification is-warning has-text-dark is-light">
+            🔔 You have <strong>{{ $pendingSale->count() }}</strong> dog{{ $pendingSale->count() > 1 ? 's' : '' }} pending registration. Register them now if you purchased or received them as a gift.
+            <a href="{{ route('salesDogs.index') }}" class="has-text-link has-text-weight-bold">Register dog{{ $pendingSale->count() > 1 ? 's' : '' }}</a>
+        </div>
 
+    @endif
 
 
     <h1 class="is-size-4">{{__('messages.main.dogs.title')}}</h1>

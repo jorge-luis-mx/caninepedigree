@@ -25,6 +25,7 @@ use App\Models\UserProfile;
 use App\Models\DogParentRequest;
 use App\Models\BreedingRequest;
 use App\Models\PendingDogRelation;
+use App\Models\DogSale;
 
 //Traits
 use App\Traits\Pedigree;
@@ -51,6 +52,7 @@ class DogController extends Controller
         if (in_array($role->name, $arrayRole)) {
 
             $dogs = Dog::whereIn('dogs.status', ['completed','exempt'])
+            ->where('transfer_pending', 0)
             ->leftJoin('dog_payments', 'dogs.dog_id', '=', 'dog_payments.dog_id')
             ->leftJoin('payments', 'dog_payments.payment_id', '=', 'payments.payment_id')
             ->select(
@@ -75,7 +77,7 @@ class DogController extends Controller
 
         $dogs = Dog::where('dogs.current_owner_id', $owner)
             ->whereIn('dogs.status', ['completed','exempt'])
-            ->where('transfer_pending', false)
+            ->where('transfer_pending', 0)
             ->leftJoin('dog_payments', 'dogs.dog_id', '=', 'dog_payments.dog_id')
             ->leftJoin('payments', 'dog_payments.payment_id', '=', 'payments.payment_id')
             ->select(
@@ -91,11 +93,17 @@ class DogController extends Controller
                 )
             ->groupBy('dogs.dog_id', 'dogs.name', 'dogs.breed', 'dogs.color', 'dogs.sex', 'dogs.status')
             ->get();
-        $pendingRequests = BreedingRequest::where('owner_id', auth()->id())
+
+
+        $pendingRequests = BreedingRequest::where('owner_id', $profile_id)
             ->where('status', 'pending')
             ->with(['femaleDog', 'maleDog']) // si tienes relaciones definidas
             ->get();
-        return view('dogs.list-dogs',compact('dogs','role','permissions','pendingRequests'));
+
+
+        $pendingSale = DogSale::where('buyer_email',$profile->email)->where('status', 'pending')->get();
+
+        return view('dogs.list-dogs',compact('dogs','role','permissions','pendingRequests','pendingSale'));
     }
 
 
@@ -440,14 +448,7 @@ class DogController extends Controller
                     ];
 
                     $this->createPendingRelation($emailData,'dam',$damEmail);
-                    // Send email with error handling
-                    // Mail::to($damEmail)->send(new SendEmailDogs($emailData));
-                    
-                    // Log successful sending
-                    // Log::info('Dog registration email sent successfully to dam', [
-                    //     'recipient' => $damEmail,
-                    //     'dog_id' => $dog->id ?? null
-                    // ]);
+
 
                 } catch (Exception $e) {
                     // Log the error
@@ -486,27 +487,6 @@ class DogController extends Controller
                     $parentRequest->delete();
                 }
             }
-
-
-            // Verificamos si hay una solicitud de cruza pendiente para este usuario
-            // $parentRequest = DogParentRequest::where('email', $profile->email)
-            //     ->where('parent_type',$parent_type)
-            //     ->first();
-
-            // if ($parentRequest) {
-            //     // Crear la solicitud de cruza automáticamente
-            //     BreedingRequest::create([
-            //         'female_dog_id' => $request->sex === 'F' ? $dog->dog_id : $parentRequest->dog_id,
-            //         'male_dog_id' => $request->sex === 'M' ? $dog->dog_id : $parentRequest->dog_id,
-            //         'requester_id'=>$profile->profile_id,
-            //         'owner_id'=>$profile->profile_id,
-            //         'status' =>$role->name == 'Admin'? 'completed':'pending',
-            //     ]);
-
-            //     // Eliminar solicitud previa
-            //     $parentRequest->delete();
-
-            // }
 
             $data['message'] = 'CANINE inserted successfully';
             $data['status'] = 200;
@@ -591,7 +571,7 @@ class DogController extends Controller
 
     public function show(string $id)
     {
-        
+     
         $dog = Dog::whereRaw('MD5(dog_id) = ?', [$id])
         ->with([
             'sire', 'dam',
@@ -603,7 +583,7 @@ class DogController extends Controller
             'dam.dam.sire', 'dam.dam.dam',
         ])
         ->firstOrFail();
-        
+
         // Todas las cruzas completadas (como macho o hembra)
         $completedBreedings = BreedingRequest::with(['photos', 'maleDog', 'femaleDog'])
             ->where(function ($q) use ($dog) {

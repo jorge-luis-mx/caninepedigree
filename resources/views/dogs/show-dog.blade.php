@@ -8,7 +8,7 @@
 
       <div class="card buttons-container">
          <a href="{{ route('dog.sales.create',['id' => $dog['id']])}}">
-            <button class="button has-text-white has-background-warning">Dog sale</button>
+            <button class="button has-text-white has-background-warning">Sale Dog</button>
          </a>
          @if($dog['sex']==='F')
             <a href="{{ route('puppies.index',['id' => $dog['id']] )}}">
@@ -65,7 +65,7 @@
                         $male = md5($breeding->male_dog_id);
                         $female = md5($breeding->femaleDog->dog_id)
                      @endphp
-                  <a href="/pedigrees/{{ $dogPedigree}}">
+                  
                      <figure class="image" style="max-width: 130px;border: 1px solid #ddd; ">
                         @if ($mainPhoto = $breeding->photos->firstWhere('is_main', 1))
                            <img src="{{ asset($mainPhoto->photo_url) }}" 
@@ -73,7 +73,7 @@
                                  style="border-radius: 10px; width: 100%; height: auto; display: block;padding: 10px;">
                         @endif
                      </figure>
-                  </a>
+                  
 
                   @else
                      <p class="has-text-grey-light is-italic">No photo available</p>

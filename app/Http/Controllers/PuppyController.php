@@ -28,14 +28,7 @@ class PuppyController extends Controller
             ->firstOrFail();
 
         return view('puppies.create',compact('dog'));
-        
 
-        
-
-
-        // return view('breeding.create-breeding',compact('dogs'));
-   
-        // return view('puppies.create');
     }
 
     public function register()
