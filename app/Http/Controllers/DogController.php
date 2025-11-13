@@ -41,15 +41,18 @@ class DogController extends Controller
     {
 
         $user = auth()->user();
-        $profile_id = $user->profile_id;
         $profile = $user->userprofile;
-
         $role = $user->role;
+
+        $profileAdminstrador = UserProfile::find(2);
+        
+       
+        //Trae los permisos que tiene un usuario auntenticado
         $permissions = $role->permissions->where('pivot.status', 1);
 
-        $arrayRole =['Admin'];
+        
 
-        if (in_array($role->name, $arrayRole)) {
+        if ($role->name=='Admin') {
 
             $dogs = Dog::whereIn('dogs.status', ['completed','exempt'])
             ->where('transfer_pending', 0)
@@ -73,29 +76,71 @@ class DogController extends Controller
         }
 
         $arrayOwner = ['Administrator','Employee'];
-        $owner = in_array($role->name, $arrayOwner) ? 2 : $profile_id;
+        $owner = in_array($role->name, $arrayOwner) ? $profileAdminstrador->profile_id: $user->profile_id;
 
-        $dogs = Dog::where('dogs.current_owner_id', $owner)
-            ->whereIn('dogs.status', ['completed','exempt'])
+        // $dogs = Dog::where('dogs.current_owner_id', $owner)
+        //     ->whereIn('dogs.status', ['completed','exempt'])
+        //     ->where('transfer_pending', 0)
+        //     ->leftJoin('dog_payments', 'dogs.dog_id', '=', 'dog_payments.dog_id')
+        //     ->leftJoin('payments', 'dog_payments.payment_id', '=', 'payments.payment_id')
+        //     ->select(
+        //             'dogs.*',
+        //             DB::raw('MD5(dogs.dog_id) as dog_hash'),
+        //             DB::raw('COALESCE(SUM(payments.amount), 0) as total_paid'),
+        //             DB::raw('100 - COALESCE(SUM(payments.amount), 0) as amount_due')
+        //         )
+        //     ->groupBy('dogs.dog_id', 'dogs.name', 'dogs.breed', 'dogs.color', 'dogs.sex', 'dogs.status')
+        //     ->limit(5)
+        //     ->get();
+
+
+        $dogs = Dog::with(['creator.userprofile'])
+            ->where('dogs.current_owner_id', $owner)
+            ->whereIn('dogs.status', ['completed', 'exempt'])
             ->where('transfer_pending', 0)
             ->leftJoin('dog_payments', 'dogs.dog_id', '=', 'dog_payments.dog_id')
             ->leftJoin('payments', 'dog_payments.payment_id', '=', 'payments.payment_id')
             ->select(
-                    'dogs.dog_id',
-                    DB::raw('MD5(dogs.dog_id) as dog_hash'),
-                        'dogs.name',
-                        'dogs.breed',
-                        'dogs.color',
-                        'dogs.sex',
-                        'dogs.status',
-                    DB::raw('COALESCE(SUM(payments.amount), 0) as total_paid'),
-                    DB::raw('100 - COALESCE(SUM(payments.amount), 0) as amount_due')
-                )
-            ->groupBy('dogs.dog_id', 'dogs.name', 'dogs.breed', 'dogs.color', 'dogs.sex', 'dogs.status')
+                'dogs.*',
+                DB::raw('MD5(dogs.dog_id) as dog_hash'),
+                DB::raw('COALESCE(SUM(payments.amount), 0) as total_paid'),
+                DB::raw('100 - COALESCE(SUM(payments.amount), 0) as amount_due')
+            )
+            ->groupBy('dogs.dog_id')
+            //->limit(5)
             ->get();
 
+        foreach ($dogs as $dog) {
+            
+            $creatorProfile = $dog->creator->userprofile ?? null;
 
-        $pendingRequests = BreedingRequest::where('owner_id', $profile_id)
+            if ($creatorProfile) {
+
+                if (!empty($creatorProfile->kennel_name) && $creatorProfile->kennel_name_status == 1) {
+                    
+                    $dog->aliasDog = $creatorProfile->kennel_name . ' ' . $dog->name;
+                }
+
+                if (!empty($creatorProfile->kennel_name) && $creatorProfile->kennel_name_status == 0) {
+
+                    $dog->aliasDog = $creatorProfile->last_name . ' ' . $dog->name;
+                }
+                if (empty($creatorProfile->kennel_name) && !empty($creatorProfile->last_name)) {
+
+                    $dog->aliasDog = $creatorProfile->last_name . ' ' . $dog->name;
+                    
+                }
+
+
+            } else {
+                $dog->aliasDog = $dog->name; // fallback si no hay perfil
+            }
+        }
+
+
+
+
+        $pendingRequests = BreedingRequest::where('owner_id', $user->profile_id)
             ->where('status', 'pending')
             ->with(['femaleDog', 'maleDog']) // si tienes relaciones definidas
             ->get();

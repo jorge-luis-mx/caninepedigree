@@ -3,14 +3,14 @@
     <div class="notification is-warning has-text-dark is-light">
         {!! session('warning') !!}
     </div>
-    @elseif($pendingRequests->count() > 0)
+    @elseif(isset($pendingRequests) && $pendingRequests->count() > 0)
         <div class="notification is-warning has-text-dark is-light">
             🔔 You have <strong>{{ $pendingRequests->count() }}</strong> pending breeding request{{ $pendingRequests->count() > 1 ? 's' : '' }} waiting for your response.
             <a href="{{ route('breeding.receibed') }}" class="has-text-link has-text-weight-bold">View requests</a>
         </div>
     @endif
 
-    @if(!empty($pendingSale->count() > 0))
+    @if(isset($pendingSale) &&!empty($pendingSale->count() > 0))
 
         <div class="notification is-warning has-text-dark is-light">
             🔔 You have <strong>{{ $pendingSale->count() }}</strong> dog{{ $pendingSale->count() > 1 ? 's' : '' }} pending registration. Register them now if you purchased or received them as a gift.
@@ -92,6 +92,7 @@
 
         // Función para llenar la tabla
         function populateTable(dogsToDisplay) {
+
             const tableBody = document.getElementById('dogTableBody');
             tableBody.innerHTML = '';
 
@@ -102,7 +103,7 @@
             paginatedDogs.forEach((dog) => {
 
                 let sex = dog.sex == 'M' ? 'Male' : 'Female';
-                let dogName = `${dog.name} <span class="dog-sex is-size-7">(${sex})</span>`;
+                let dogName = `${dog.aliasDog} <span class="dog-sex is-size-7">(${sex})</span>`;
 
                 const row = document.createElement('tr');
                 
@@ -140,7 +141,6 @@
                     });
                     actionTd.appendChild(editBtnDog);
 
-
                     row.appendChild(actionTd);  // Botón eliminar
                 }
 
@@ -150,96 +150,95 @@
 
             renderPagination(dogsToDisplay);
         }
-function renderPagination(dogsList) {
-    const paginationContainer = document.getElementById('pagination');
-    paginationContainer.innerHTML = '';
 
-    const totalPages = Math.ceil(dogsList.length / dogsPerPage);
-    if (totalPages <= 1) return;
+        function renderPagination(dogsList) {
+            const paginationContainer = document.getElementById('pagination');
+            paginationContainer.innerHTML = '';
 
-    const prevBtn = document.createElement('button');
-    prevBtn.textContent = "{{__('messages.main.dogs.previous')}}";
-    prevBtn.className = 'button is-small mx-1';
-    prevBtn.disabled = currentPage === 1;
-    prevBtn.onclick = () => {
-        currentPage--;
-        populateTable(dogsList);
-    };
-    paginationContainer.appendChild(prevBtn);
+            const totalPages = Math.ceil(dogsList.length / dogsPerPage);
+            if (totalPages <= 1) return;
 
-    const maxVisiblePages = 5;
-    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = startPage + maxVisiblePages - 1;
+            const prevBtn = document.createElement('button');
+            prevBtn.textContent = "{{__('messages.main.dogs.previous')}}";
+            prevBtn.className = 'button is-small mx-1';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.onclick = () => {
+                currentPage--;
+                populateTable(dogsList);
+            };
+            paginationContainer.appendChild(prevBtn);
 
-    if (endPage > totalPages) {
-        endPage = totalPages;
-        startPage = Math.max(1, endPage - maxVisiblePages + 1);
-    }
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = startPage + maxVisiblePages - 1;
 
-    if (startPage > 1) {
-        const firstPageBtn = document.createElement('button');
-        firstPageBtn.textContent = '1';
-        firstPageBtn.className = 'button is-small mx-1';
-        firstPageBtn.onclick = () => {
-            currentPage = 1;
-            populateTable(dogsList);
-        };
-        paginationContainer.appendChild(firstPageBtn);
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
 
-        if (startPage > 2) {
-            const dots = document.createElement('span');
-            dots.textContent = '...';
-            dots.className = 'mx-1';
-            paginationContainer.appendChild(dots);
+            if (startPage > 1) {
+                const firstPageBtn = document.createElement('button');
+                firstPageBtn.textContent = '1';
+                firstPageBtn.className = 'button is-small mx-1';
+                firstPageBtn.onclick = () => {
+                    currentPage = 1;
+                    populateTable(dogsList);
+                };
+                paginationContainer.appendChild(firstPageBtn);
+
+                if (startPage > 2) {
+                    const dots = document.createElement('span');
+                    dots.textContent = '...';
+                    dots.className = 'mx-1';
+                    paginationContainer.appendChild(dots);
+                }
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.textContent = i;
+                pageBtn.className = `button is-small mx-1 ${i === currentPage ? 'is-primary' : ''}`;
+                pageBtn.onclick = () => {
+                    currentPage = i;
+                    populateTable(dogsList);
+                };
+                paginationContainer.appendChild(pageBtn);
+            }
+
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    const dots = document.createElement('span');
+                    dots.textContent = '...';
+                    dots.className = 'mx-1';
+                    paginationContainer.appendChild(dots);
+                }
+
+                const lastPageBtn = document.createElement('button');
+                lastPageBtn.textContent = totalPages;
+                lastPageBtn.className = 'button is-small mx-1';
+                lastPageBtn.onclick = () => {
+                    currentPage = totalPages;
+                    populateTable(dogsList);
+                };
+                paginationContainer.appendChild(lastPageBtn);
+            }
+
+            const nextBtn = document.createElement('button');
+            nextBtn.textContent = "{{__('messages.main.dogs.next')}}";
+            nextBtn.className = 'button is-small mx-1';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.onclick = () => {
+                currentPage++;
+                populateTable(dogsList);
+            };
+            paginationContainer.appendChild(nextBtn);
         }
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-        const pageBtn = document.createElement('button');
-        pageBtn.textContent = i;
-        pageBtn.className = `button is-small mx-1 ${i === currentPage ? 'is-primary' : ''}`;
-        pageBtn.onclick = () => {
-            currentPage = i;
-            populateTable(dogsList);
-        };
-        paginationContainer.appendChild(pageBtn);
-    }
-
-    if (endPage < totalPages) {
-        if (endPage < totalPages - 1) {
-            const dots = document.createElement('span');
-            dots.textContent = '...';
-            dots.className = 'mx-1';
-            paginationContainer.appendChild(dots);
-        }
-
-        const lastPageBtn = document.createElement('button');
-        lastPageBtn.textContent = totalPages;
-        lastPageBtn.className = 'button is-small mx-1';
-        lastPageBtn.onclick = () => {
-            currentPage = totalPages;
-            populateTable(dogsList);
-        };
-        paginationContainer.appendChild(lastPageBtn);
-    }
-
-    const nextBtn = document.createElement('button');
-    nextBtn.textContent = "{{__('messages.main.dogs.next')}}";
-    nextBtn.className = 'button is-small mx-1';
-    nextBtn.disabled = currentPage === totalPages;
-    nextBtn.onclick = () => {
-        currentPage++;
-        populateTable(dogsList);
-    };
-    paginationContainer.appendChild(nextBtn);
-}
-
-
 
         window.filterDogs = function () {
             const searchInput = document.getElementById('searchInput');
-            const newTerm = searchInput.value.toLowerCase();
-
+            const newTerm = searchInput.value.trim().toLowerCase();
+            
             // Si el usuario acaba de empezar a escribir, guardamos la página actual
             if (currentSearchTerm === '' && newTerm !== '') {
                 previousPageBeforeFilter = currentPage;
@@ -248,7 +247,7 @@ function renderPagination(dogsList) {
             currentSearchTerm = newTerm;
 
             const filteredDogs = dogs.filter(dog =>
-                dog.name.toLowerCase().includes(currentSearchTerm)
+                dog.aliasDog.toLowerCase().match(currentSearchTerm)
             );
 
             const totalPages = Math.ceil(filteredDogs.length / dogsPerPage);
@@ -315,7 +314,7 @@ function renderPagination(dogsList) {
         }
 
         populateTable(dogs.filter(dog =>
-            dog.name.toLowerCase().includes(currentSearchTerm)
+            dog.aliasDog.toLowerCase().match(currentSearchTerm)
         ));
 
     });
