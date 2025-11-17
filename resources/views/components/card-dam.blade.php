@@ -53,6 +53,16 @@
       </div>
 
       <div class="field">
+         <label class="label" for="dam_name">Name dam</label>
+         <div class="control">
+            <input
+               class="input"
+               type="dam_name"
+               name="dam_name">
+         </div>
+      </div>
+
+      <div class="field">
          <label class="label" for="description">{{__('messages.main.formDog.noteDam')}}</label>
          <div class="control">
             <textarea

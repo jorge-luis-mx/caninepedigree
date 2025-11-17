@@ -57,6 +57,16 @@
       </div>
 
       <div class="field">
+         <label class="label" for="sire_name">Name sire</label>
+         <div class="control">
+            <input
+               class="input"
+               type="sire_name"
+               name="sire_name">
+         </div>
+      </div>
+
+      <div class="field">
          <label class="label" for="description">{{__('messages.main.formDog.noteSire')}}</label>
          <div class="control">
             <textarea

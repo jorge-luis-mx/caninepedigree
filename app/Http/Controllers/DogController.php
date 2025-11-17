@@ -162,10 +162,13 @@ class DogController extends Controller
         $invoice = $request->get('invoice') ?? session('pending_invite_invoice');
 
         if ($token) {
-            $pending = PendingDogRelation::where('token', $token)->first();
+            
+            $pending = PendingDogRelation::where('token', $token)
+            ->where('status','pending')
+            ->first();
 
             if (!$pending) {
-                abort(404, 'Invalid or expired registration token.');
+                return redirect()->route('dogs.index');
             }
 
             // Si el usuario no está autenticado, redirige al login con el token
@@ -177,21 +180,25 @@ class DogController extends Controller
             if ($profile->email !== $pending->pending_email) {
                 abort(403, 'You are not authorized to register this dog.');
             }
-            if (session()->has('pending_invite_token')) {
-                session()->forget('pending_invite_token');
-            }
+            // if (session()->has('pending_invite_token')) {
+            //     session()->forget('pending_invite_token');
+            // }
+          
             // Renderiza la vista con los datos del registro pendiente
             return view('dogs.create-dog', [
                 'pending_token' => $token,
                 'pending_name' => $pending->temp_dog_name,
-                'relation_type' => $pending->relation_type,
+                'relation_type' => $pending->relation_type=='sire'?'M':'F',
+                
             ]);
         }
 
 
         if ($invoice) {
             
-            $parentRequest = DogParentRequest::where('token', $invoice)->first();
+            $parentRequest = DogParentRequest::where('token', $invoice)
+            ->where('status','pending')
+            ->first();
            
             if (!$parentRequest) {
                 abort(404, 'Invalid or expired registration invoice.');
@@ -204,9 +211,9 @@ class DogController extends Controller
             if ($profile->email !== $parentRequest->email) {
                 abort(403, 'You are not authorized to register this dog.');
             }
-            if (session()->has('pending_invite_invoice')) {
-                session()->forget('pending_invite_invoice');
-            }
+            // if (session()->has('pending_invite_invoice')) {
+            //     session()->forget('pending_invite_invoice');
+            // }
             // Renderiza la vista con los datos del registro pendiente
             return view('dogs.create-dog', [
                 'pending_invoice' => $invoice,
@@ -227,18 +234,50 @@ class DogController extends Controller
 
         if (!empty($reg_no)) {
 
-            $dogs = Dog::where('sex', $sex)
+            $dogs = Dog::with(['creator.userprofile'])
+                ->where('sex', $sex)
                 ->whereIn('status', ['completed', 'exempt'])
-                ->where('name', 'LIKE', "%$reg_no%")
+                ->where(function ($query) use ($reg_no) {
+                    $reg_no = trim($reg_no);
+                    $words = preg_split('/\s+/', $reg_no); // divide por espacios
+
+                    // Buscar coincidencias en dogs.name
+                    $query->where('dogs.name', 'LIKE', "%$reg_no%")
+
+                    // Buscar coincidencias en kennel_name o last_name
+                    ->orWhereHas('creator.userprofile', function ($subquery) use ($reg_no) {
+                        $subquery->where('kennel_name', 'LIKE', "%$reg_no%")
+                                ->orWhere('last_name', 'LIKE', "%$reg_no%");
+                    })
+
+                    // 🔥 Buscar por cada palabra dentro de la concatenación kennel_name + name
+                    ->orWhere(function ($q) use ($words) {
+                        foreach ($words as $word) {
+                            $q->whereRaw("
+                                EXISTS (
+                                    SELECT 1
+                                    FROM user_profiles up
+                                    WHERE up.profile_id = dogs.created_by_user_id
+                                    AND CONCAT(
+                                        COALESCE(up.kennel_name, ''), ' ',
+                                        COALESCE(dogs.name, '')
+                                    ) LIKE ?
+                                )
+                            ", ["%{$word}%"]);
+                        }
+                    });
+                })
                 ->orderByRaw("
                     CASE 
-                        WHEN name = ? THEN 1
-                        WHEN name LIKE ? THEN 2
-                        WHEN name LIKE ? THEN 3
+                        WHEN dogs.name = ? THEN 1
+                        WHEN dogs.name LIKE ? THEN 2
+                        WHEN dogs.name LIKE ? THEN 3
                         ELSE 4
                     END
                 ", [$reg_no, "$reg_no%", "%$reg_no"])
                 ->get();
+
+
 
 
             if ($dogs->isNotEmpty()) {
@@ -246,6 +285,23 @@ class DogController extends Controller
                 $dogs->each(function ($dog) {
                     // Genera un hash MD5 de 32 caracteres utilizando el dog_id y lo asigna a la propiedad dog_hash del objeto dog
                     $dog->dog_hash = md5($dog->dog_id);
+                    // Obtiene perfil del creador
+                    $creatorProfile = $dog->creator->userprofile ?? null;
+
+                    if ($creatorProfile) {
+                        if (!empty($creatorProfile->kennel_name) && $creatorProfile->kennel_name_status == 1) {
+                            $dog->aliasDog = $creatorProfile->kennel_name . ' ' . $dog->name;
+                        } elseif (!empty($creatorProfile->kennel_name) && $creatorProfile->kennel_name_status == 0) {
+                            $dog->aliasDog = $creatorProfile->last_name . ' ' . $dog->name;
+                        } elseif (empty($creatorProfile->kennel_name) && !empty($creatorProfile->last_name)) {
+                            $dog->aliasDog = $creatorProfile->last_name . ' ' . $dog->name;
+                        } else {
+                            $dog->aliasDog = $dog->name;
+                        }
+                    } else {
+                        $dog->aliasDog = $dog->name; // Fallback si no hay perfil
+                    }
+                    
                 });
 
                 $data['status'] = 200;
@@ -269,6 +325,7 @@ class DogController extends Controller
 
         if ($breedingSearch!=null ) {
         // Buscar el perro por número de registro
+
             $dog = Dog::where('reg_no', $reg_no)->where('sex','M')->whereIn('status', ['completed','exempt'])->first();
 
             if ($dog) {
@@ -277,16 +334,90 @@ class DogController extends Controller
                 $data['data'] = $dog;
             } else {
                 // Buscar por nombre si no se encontró por número de registro
-                $dogs = Dog::where('name', 'LIKE', "%$reg_no%")->where('sex','M')->whereIn('status', ['completed','exempt'])->get();
+                // $dogs = Dog::where('name', 'LIKE', "%$reg_no%")->where('sex','M')->whereIn('status', ['completed','exempt'])->get();
 
+                // if ($dogs->isNotEmpty()) {
+                //     $dogs->each(function ($dog) {
+                //         $dog->dog_hash = md5($dog->dog_id);
+                //     });
+
+                //     $data['status'] = 200;
+                //     $data['data'] = $dogs;
+                // }
+
+                //  Buscar por nombre (cuando no se encuentra por número de registro)
+                $dogs = Dog::with(['creator.userprofile'])
+                    ->where('sex', 'M')
+                    ->whereIn('status', ['completed', 'exempt'])
+                    ->where(function ($query) use ($reg_no) {
+                        $reg_no = trim($reg_no);
+                        $words = preg_split('/\s+/', $reg_no); // divide por espacios
+
+                        // Buscar coincidencia directa en el nombre
+                        $query->where('dogs.name', 'LIKE', "%$reg_no%")
+
+                        // Buscar coincidencia en kennel_name o last_name
+                        ->orWhereHas('creator.userprofile', function ($subquery) use ($reg_no) {
+                            $subquery->where('kennel_name', 'LIKE', "%$reg_no%")
+                                    ->orWhere('last_name', 'LIKE', "%$reg_no%");
+                        })
+
+                        // Buscar por cada palabra dentro de kennel_name + dog name
+                        ->orWhere(function ($q) use ($words) {
+                            foreach ($words as $word) {
+                                $q->orWhereRaw("
+                                    EXISTS (
+                                        SELECT 1
+                                        FROM user_profiles up
+                                        WHERE up.profile_id = dogs.created_by_user_id
+                                        AND CONCAT(
+                                            COALESCE(up.kennel_name, ''), ' ',
+                                            COALESCE(dogs.name, '')
+                                        ) LIKE ?
+                                    )
+                                ", ["%{$word}%"]);
+                            }
+                        });
+                    })
+                    ->orderByRaw("
+                        CASE 
+                            WHEN dogs.name = ? THEN 1
+                            WHEN dogs.name LIKE ? THEN 2
+                            WHEN dogs.name LIKE ? THEN 3
+                            ELSE 4
+                        END
+                    ", [$reg_no, "$reg_no%", "%$reg_no"])
+                    ->get();
+
+                // 🔹 Si encontró perros, procesar resultados
                 if ($dogs->isNotEmpty()) {
                     $dogs->each(function ($dog) {
+                        // Genera hash MD5 basado en dog_id
                         $dog->dog_hash = md5($dog->dog_id);
+
+                        // Carga perfil del creador
+                        $creatorProfile = $dog->creator->userprofile ?? null;
+
+                        if ($creatorProfile) {
+                            if (!empty($creatorProfile->kennel_name) && $creatorProfile->kennel_name_status == 1) {
+                                $dog->aliasDog = $creatorProfile->kennel_name . ' ' . $dog->name;
+                            } elseif (!empty($creatorProfile->kennel_name) && $creatorProfile->kennel_name_status == 0) {
+                                $dog->aliasDog = $creatorProfile->last_name . ' ' . $dog->name;
+                            } elseif (empty($creatorProfile->kennel_name) && !empty($creatorProfile->last_name)) {
+                                $dog->aliasDog = $creatorProfile->last_name . ' ' . $dog->name;
+                            } else {
+                                $dog->aliasDog = $dog->name;
+                            }
+                        } else {
+                            $dog->aliasDog = $dog->name; // fallback sin perfil
+                        }
                     });
 
                     $data['status'] = 200;
                     $data['data'] = $dogs;
                 }
+
+
             }
             return response()->json($data);
         }
@@ -300,16 +431,102 @@ class DogController extends Controller
             $data['data'] = $dog;
         } else {
             // Buscar por nombre si no se encontró por número de registro
-            $dogs = Dog::where('name', 'LIKE', "%$reg_no%")->whereIn('status', ['completed','exempt'])->get();
+            // $dogs = Dog::where('name', 'LIKE', "%$reg_no%")->whereIn('status', ['completed','exempt'])->get();
 
+            // if ($dogs->isNotEmpty()) {
+            //     $dogs->each(function ($dog) {
+            //         $dog->dog_hash = md5($dog->dog_id);
+            //     });
+
+            //     $data['status'] = 200;
+            //     $data['data'] = $dogs;
+            // }
+
+            $dogs = Dog::with(['creator.userprofile'])
+                ->whereIn('status', ['completed', 'exempt'])
+                ->where(function ($query) use ($reg_no) {
+
+                    $reg_no = trim($reg_no);
+                    $words = preg_split('/\s+/', $reg_no);
+
+                    // Coincidencia directa por nombre
+                    $query->where('dogs.name', 'LIKE', "%$reg_no%")
+
+                    // Coincidencia con kennel_name o last_name
+                    ->orWhereHas('creator.userprofile', function ($subquery) use ($reg_no) {
+                        $subquery->where('kennel_name', 'LIKE', "%$reg_no%")
+                                ->orWhere('last_name', 'LIKE', "%$reg_no%");
+                    })
+
+                    // Buscar por cada palabra en CONCAT(kennel_name + name)
+                    ->orWhere(function ($q) use ($words) {
+                        foreach ($words as $word) {
+                            $q->orWhereRaw("
+                                EXISTS (
+                                    SELECT 1
+                                    FROM user_profiles up
+                                    WHERE up.profile_id = dogs.created_by_user_id
+                                    AND CONCAT(
+                                        COALESCE(up.kennel_name, ''), ' ',
+                                        COALESCE(dogs.name, '')
+                                    ) LIKE ?
+                                )
+                            ", ["%{$word}%"]);
+                        }
+                    });
+
+                })
+                ->orderByRaw("
+                    CASE 
+                        WHEN dogs.name = ? THEN 1        -- coincidencia exacta
+                        WHEN dogs.name LIKE ? THEN 2     -- comienza igual
+                        WHEN dogs.name LIKE ? THEN 3     -- contiene
+                        ELSE 4
+                    END
+                ", [$reg_no, "$reg_no%", "%$reg_no"])
+                ->get();
+
+
+            // Si encontró perros – procesar resultados
             if ($dogs->isNotEmpty()) {
+
                 $dogs->each(function ($dog) {
+
+                    // Hash único
                     $dog->dog_hash = md5($dog->dog_id);
+
+                    // Perfil del creador
+                    $creatorProfile = $dog->creator->userprofile ?? null;
+
+                    if ($creatorProfile) {
+                        if (!empty($creatorProfile->kennel_name) && $creatorProfile->kennel_name_status == 1) {
+                            $dog->aliasDog = $creatorProfile->kennel_name . ' ' . $dog->name;
+
+                        } elseif (!empty($creatorProfile->kennel_name) && $creatorProfile->kennel_name_status == 0) {
+                            $dog->aliasDog = $creatorProfile->last_name . ' ' . $dog->name;
+
+                        } elseif (empty($creatorProfile->kennel_name) && !empty($creatorProfile->last_name)) {
+                            $dog->aliasDog = $creatorProfile->last_name . ' ' . $dog->name;
+
+                        } else {
+                            $dog->aliasDog = $dog->name;
+                        }
+
+                    } else {
+                        $dog->aliasDog = $dog->name;
+                    }
                 });
 
                 $data['status'] = 200;
                 $data['data'] = $dogs;
+
+            } else {
+
+                $data['status'] = 404;
+                $data['message'] = "Oops! No matches found for your search.";
             }
+
+
         }
         return response()->json($data);
     }
@@ -337,13 +554,13 @@ class DogController extends Controller
         }
 
         $validatedData = $validator->validated();
-        
+
         $dog = Dog::whereRaw('LOWER(name) = ?', [strtolower($validatedData['name'])])->first();
 
 
         if ($dog) {
 
-            $data['message'] = 'A dog with this name already exists in the system.';
+            $data['message'] = 'A dog with the name '.$dog->name.' already exists in the system';
             return response()->json($data, 422);
         }
     
@@ -431,6 +648,7 @@ class DogController extends Controller
                 try {
 
                     $sireEmail = $validatedData['sire_email'];
+                    $sireName = $validatedData['sire_name'];
                     $descriptionSire = $validatedData['descriptionSire'] ?? '';
 
                     // Validate email before sending
@@ -448,7 +666,7 @@ class DogController extends Controller
                         'description' => $descriptionSire
                     ];
 
-                    $this->createPendingRelation($emailData,'sire',$sireEmail);
+                    $this->createPendingRelation($emailData,'sire',$sireEmail,$sireName);
 
                     //Log successful sending
                     Log::info('Dog registration email sent successfully', [
@@ -475,6 +693,7 @@ class DogController extends Controller
                 try {
                     
                     $damEmail = $validatedData['dam_email'];
+                    $damName = $validatedData['dam_name'];
                     $descriptionDam = $validatedData['descriptionDam'] ?? '';
 
                     // Validate email before sending
@@ -492,7 +711,7 @@ class DogController extends Controller
                         'description' => $descriptionDam
                     ];
 
-                    $this->createPendingRelation($emailData,'dam',$damEmail);
+                    $this->createPendingRelation($emailData,'dam',$damEmail,$damName);
 
 
                 } catch (Exception $e) {
@@ -551,7 +770,7 @@ class DogController extends Controller
         return response()->json($data);
     }
 
-    private function createPendingRelation($emailData, $relationType, $email)
+    private function createPendingRelation($emailData, $relationType, $email,$name)
     {
         try {
 
@@ -561,7 +780,7 @@ class DogController extends Controller
                 'main_dog_id'   => $emailData['dog']->dog_id,
                 'relation_type' => $relationType,
                 'pending_email' => $email,
-                'temp_dog_name' => null,
+                'temp_dog_name' => $name,
                 'token'         => $token,
                 'status'        => 'pending',
             ]);

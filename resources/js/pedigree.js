@@ -60,7 +60,7 @@ export  function pedigree() {
                   dogs.forEach(dog => {
 
                      let sex = dog.sex == 'M' ? 'Male' : 'Female';
-                     let dogName = `${dog.name} <span class="dog-sex is-size-7">(${sex})</span>`;
+                     let dogName = `${dog.aliasDog} <span class="dog-sex is-size-7">(${sex})</span>`;
                      
                      const li = document.createElement('li');
                      li.classList.add('dog-item'); // esta clase la usaremos para estilo

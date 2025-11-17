@@ -53,8 +53,8 @@
             const row = document.createElement('tr');
             row.innerHTML = `
                 
-                <td>${breeding.male_dog.name}</td>
-                <td>${breeding.female_dog.name}</td>
+                <td>${breeding.male_dog.alias_dog}</td>
+                <td>${breeding.female_dog.alias_dog}</td>
                 <td>
                 <button class="button has-text-white is-success is-small" 
                     onclick="receibed(
@@ -87,8 +87,8 @@
     window.filterBreedings = function() {
         const search = document.getElementById('searchInput').value.toLowerCase();
         const filtered = breedings.filter(b =>
-            b.female_dog.name.toLowerCase().includes(search) ||
-            b.male_dog.name.toLowerCase().includes(search)
+            b.female_dog.alias_dog.toLowerCase().includes(search) ||
+            b.male_dog.alias_dog.toLowerCase().includes(search)
         );
         populateTable(filtered);
     };

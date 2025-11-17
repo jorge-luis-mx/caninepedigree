@@ -26,6 +26,7 @@ trait Pedigree
                 'id' => md5($dog->dog_id),
                 'number'=>$dog->reg_no,
                 'name' => $dog->name,
+                'aliasDog' => $dog->alias_dog,   // alias integrado
                 'breed' => $dog->breed,
                 'color' => $dog->color,
                 'sex' => $dog->sex,

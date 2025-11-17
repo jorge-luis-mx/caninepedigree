@@ -91,14 +91,14 @@ export  function breedingRequest() {
             dogs.forEach(dog => {
                 const item = document.createElement('div');
                 item.className = 'result-item';
-                item.textContent = dog.name;
+                item.textContent = dog.aliasDog;
                 item.dataset.dogId = dog.dog_id;
         
                 // Maneja el clic correctamente
                 item.addEventListener('mousedown', () => {
                     selectingDog = true;
                     // Usamos 'mousedown' en lugar de 'click' para que se registre antes de que el input pierda el foco
-                    selectDog(dog.dog_id, dog.name, form, type);
+                    selectDog(dog.dog_id, dog.aliasDog, form, type);
                     
                 });
         

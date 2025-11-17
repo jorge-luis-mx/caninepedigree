@@ -56,8 +56,8 @@
                 const formattedDate = `${year}-${month}-${day}`;
 
                 row.innerHTML = `
-                    <td>${request.female_dog.name}</td>
-                    <td>${request.male_dog.name}</td>
+                    <td>${request.female_dog.alias_dog}</td>
+                    <td>${request.male_dog.alias_dog}</td>
                     <td>
                         <span class="tag ${
                             request.status === 'pending' ? 'is-pending' :
@@ -103,8 +103,8 @@
 
         function filteredRequests() {
             return sentRequests.filter(req =>
-                req.female_dog.name.toLowerCase().includes(currentSearch) ||
-                req.male_dog.name.toLowerCase().includes(currentSearch)
+                req.female_dog.alias_dog.toLowerCase().includes(currentSearch) ||
+                req.male_dog.alias_dog.toLowerCase().includes(currentSearch)
             );
         }
 

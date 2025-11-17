@@ -29,7 +29,7 @@
                                     class="input"
                                     type="text"
                                     name="name"
-                                    value="">
+                                    value="{{ old('name', $pending_name ?? '') }}">
                               </div>
                            </div>
                         </div>
@@ -54,10 +54,22 @@
                               <label class="label" for="sex">{{__('messages.main.formDog.sex')}}</label>
                               <div class="control">
                                  <div class="select is-fullwidth">
-                                    <select name="sex" id="sex">
-                                       <option value="M">{{__('messages.main.formDog.selectedMale')}}</option>
-                                       <option value="F">{{__('messages.main.formDog.slectedFemale')}}</option>
-                                    </select>
+                                 @php
+                                    $sexValue = old('sex', $relation_type ?? '');
+                                 @endphp
+
+                                 <select name="sex" id="sex">
+                                    <option value="M" {{ $sexValue === 'M' ? 'selected' : '' }}>
+                                       {{ __('messages.main.formDog.selectedMale') }}
+                                    </option>
+
+                                    <option value="F" {{ $sexValue === 'F' ? 'selected' : '' }}>
+                                       {{ __('messages.main.formDog.slectedFemale') }}
+                                    </option>
+                                 </select>
+
+
+
                                  </div>
                               </div>
                            </div>

@@ -25,7 +25,7 @@
                                                 <option value=""  selected>Choose your dog</option>
                                                 @foreach($dogs as $dog)
                                                     <option value="{{ $dog->dog_id }}">
-                                                        {{ $dog->name }} ({{ $dog['sex'] == 'M' ? 'Male' : 'Female' }})
+                                                        {{ $dog->aliasDog }} ({{ $dog['sex'] == 'M' ? 'Male' : 'Female' }})
                                                     </option>
                                                 @endforeach
                                             </select>

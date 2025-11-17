@@ -19,6 +19,7 @@ class Dog extends Model
         'birthdate' => 'datetime',  // Esto convierte op_date a un objeto Carbon
         'current_owner_id' => 'integer',
     ];
+    protected $appends = ['alias_dog'];
     protected $fillable = [
         'reg_no',
         'name',
@@ -88,4 +89,28 @@ class Dog extends Model
     {
         return $this->belongsTo(User::class, 'created_by_user_id');
     }
+
+    public function getAliasDogAttribute()
+    {
+        $profile = $this->creator->userprofile ?? null;
+
+        if (!$profile) {
+            return $this->name;
+        }
+
+        if (!empty($profile->kennel_name) && $profile->kennel_name_status == 1) {
+            return $profile->kennel_name . ' ' . $this->name;
+        }
+
+        if (!empty($profile->kennel_name) && $profile->kennel_name_status == 0) {
+            return $profile->last_name . ' ' . $this->name;
+        }
+
+        if (empty($profile->kennel_name) && !empty($profile->last_name)) {
+            return $profile->last_name . ' ' . $this->name;
+        }
+
+        return $this->name;
+    }
+
 }

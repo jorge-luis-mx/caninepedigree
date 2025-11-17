@@ -79,15 +79,15 @@ class RegisteredUserController extends Controller
                 }
             }
             // Guardar token en sesión para usar después (tras crear usuario si es necesario)
-            // session(['pending_invite_token' => $token]);
+            session(['pending_invite_token' => $token]);
         }
 
         // Verificar si viene token en la URL
         if ($request->filled('invoice')) {
-            $token = $request->input('invoice');
+            $invoice = $request->input('invoice');
 
             // Buscar registro pendiente
-            $parentRequest = DogParentRequest::where('token', $token)->first();
+            $parentRequest = DogParentRequest::where('token', $invoice)->first();
 
             if (!$parentRequest) {
                 abort(404, 'Invalid or expired registration token.');
@@ -102,7 +102,8 @@ class RegisteredUserController extends Controller
                     abort(403, 'You are not authorized to register this dog.');
                 }
             }
-
+            // Guardar token en sesión para usar después (tras crear usuario si es necesario)
+            session(['pending_invite_invoice' => $invoice]);
         }
 
         $role = $validated['role'] ?? null;

@@ -57,7 +57,7 @@ class BreedingRequestController extends Controller
             })
             ->where('status', 'pending')
             ->orderBy('created_at', 'desc')
-            ->with(['femaleDog', 'maleDog']) // Carga la perra y el perro
+            ->with(['femaleDog.creator.userprofile', 'maleDog.creator.userprofile']) // Carga la perra y el perro
             ->get()
             ->map(function ($item) {
                 $item->hash_request_id = md5($item->request_id);
@@ -116,7 +116,41 @@ class BreedingRequestController extends Controller
             return view('breeding.create-breeding',compact('dog'));
         }
 
-        $dogs = Dog::where('current_owner_id', $owner)->where('status','completed')->where('sex','F')->get();
+        // $dogs = Dog::where('current_owner_id', $owner)->where('status','completed')->where('sex','F')->get();
+        $dogs = Dog::with(['creator.userprofile'])
+            ->where('current_owner_id', $owner)
+            ->where('status', 'completed')
+            ->where('sex', 'F')
+            ->get();
+
+        $dogs->each(function ($dog) {
+
+            // Perfil del creador
+            $creatorProfile = $dog->creator->userprofile ?? null;
+
+            if ($creatorProfile) {
+
+                if (!empty($creatorProfile->kennel_name) && $creatorProfile->kennel_name_status == 1) {
+                    $dog->aliasDog = $creatorProfile->kennel_name . ' ' . $dog->name;
+                } 
+                elseif (!empty($creatorProfile->kennel_name) && $creatorProfile->kennel_name_status == 0) {
+                    $dog->aliasDog = $creatorProfile->last_name . ' ' . $dog->name;
+                } 
+                elseif (empty($creatorProfile->kennel_name) && !empty($creatorProfile->last_name)) {
+                    $dog->aliasDog = $creatorProfile->last_name . ' ' . $dog->name;
+                } 
+                else {
+                    $dog->aliasDog = $dog->name;
+                }
+
+            } else {
+
+                // fallback sin perfil
+                $dog->aliasDog = $dog->name; 
+            }
+        });
+
+
 
 
         return view('breeding.create-breeding',compact('dogs'));
@@ -536,11 +570,19 @@ class BreedingRequestController extends Controller
         $user = auth()->user();
         $profile = $user->userprofile;
 
+        // $send_request = BreedingRequest::where('requester_id', $profile->profile_id)
+        //     ->orderBy('created_at', 'desc')
+        //     ->with(['maleDog', 'femaleDog', 'owner'])
+        //     ->get();
+
         $send_request = BreedingRequest::where('requester_id', $profile->profile_id)
             ->orderBy('created_at', 'desc')
-            ->with(['maleDog', 'femaleDog', 'owner'])
+            ->with([
+                'maleDog.creator.userprofile',
+                'femaleDog.creator.userprofile',
+                'owner'
+            ])
             ->get();
-
 
         // $send_request = BreedingRequest::with(['femaleDog', 'maleDog'])->get();
         return view('breeding.list-sent-request', compact('send_request'));

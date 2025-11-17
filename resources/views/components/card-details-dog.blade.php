@@ -8,7 +8,7 @@
       <img src="{{ asset('assets/img/dogs-image.jpg') }}" />
    </div>
    <div class="content-details">
-      <p class="title is-3 mt-2">{{ $dog['name']}}</p>
+      <p class="title is-3 mt-2">{{ $dog['aliasDog']}} </p>
       <ul class="is-flex is-align-items-center mb-3">
          <li>
             <span>{{$dog['owner']['name']}}</span><br>
