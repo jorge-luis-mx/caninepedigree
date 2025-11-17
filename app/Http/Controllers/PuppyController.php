@@ -27,7 +27,18 @@ class PuppyController extends Controller
             ->where('sex', 'F')
             ->firstOrFail();
 
-        return view('puppies.create',compact('dog'));
+        $latestBreeding = $dog->breedingsAsFemale()
+            ->with('maleDog.creator.userprofile')
+            ->latest()
+            ->first();
+        
+        // return view('puppies.create',compact('dog'));
+
+        if (!$latestBreeding) {
+            return view('puppies.no-breeding', compact('dog'));
+        }
+
+        return view('puppies.create', compact('dog', 'latestBreeding'));
 
     }
 

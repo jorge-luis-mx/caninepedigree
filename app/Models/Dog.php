@@ -70,13 +70,13 @@ class Dog extends Model
     // Cruzamientos donde el perro fue el macho
     public function breedingsAsMale()
     {
-        return $this->hasMany(BreedingRequest::class, 'male_dog_id');
+        return $this->hasMany(BreedingRequest::class, 'male_dog_id','dog_id');
     }
 
     // Cruzamientos donde el perro fue la hembra
     public function breedingsAsFemale()
     {
-        return $this->hasMany(BreedingRequest::class, 'female_dog_id');
+        return $this->hasMany(BreedingRequest::class, 'female_dog_id','dog_id');
     }
 
     // Si este perro es un cachorro, de qué cruza proviene

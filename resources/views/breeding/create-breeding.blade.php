@@ -98,6 +98,18 @@
                                             <small class="error-message" id="error-dog_email"></small>
                                         </div>
                                     </div>
+                                    <div class="field">
+                                        <label class="label" for="sire_name">Name sire</label>
+                                        <div class="control">
+                                            <input
+                                                class="input"
+                                                type="text"
+                                                id="sire_name"
+                                                name="sire_name">
+
+                                            <small class="error-message" id="sire_name_error"></small>
+                                        </div>
+                                    </div>
 
                                     <div class="field">
                                         <label class="label" for="description">{{__('messages.main.formDog.noteSire')}}</label>

@@ -43,7 +43,7 @@
                type="email"
                name="dam_email"
                id="dam_email"
-               placeholder="{{__('messages.main.formDog.placeholderDamEmail')}}">
+               placeholder="{{__('messages.main.formDog.placeholderDamEmail')}}" autocomplete="off">
             <span class="icon is-small is-left">
                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
                   <path fill="currentColor" d="M2 4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4zm2 0v1.6l8 4.8l8-4.8V4H4zm16 2.4l-8 4.8l-8-4.8V18h16V6.4z" />

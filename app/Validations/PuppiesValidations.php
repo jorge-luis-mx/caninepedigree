@@ -11,7 +11,7 @@ class PuppiesValidations
         $rules = [
             // Validar campos del padre y madre
             'totalPuppies'=>'required',
-            'dog' => 'required|regex:/^[\pL0-9\s\'\(\)]+$/u',
+            // 'dog' => 'required|regex:/^[\pL0-9\s\'\(\)]+$/u',
             'dog_id' => 'required|integer',
             // 'dam' => 'required|regex:/^[\pL0-9\s\'\(\)]+$/u',
             'dam_id' => 'required|integer',

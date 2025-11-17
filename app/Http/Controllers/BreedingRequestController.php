@@ -189,13 +189,7 @@ class BreedingRequestController extends Controller
                 ->whereIn('status', ['pending', 'approved']) // Considerar también 'approved' como activo
                 ->exists();
             
-            // if ($hasActiveRequests) {
 
-            //     return response()->json([
-            //         'status' => 'error',
-            //         'message' => 'This female dog already has an active breeding request.',
-            //     ], 403);
-            // }
 
             // Verificar si es la primera cría
             $isFirstBreeding = BreedingRequest::where('female_dog_id', $validatedData['my_dog_id'])
@@ -396,6 +390,7 @@ class BreedingRequestController extends Controller
             'dog_id' => $femaleDog->dog_id,
             'parent_type' => $sexDog,
             'email' => $validatedData['dog_email'],
+            'temp_dog_name' => $validatedData['sire_name'],
             'token' => $token,
         ]);
 

@@ -4,8 +4,6 @@
 
    @if(!empty($dog))
 
-
-
       <div class="card buttons-container">
          <a href="{{ route('dog.sales.create',['id' => $dog['id']])}}">
             <button class="button has-text-white has-background-warning">Sale Dog</button>
@@ -18,12 +16,6 @@
                <button class="button has-text-white has-background-warning">Add Breeding</button>
             </a>
          @endif
-         <!-- <a target="_blank" href="{{ route('certificates.pdf', ['id' => $dog['id'],'type'=>'registration']) }}">
-            <button class="button has-text-white has-background-warning">{{__('messages.main.dogDetails.btnRegistration')}}</button>
-         </a>
-         <a target="_blank" href="{{ route('certificates.pdf', ['id' => $dog['id'],'type'=>'pedigree']) }}">
-            <button class="button has-text-white has-background-warning">{{__('messages.main.dogDetails.btnPedigree')}}</button>
-         </a> -->
 
          <a href="#" 
             data-id="{{ $dog['id'] }}" data-type="registration" onclick="generateCertificateFromData(this)">
@@ -81,33 +73,11 @@
                </li>
 
                <li>
-                  @if($breeding->male_dog_id === $dog['dog_id'])
-                     <!-- <p class="has-text-link mb-1 is-flex is-flex-direction-column">
-                        <strong>Female:</strong>
-                        <a href="/pedigrees/{{ $female}}" 
-                           class="has-text-link has-text-weight-semibold is-underlined">
-                           {{ $breeding->femaleDog->name ?? 'Unknown' }}
-                        </a>
-                     </p> -->
-                  @else
-                     <!-- <p class="has-text-link mb-1 is-flex is-flex-direction-column">
-                        <strong>Male:</strong>
-                        <a href="/pedigrees/{{ $male }}" 
-                           class="has-text-link has-text-weight-semibold is-underlined">
-                           <span class="has-text-link">
-                              {{ $breeding->maleDog->name ?? 'Unknown' }}
-                           </span>
-                        </a>
-                     </p> -->
-                  @endif
-               </li>
-
-               <li>
                   <p class="has-text-link mb-1 is-flex is-flex-direction-column">
                      <strong>Female:</strong>
                      <a href="/pedigrees/{{ $female}}" 
                         class="has-text-link has-text-weight-semibold is-underlined">
-                        {{ $breeding->femaleDog->name ?? 'Unknown' }}
+                        {{ $breeding->femaleDog->aliasDog?? 'Unknown' }}
                      </a>
                   </p>
                </li>
@@ -118,7 +88,7 @@
                      <a href="/pedigrees/{{ $male }}" 
                         class="has-text-link has-text-weight-semibold is-underlined">
                         <span class="has-text-link">
-                           {{ $breeding->maleDog->name ?? 'Unknown' }}
+                           {{ $breeding->maleDog->aliasDog?? 'Unknown' }}
                         </span>
                      </a>
                   </p>
@@ -126,7 +96,7 @@
 
                <li>
                   <p class="mb-0 is-flex is-flex-direction-column">
-                     <strong>Breeding date:</strong>
+                     <strong>Date:</strong>
                      <span class="has-text-grey-dark">
                         {{ $breeding->created_at->format('d/m/Y') }}
                      </span>

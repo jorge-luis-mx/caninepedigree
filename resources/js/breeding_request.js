@@ -120,6 +120,7 @@ export  function breedingRequest() {
 
         const saveBtn = document.querySelector(".saveBreedingRequest");
         if (saveBtn) {
+            
             saveBtn.addEventListener("click", e => {
                 e.preventDefault();
 
@@ -195,21 +196,30 @@ export  function breedingRequest() {
     function validateDogForm(serializedData) {
         let hasError = false;
     
-        const fields = ['my_dog_id', 'dog_id', 'dogDetails', 'dog_email'];
+        const fields = ['my_dog_id', 'dog_id','sire_name', 'dogDetails', 'dog_email'];
         fields.forEach(id => clearError(id)); // Limpia antes de validar
     
         const dog_id = serializedData.dog_id?.trim() || '';
         const dogDetails = serializedData.dogDetails?.trim() || '';
         const dog_email = serializedData.dog_email?.trim() || '';
         const my_dog_id = serializedData.my_dog_id?.trim() || '';
+        const sire_name = serializedData.sire_name?.trim() || '';
     
         if (!my_dog_id) {
             showError('my_dog_id', 'Debe seleccionar su propio perro.');
             hasError = true;
         }
-    
+        
+        // SOLO si dog_id está vacío → validar sire_name
+        if (!dog_id && !sire_name) {
+            showError('sire_name', 'Ingresar el nombre del perro');
+            hasError = true;
+        }
+
         if (!dog_id) {
             showError('dog_id', 'Buscar el perro que desee cruzar');
+
+            
     
             if (!dogDetails) {
                 showError('dogDetails', 'Debe completar los detalles del perro.');

@@ -18,6 +18,7 @@ class DogParentRequest extends Model
         'dog_id',
         'parent_type', 
         'email', 
+        'temp_dog_name',
         'token'
     ];
 

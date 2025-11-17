@@ -12,6 +12,17 @@
                <div class="btn-contador" onclick="incrementar()">+</div>
             </div>
          </div>
+         <div class="column is-full">
+            @if ($latestBreeding && $latestBreeding->maleDog)
+               <article class="message is-info">
+                  <div class="message-body">
+                        Father of the puppies to register:
+                        <strong>{{ $latestBreeding->maleDog->alias_dog}}</strong>
+                  </div>
+               </article>
+            @endif
+
+         </div>
          <div class="column">
             <div class="card" style="box-shadow: none;">
                <div class="card-content">
@@ -20,12 +31,12 @@
                      @method('post')
 
 
-                     <div class="columns is-multiline">
+                     <!-- <div class="columns is-multiline">
 
                         <div class="column">
                            <input type="hidden" name="dam_id" value="{{ $dog->dog_id }}">
                         </div>
-                        <!-- Bloque para Male (Sire) -->
+                        
                         <div class="column is-full">
                            <div class="field search-container" data-type="sire">
                               <label class="label">Enter the IDDR number or the dog's name (Sire)</label>
@@ -49,9 +60,13 @@
                            </div>
                            <div id="dogResults" style="display: none;"></div>
                         </div>
+                     </div> -->
+                     <div class="column">
+                        <input type="hidden" name="dam_id" value="{{ $dog->dog_id }}">
                      </div>
-                     <!-- aqui la ninea -->
-                     <hr style="background-color: #d3d3d3; height: 1px;   margin: 1rem -1.5rem;margin-bottom:2rem;">
+                     <input type="hidden" class="dog_id" name="dog_id" id="dog_id"  value="{{ optional($latestBreeding->maleDog)->dog_id }}">
+                     <!-- aqui la linea -->
+                     <!-- <hr style="background-color: #d3d3d3; height: 1px;   margin: 1rem -1.5rem;margin-bottom:2rem;"> -->
 
                      <div class="column">
                         <div class="field">

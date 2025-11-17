@@ -178,7 +178,7 @@ class DogController extends Controller
 
             // Verifica que el email del usuario coincida con el correo pendiente
             if ($profile->email !== $pending->pending_email) {
-                abort(403, 'You are not authorized to register this dog.');
+                return redirect()->route('dogs.index');
             }
             // if (session()->has('pending_invite_token')) {
             //     session()->forget('pending_invite_token');
@@ -196,12 +196,13 @@ class DogController extends Controller
 
         if ($invoice) {
             
-            $parentRequest = DogParentRequest::where('token', $invoice)
-            ->where('status','pending')
-            ->first();
+            $parentRequest = DogParentRequest::where('token', $invoice)->first();
+            //->where('status','pending')
+            
            
             if (!$parentRequest) {
-                abort(404, 'Invalid or expired registration invoice.');
+                
+                return redirect()->route('dogs.index');
             }
             // Si el usuario no está autenticado, redirige al login con el token
             if (!auth()->check()) {
@@ -209,7 +210,7 @@ class DogController extends Controller
             }
             // Verifica que el email del usuario coincida con el correo pendiente
             if ($profile->email !== $parentRequest->email) {
-                abort(403, 'You are not authorized to register this dog.');
+                return redirect()->route('dogs.index');
             }
             // if (session()->has('pending_invite_invoice')) {
             //     session()->forget('pending_invite_invoice');
@@ -217,8 +218,8 @@ class DogController extends Controller
             // Renderiza la vista con los datos del registro pendiente
             return view('dogs.create-dog', [
                 'pending_invoice' => $invoice,
-                'pending_name' => null,
-                'relation_type' => $parentRequest->parent_type,
+                'pending_name' => $parentRequest->temp_dog_name,
+                'relation_type' => $parentRequest->parent_type =='sire'? 'M':'F'
             ]);
         }
 
@@ -849,7 +850,7 @@ class DogController extends Controller
         ->firstOrFail();
 
         // Todas las cruzas completadas (como macho o hembra)
-        $completedBreedings = BreedingRequest::with(['photos', 'maleDog', 'femaleDog'])
+        $completedBreedings = BreedingRequest::with(['photos', 'maleDog.creator.userprofile', 'femaleDog.creator.userprofile'])
             ->where(function ($q) use ($dog) {
                 $q->where('male_dog_id', $dog->dog_id)
                 ->orWhere('female_dog_id', $dog->dog_id);

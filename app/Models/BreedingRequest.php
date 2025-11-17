@@ -33,7 +33,7 @@ class BreedingRequest extends Model
 
     public function femaleDog()
     {
-        return $this->belongsTo(Dog::class, 'female_dog_id');
+        return $this->belongsTo(Dog::class, 'female_dog_id', 'dog_id');
     }
 
      /**
@@ -43,7 +43,7 @@ class BreedingRequest extends Model
      */
     public function maleDog()
     {
-        return $this->belongsTo(Dog::class, 'male_dog_id');
+        return $this->belongsTo(Dog::class, 'male_dog_id', 'dog_id');
     }
 
     /**
