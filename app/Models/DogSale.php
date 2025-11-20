@@ -21,7 +21,8 @@ class DogSale extends Model
         'sale_date',
         'payment_method',
         'price',
-        'status'
+        'status',
+        'token'
     ];
 
     const CREATED_AT = 'created_at';

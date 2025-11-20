@@ -68,14 +68,17 @@ class DogSaleController extends Controller
             return back()->with('error', 'You cannot sell or transfer a dog to yourself.');
         }
 
-        $userExists = $profile::where('email', $request->buyer_email)->exists();
-
+        // $userExists = $profile::where('email', $request->buyer_email)->exists();
+        $userExists = $profile::where('email', $request->buyer_email)->first();
         $token = \Illuminate\Support\Str::random(40);
+
         $url = $userExists
-                ? url(config('app.url') . "?ownership={$token}") 
+                ? url(config('app.url')) 
                 : url(config('app.url') . "register?ownership={$token}");
 
-        $buyer_id = $userExists ? $profile->profile_id: null;
+        $buyer_id = $userExists ? $userExists->profile_id: null;
+
+        $validToken =  $userExists ? null: $token;
 
         $sale = DogSale::create([
             'dog_id' => $dog->dog_id,
@@ -86,58 +89,26 @@ class DogSaleController extends Controller
             'payment_method' => $request->payment_method,
             'sale_date' => now(),
             'status' => 'pending',
+            'token'=>$validToken
         ]);
 
-        $this->sendEmailSale($request,$url,$sale);
+        Dog::where('dog_id', $request->dog_id)->update(['transfer_pending' => true]);
+        
+        if(!$userExists ){
 
+            $this->sendEmailSale($request,$url,$sale);
+            
+        }
+        
         return redirect()->route('dogs.index')
             ->with('success', 'Dog sale completed and ownership transferred.');
 
+        // $encryptedId = Crypt::encrypt($sale->sale_id);
+        // $url = url('register?dog_sale=' . urlencode($encryptedId));
+        // $this->sendEmailSale($request,$url,$sale);
 
-        // if (!$buyer) {
-        //     // 👤 Comprador no registrado
-        //     $sale = DogSale::create([
-        //         'dog_id' => $dog->dog_id,
-        //         'seller_id' => $profile->profile_id,
-        //         'buyer_id' => null,
-        //         'buyer_email' => $request->buyer_email,
-        //         'price' => $request->price,
-        //         'payment_method' => $request->payment_method,
-        //         'sale_date' => now(),
-        //         'status' => 'pending',
-        //     ]);
-            
-
-
-        //     $encryptedId = Crypt::encrypt($sale->sale_id);
-        //     $url = url('register?dog_sale=' . urlencode($encryptedId));
-
-
-            
-        //     $this->sendEmailSale($request,$url,$sale);
-
-        //     return redirect()->route('dogs.index')
-        //     ->with('success', 'Dog sale completed and ownership transferred.');
-        // }
-
-        // // 👥 Comprador ya registrado
-        // $sale = DogSale::create([
-        //     'dog_id' => $dog->dog_id,
-        //     'seller_id' => $profile->profile_id,
-        //     'buyer_id' => $buyer->profile_id,
-        //     'buyer_email' => $buyer->email,
-        //     'price' => $request->price,
-        //     'payment_method' => $request->payment_method,
-        //     'sale_date' => now(),
-        //     'status' => 'pending',
-        // ]);
-
-        // Dog::where('dog_id', $request->dog_id)->update(['transfer_pending' => true]);
-        
-
-
-        // return redirect()->route('dogs.index')
-        //     ->with('success', 'Dog sale completed and ownership transferred.');
+        //para obtener
+        //$saleId = Crypt::decrypt($request->dog_sale);
     }
 
     /**

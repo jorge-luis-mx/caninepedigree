@@ -37,7 +37,7 @@
       </div>
 
       <div class="mt-4">
-        <button type="submit" id="submitBtn" class="button is-link is-medium">
+        <button type="submit" id="submitBtn" class="button btn-general is-medium">
           🐾 Register under my name
         </button>
       </div>

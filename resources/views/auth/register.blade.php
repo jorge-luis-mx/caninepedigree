@@ -14,8 +14,8 @@
                     <input type="hidden" name="token" value="{{ request()->input('token') }}">
                 @endif
 
-                @if (request()->has('dog_sale'))
-                    <input type="hidden" name="dog_sale" value="{{ request()->get('dog_sale') }}">
+                @if (request()->has('ownership'))
+                    <input type="hidden" name="ownership" value="{{ request()->get('ownership') }}">
                 @endif
                 <!-- Name -->
                 <div class="mb-1">
@@ -69,7 +69,7 @@
                     <a class="text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
                         {{ __('Already registered?') }}
                     </a>
-                    <x-primary-button class="">
+                    <x-primary-button>
                         {{ __('Register') }}
                     </x-primary-button>
                 </div>

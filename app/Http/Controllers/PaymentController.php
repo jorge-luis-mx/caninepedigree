@@ -63,7 +63,6 @@ class PaymentController extends Controller
         }
 
 
-        //return view('payments/payment',compact('paypal','dog','puppies', 'payment'));
     }
 
     public function createOrder(Request $request){
@@ -137,73 +136,6 @@ class PaymentController extends Controller
         $createOrder = $this->paypalHelper->orderCreate($order);
         return response()->json($createOrder);
 
-
-        
-       
-        // $dog = Dog::whereRaw('MD5(dog_id) = ?', $post['invoice'])
-        // ->firstOrFail();
-        // $dog->payment = $dog->payments;
-   
-
-        //     $sale = [];
-        //     $sale['keyReservation'] = $dog->reg_no;
-        //     $sale['cye'] = 'MXN';
-        //     $sale['total'] = 100;
-            
-        //         $item = 'Dog Registration with Payment ';
-        //         $ivoice_Id = $sale['keyReservation'].'-'.time();
-        //         $name = 'Dog Registration';
-
-        //         $order = '{
-        //         "intent" : "CAPTURE",
-        //         "application_context" : {
-        //             "return_url" : "",
-        //             "cancel_url" : ""
-        //         },
-        //         "purchase_units" : [ 
-        //             {
-        //                 "reference_id" : "' . $sale['keyReservation']. '",
-        //                 "description" : "'.$item.'",
-        //                 "invoice_id" : "' . $ivoice_Id  . '",
-        //                 "custom_id" : "' . $sale['keyReservation']. '",
-        //                 "amount" : {
-        //                     "currency_code" : "' . $sale['cye']. '",
-        //                     "value" : "' . $sale['total'] . '",
-        //                     "breakdown": {
-        //                         "item_total": {
-        //                             "currency_code": "' . $sale['cye']. '",
-        //                             "value": "' .  $sale['total'] . '"
-        //                         },
-        //                         "tax_total": {
-        //                             "currency_code": "' . $sale['cye']. '",
-        //                             "value": "0"
-        //                         },
-        //                         "discount": {
-        //                             "currency_code": "' . $sale['cye']. '",
-        //                             "value": "0"
-        //                         }
-        //                     }
-        //                 },
-        //                 "items": [
-        //                     {
-        //                         "sku": "' . $sale['keyReservation'] . '", 
-        //                         "name": " ' . $name . '", 
-        //                         "quantity": "1",
-        //                         "unit_amount": {
-        //                             "currency_code": "' . $sale['cye']. '",
-        //                             "value": "' . $sale['total'] . '"
-        //                         }
-        //                     }
-        //                 ]
-        //             }
-        //         ]
-        //         }';
-
-            
-
-        //     $createOrder = $this->paypalHelper->orderCreate($order);
-
-        //     return response()->json($createOrder);
     }
 
 
@@ -252,8 +184,6 @@ class PaymentController extends Controller
                 'transfer_pending' => 0
             ]);
 
-            
-
             // Actualizar dog_sales a completed
             DogSale::whereIn('dog_id', $dogIds)->update(['status' => 'completed']);
 
@@ -267,82 +197,6 @@ class PaymentController extends Controller
             return response()->json(['error' => true, 'cause' => 'Error al procesar'], 500);
         }
 
-
-
-
-
-
-
-
-
-
-
-
-        // $post = (object)$request->all();
-
-        // $payment = Payment::where('order_reference', $post->invoice)->first();
-
-        // if (!$payment) {
-        //     return response()->json(['error' => 'Pago no encontrado'], 404);
-        // }
-
-        // $payment->update(['status' => 'completed']);
-        // $dogs = $payment->dogs;
-        
-        // if(empty($dogs)){
-
-        //     $dogsTransfers = $payment->dogs()->where('transfer_pending', 1)->get();
-
-        // }
-
-        // if ($dogs->count() == 1 && !$dogs->first()->is_puppy) {
-        //     // Caso: registro de perro individual
-        //     $dogs->first()->update(['status' => 'completed']);
-        // } else {
-        //     // Caso: camada de cachorros
-        //     foreach ($dogs as $dog) {
-        //         $dog->update(['status' => 'completed']);
-        //     }
-        // }
-
-        // $data = ['error' => false, 'cause' => 'Success'];
-        // return response()->json($data);
-
-
-
-        // if (!$post) {
-        //     return response()->json([
-        //         'error' => true,
-        //         'cause' => 'Request invalid'
-        //     ]);
-        // }
-
-        // if (isset($post->invoice) && !empty($post->invoice)) {
-
-
-        //     DB::beginTransaction();
-        //     try {
-        //         $dog = Dog::whereRaw('MD5(dog_id) = ?', [$post->invoice])
-        //             ->with('payments')
-        //             ->firstOrFail(); 
-            
-        //         if ($dog->payments->isNotEmpty()) {
-                    
-        //             $dog->payments()->update(['status' => 'completed']);
-        //             $dog->update(['status' => 'completed']);
-        //         }
-            
-        //         DB::commit();
-        //     } catch (\Exception $e) {
-        //         DB::rollback();
-        //         return response()->json(['error' => 'Error al actualizar: ' . $e->getMessage()], 500);
-        //     }
-
-
-        // }
-
-
-        // return response()->json($data);
     }
 
 

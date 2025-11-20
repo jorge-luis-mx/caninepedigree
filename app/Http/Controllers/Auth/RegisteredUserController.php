@@ -106,6 +106,7 @@ class RegisteredUserController extends Controller
             session(['pending_invite_invoice' => $invoice]);
         }
 
+
         $role = $validated['role'] ?? null;
         $text = preg_split('/\s+/', $request->last_name);
 
@@ -130,35 +131,15 @@ class RegisteredUserController extends Controller
             'status' => 1,
         ]);
 
-        // 4️⃣ Verificar si viene un enlace de venta (dog_sale)
-        if ($request->filled('dog_sale')) {
-            try {
-                // Si usas Crypt
-                $saleId = Crypt::decrypt($request->dog_sale);
+        if ($request->filled('ownership')) {
+            
+            $ownership = $request->input('ownership');
 
-                $sale = DogSale::find($saleId);
-              
-                if ($sale && $sale->status === 'pending') {
-                    // Actualizar comprador y marcar como completada
-                    $sale->update([
-                        'buyer_id' => $userProfile->profile_id,
-                        'status' => 'completed',
-                        'sale_date' => now(), // 🆕 registrar fecha automática
-                    ]);
+            DogSale::where('token', $ownership)->update(['buyer_id' => $userProfile->profile_id]);
 
-                    // Cambiar el dueño del perro
-                    Dog::where('dog_id', $sale->dog_id)
-                        ->update([
-                                'current_owner_id' => $userProfile->profile_id,
-                                'transfer_pending' => false
-                            ]);
-                }
-
-            } catch (\Exception $e) {
-                Log::error('Error processing dog sale during registration: ' . $e->getMessage());
-            }
         }
-        
+
+
         // 5️⃣ Autenticar y redirigir
         event(new Registered($user));
         Auth::login($user);
