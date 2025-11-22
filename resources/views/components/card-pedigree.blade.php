@@ -84,7 +84,7 @@
                           <img src="{{ asset('assets/img/dogs-image.jpg') }}" />
                         </div>
                         <div class="dog-details">
-                          <p><label>{{__('messages.main.dogDetails.name')}}:</label> <span>{{$dog['name']}}</span></p>
+                          <p><label>{{__('messages.main.dogDetails.name')}}:</label> <span>{{$dog['aliasDog']}}</span></p>
                           <p><label>{{__('messages.main.dogDetails.owner')}}:</label> <span>{{$dog['owner']['name']}}</span></p>
                           <p><label>{{__('messages.main.dogDetails.regNo')}}:</label> <span>{{$dog['number']}}</span></p>
                           <p><label>{{__('messages.main.dogDetails.breed')}}:</label> <span>{{$dog['breed']}}</span></p>

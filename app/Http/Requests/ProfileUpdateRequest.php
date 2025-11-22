@@ -18,56 +18,67 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'first_name' => ['required', 'string', 'max:255','regex:/^[\pL\pN\s\-\.]+$/u'],
-            'kennel_name' => ['required', 'string', 'max:255','regex:/^[\pL\pN\s\-\.]+$/u'],
-            
             'last_name' => ['required', 'string', 'max:255','regex:/^[\pL\pN\s\-\.]+$/u'],
             'middle_name' => ['required', 'string', 'max:255','regex:/^[\pL\pN\s\-\.]+$/u'],
+            
+            // Checkbox es opcional (nullable o boolean)
+            'use_kennel_name' => ['nullable', 'boolean'],
+            
+            // kennel_name es requerido SOLO si use_kennel_name está checkeado
+            'kennel_name' => [
+                'required_if:use_kennel_name,1',
+                'nullable',
+                'string',
+                'max:255',
+                'regex:/^[\pL\pN\s\-\.]+$/u'
+            ],
+            
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 
                 Rule::unique('user_profiles', 'email')->ignore(
-                    $this->user()->UserProfile->profile_id, // Ignora el proveedor autenticado
-                    'profile_id' // Columna que actúa como identificador
+                    $this->user()->UserProfile->profile_id,
+                    'profile_id'
                 ),
             ],
             'phone' => [
                 'required', 
                 'string',
-                'regex:/^\+?[0-9]{7,15}$/', // Acepta números de teléfono internacionales y locales (7-15 dígitos)
+                'regex:/^\+?[0-9]{7,15}$/',
             ],
-
         ];
     }
 
     public function messages(): array
     {
         return [
-            'kennel_name.required' => 'The provider name is required.',
-            'kennel_name.string' => 'The provider name must be a string.',
-            'kennel_name.max' => 'The provider name must not exceed 255 characters.',
-            'kennel_name.regex' => 'El nombre de la empresa solo puede contener letras, espacios y "&". No se permiten números ni caracteres especiales.',
+            'kennel_name.required_if' => 'The kennel name is required when "Accept Kennel Name" is checked.',
+            'kennel_name.string' => 'The kennel name must be a string.',
+            'kennel_name.max' => 'The kennel name must not exceed 255 characters.',
+            'kennel_name.regex' => 'El nombre del kennel solo puede contener letras, números, espacios, guiones y puntos.',
 
-            'fullname.required' => 'The provider name is required.',
-            'fullname.string' => 'The provider name must be a string.',
-            'fullname.max' => 'The provider name must not exceed 255 characters.',
-            'fullname.regex' => 'El nombre de la empresa solo puede contener letras, espacios y "&". No se permiten números ni caracteres especiales.',
+            'first_name.required' => 'The first name is required.',
+            'first_name.string' => 'The first name must be a string.',
+            'first_name.max' => 'The first name must not exceed 255 characters.',
+            'first_name.regex' => 'El nombre solo puede contener letras, espacios, guiones y puntos.',
 
+            'last_name.required' => 'The last name is required.',
+            'last_name.string' => 'The last name must be a string.',
+            'last_name.max' => 'The last name must not exceed 255 characters.',
+            'last_name.regex' => 'El apellido solo puede contener letras, espacios, guiones y puntos.',
 
-            'email.required' => 'The provider email is required.',
-            'email.string' => 'The provider email must be a string.',
-            'email.lowercase' => 'The provider email must be in lowercase.',
+            'middle_name.required' => 'The middle name is required.',
+            'middle_name.string' => 'The middle name must be a string.',
+            'middle_name.max' => 'The middle name must not exceed 255 characters.',
+            'middle_name.regex' => 'El segundo nombre solo puede contener letras, espacios, guiones y puntos.',
+
+            'email.required' => 'The email is required.',
+            'email.string' => 'The email must be a string.',
+            'email.lowercase' => 'The email must be in lowercase.',
             'email.email' => 'A valid email address must be provided.',
             'email.max' => 'The email address must not exceed 255 characters.',
-            'email.unique' => 'The email address is already registered for another provider.',
+            'email.unique' => 'The email address is already registered.',
 
             'phone.required' => 'The phone number is required.',
             'phone.regex' => 'The phone number must be valid (7-15 digits, optional +).',
-
-            'address.required' => 'The provider name is required.',
-            'address.string' => 'The provider name must be a string.',
-            'address.max' => 'The provider name must not exceed 255 characters.',
-            'address.regex' => 'La dirección solo puede contener letras, números, espacios, comas, puntos, guiones y "#".',
-
-            'country.required' => 'The country is required.',
-            'country.regex' => 'The country name must only contain letters, numbers, and spaces.',
         ];
     }
 }

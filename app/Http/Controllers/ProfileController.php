@@ -39,6 +39,7 @@ class ProfileController extends Controller
         // validated
         $validatedData = $request->validated();
 
+    
         $userProfile = $request->user()->UserProfile;
 
         if (!$userProfile) {
@@ -58,7 +59,8 @@ class ProfileController extends Controller
                 'middle_name' => $validatedData['middle_name'] ?? $userProfile->middle_name,
                 'email' => $validatedData['email'] ?? $userProfile->email,
                 'phone' => $validatedData['phone'] ?? $userProfile->phone,
-                'kennel_name' => $validatedData['kennel_name'] ?? $userProfile->kennel_name
+                'kennel_name_status' => $request->boolean('use_kennel_name'),
+                'kennel_name' =>$request->use_kennel_name ? $request->kennel_name : null,
             ]);
     
             // Guardar los cambios en la base de datos

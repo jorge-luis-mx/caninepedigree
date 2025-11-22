@@ -115,6 +115,7 @@ class RegisteredUserController extends Controller
             'first_name' => $request->name,
             'last_name' => count($text) > 0 ? $text[0] : null,
             'kennel_name'=>$request->kennel_name,
+            'kennel_name_status'=>$request->filled('kennel_name') ? 1 : 0,
             'email' => $request->email,
             'status' => 1,
         ]);

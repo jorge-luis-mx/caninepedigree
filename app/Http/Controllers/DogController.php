@@ -78,21 +78,6 @@ class DogController extends Controller
         $arrayOwner = ['Administrator','Employee'];
         $owner = in_array($role->name, $arrayOwner) ? $profileAdminstrador->profile_id: $user->profile_id;
 
-        // $dogs = Dog::where('dogs.current_owner_id', $owner)
-        //     ->whereIn('dogs.status', ['completed','exempt'])
-        //     ->where('transfer_pending', 0)
-        //     ->leftJoin('dog_payments', 'dogs.dog_id', '=', 'dog_payments.dog_id')
-        //     ->leftJoin('payments', 'dog_payments.payment_id', '=', 'payments.payment_id')
-        //     ->select(
-        //             'dogs.*',
-        //             DB::raw('MD5(dogs.dog_id) as dog_hash'),
-        //             DB::raw('COALESCE(SUM(payments.amount), 0) as total_paid'),
-        //             DB::raw('100 - COALESCE(SUM(payments.amount), 0) as amount_due')
-        //         )
-        //     ->groupBy('dogs.dog_id', 'dogs.name', 'dogs.breed', 'dogs.color', 'dogs.sex', 'dogs.status')
-        //     ->limit(5)
-        //     ->get();
-
 
         $dogs = Dog::with(['creator.userprofile'])
             ->where('dogs.current_owner_id', $owner)
@@ -150,7 +135,6 @@ class DogController extends Controller
 
         return view('dogs.list-dogs',compact('dogs','role','permissions','pendingRequests','pendingSale'));
     }
-
 
     public function create(Request $request)
     {
@@ -821,7 +805,6 @@ class DogController extends Controller
         return $codigo;
     }
     
-
     public function getOrderReference(){
 
         $cadena = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
