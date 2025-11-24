@@ -9,16 +9,18 @@
         @if(!empty($breedings))
 
             <input id="searchInput" class="input " type="text" placeholder="Buscar por nombre..." onkeyup="filterBreedings()">
-            <table class="table is-striped is-fullwidth mt-4">
-                <thead>
-                    <tr>
-                        <th>Male</th>
-                        <th>Female</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="breedingReceibed"></tbody>
-            </table>
+            <div class="table-container">
+                <table class="table is-striped is-fullwidth mt-4">
+                    <thead>
+                        <tr>
+                            <th>Male</th>
+                            <th>Female</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="breedingReceibed"></tbody>
+                </table>
+            </div>
             <div id="pagination" class="mt-4"></div>
 
         @else

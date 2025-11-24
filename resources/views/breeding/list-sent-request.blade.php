@@ -5,19 +5,19 @@
         @if(!empty($send_request) && count($send_request) > 0)
 
             <input id="searchInput" class="input" type="text" placeholder="Search by name..." onkeyup="filterSentRequests()">
-
-            <table class="table is-striped is-fullwidth mt-4">
-                <thead>
-                    <tr>
-                        <th>Female</th>
-                        <th>Male</th>
-                        <th>Status</th>
-                        <th>Request Date</th>
-                    </tr>
-                </thead>
-                <tbody id="sentTableBody"></tbody>
-            </table>
-
+            <div class="table-container">
+                <table class="table is-striped is-fullwidth mt-4">
+                    <thead>
+                        <tr>
+                            <th>Female</th>
+                            <th>Male</th>
+                            <th>Status</th>
+                            <th>Request Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sentTableBody"></tbody>
+                </table>
+            </div>
             <div id="pagination" class="mt-4"></div>
 
         @else

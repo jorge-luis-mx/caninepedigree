@@ -120,16 +120,43 @@
                                         </a>
                                     </li>
                                     <!-- <li>
-                                        <a href="#" class="is-flex is-flex is-align-items-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="custom-size-icon-list" viewBox="0 0 256 256"><path fill="currentColor" d="M128 20a108 108 0 1 0 108 108A108.12 108.12 0 0 0 128 20m0 192a84 84 0 1 1 84-84a84.09 84.09 0 0 1-84 84"/></svg> 
-                                            <span>Manage Requests</span>
+                                        <a href="{{ route('logout') }}" class="is-flex is-flex is-align-items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="custom-size-icon" viewBox="0 0 24 24"><path fill="#FBA53E" d="m6.265 3.807l1.147 1.639a8 8 0 1 0 9.176 0l1.147-1.639A9.99 9.99 0 0 1 22 12c0 5.523-4.477 10-10 10S2 17.523 2 12a9.99 9.99 0 0 1 4.265-8.193M11 12V2h2v10z"/></svg> 
+                                            <span>{{__('messages.nav.profile.logOut')}}</span>
                                         </a>
                                     </li> -->
 
                                 </ul>
                             </li>
                         </ul>
-                    
+
+                        <ul class="menu-list">
+                            <li class="nav-drop">
+
+                                <a href="{{ route('profile.edit') }}" class="nav-link is-flex is-justify-content-space-between">
+                                    <div class="is-flex is-justify-content-start is-align-items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="custom-size-icon" viewBox="0 0 24 24"><g fill="none" stroke="#FBA53E" stroke-width="1.5"><circle cx="12" cy="9" r="3"/><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M17.97 20c-.16-2.892-1.045-5-5.97-5s-5.81 2.108-5.97 5"/></g></svg>
+                                        <span>{{__('messages.nav.profile.profile')}}</span>
+                                    </div>
+                                </a>
+
+                            </li>
+                        </ul>
+
+                        <ul class="menu-list">
+                            <li class="nav-drop">
+
+                                <a href="{{ route('logout') }}"  onclick="event.preventDefault(); document.getElementById('logout-form').submit();"  class="nav-link is-flex is-justify-content-space-between">
+                                    <div class="is-flex is-justify-content-start is-align-items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="custom-size-icon" viewBox="0 0 24 24"><path fill="#FBA53E" d="m6.265 3.807l1.147 1.639a8 8 0 1 0 9.176 0l1.147-1.639A9.99 9.99 0 0 1 22 12c0 5.523-4.477 10-10 10S2 17.523 2 12a9.99 9.99 0 0 1 4.265-8.193M11 12V2h2v10z"/></svg>
+                                        <span>{{__('messages.nav.profile.logOut')}}</span>
+                                    </div>
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                            </li>
+                        </ul>
 
                 </div>
             </div>
