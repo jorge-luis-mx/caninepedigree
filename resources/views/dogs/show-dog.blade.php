@@ -3,28 +3,31 @@
    <h1 class="is-size-4">{{__('messages.main.dogDetails.title')}}</h1>
 
    @if(!empty($dog))
-
+   
+      @php
+         $kennel_name = (!empty($dog->creator->userprofile->kennel_name) && $dog->creator->userprofile->kennel_name_status == 1)? 'true': 'false';
+      @endphp
       <div class="card buttons-container">
-         <a href="{{ route('dog.sales.create',['id' => $dog['id']])}}">
+         <a href="{{ route('dog.sales.create',['id' =>md5($dog->dog_id)])}}">
             <button class="button has-text-white has-background-warning">Sale Dog</button>
          </a>
-         @if($dog['sex']==='F')
-            <a href="{{ route('puppies.index',['id' => $dog['id']] )}}">
+         @if($dog->sex==='F')
+            <a href="{{ route('puppies.index',['id' =>md5($dog->dog_id)] )}}">
                <button class="button has-text-white has-background-warning">Add Puppies</button>
             </a>
-            <a href="{{ route('breeding.create',['id' => $dog['id']] )}}">
+            <a href="{{ route('breeding.create',['id' =>md5($dog->dog_id)] )}}">
                <button class="button has-text-white has-background-warning">Add Breeding</button>
             </a>
          @endif
 
          <a href="#" 
-            data-id="{{ $dog['id'] }}" data-type="registration" onclick="generateCertificateFromData(this)">
+            data-id="{{md5($dog->dog_id) }}" data-type="registration" data-kennel="{{ $kennel_name }}" onclick="generateCertificateFromData(this)">
             <button class="button has-text-white has-background-warning">{{ __('messages.main.dogDetails.btnRegistration') }}</button>
             
          </a>
 
          <a href="#"
-            data-id="{{ $dog['id'] }}" data-type="pedigree" onclick="generateCertificateFromData(this)">
+            data-id="{{md5($dog->dog_id) }}" data-type="pedigree" data-kennel="{{ $kennel_name }}" onclick="generateCertificateFromData(this)">
             
             <button class="button has-text-white has-background-warning">{{ __('messages.main.dogDetails.btnPedigree') }}</button>
          </a>
@@ -49,11 +52,10 @@
                   @if($breeding->photos->count())
                      @php
 
-                        $dog_id = ($breeding->male_dog_id === $dog['dog_id'])
+                        $dogPedigree = ($breeding->male_dog_id === $dog->dog_id)
                            ? ($breeding->maleDog?->dog_id)
                            : ($breeding->femaleDog?->dog_id);
 
-                        $dogPedigree = md5($dog_id);
                         $male = md5($breeding->male_dog_id);
                         $female = md5($breeding->femaleDog->dog_id)
                      @endphp
@@ -108,15 +110,39 @@
    @endif
 
 <script>
-function generateCertificateFromData(el) {
-    let dogId = el.dataset.id;
-    let type = el.dataset.type;
+function generateCertificateFromData(e) {
 
-    let includeFlag = confirm("Do you want to print the certificate with the Kennel Name?");
-    let flagValue = includeFlag ? 1 : 0;
-    let url = `/certificates/${dogId}/pdf/${type}?flag=${flagValue}`;
+   let dogId = e.dataset.id;
+   let type = e.dataset.type;
+   let kennel_name = e.dataset.kennel;
 
-    window.open(url, '_blank');
+   
+   if (kennel_name == 'true') {
+
+      Swal.fire({
+         title: "Include Kennel Name?",
+         text: "Do you want to print the certificate with the Kennel Name?",
+         icon: "question",
+         showCancelButton: true,
+         confirmButtonText: "Yes, include it",
+         cancelButtonText: "No, without Kennel Name",
+         confirmButtonColor: "#3085d6",
+         cancelButtonColor: "#d33"
+      }).then((result) => {
+
+         let flagValue = result.isConfirmed ? 1 : 0;
+         let url = `/certificates/${dogId}/pdf/${type}?flag=${flagValue}`;
+         window.open(url, "_blank");
+      });
+
+   } else {
+
+      let url = `/certificates/${dogId}/pdf/${type}?flag=0`;
+      window.open(url, '_blank');
+   }
+
+
+
 }
 </script>
 

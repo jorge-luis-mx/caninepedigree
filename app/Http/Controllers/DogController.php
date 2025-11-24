@@ -829,6 +829,8 @@ class DogController extends Controller
             'sire.dam.sire', 'sire.dam.dam',
             'dam.sire.sire', 'dam.sire.dam',
             'dam.dam.sire', 'dam.dam.dam',
+            'creator.userprofile',
+            'currentOwner' // 👈 AGREGADO AQUÍ
         ])
         ->firstOrFail();
 
@@ -842,10 +844,8 @@ class DogController extends Controller
             ->orderBy('created_at', 'desc') // opcional, para mostrar primero las más recientes
             ->get();
 
-        $pedigree = $this->findPedigree($dog);
-        $dog = $pedigree['dog'];
-
-
+        //$pedigree = $this->findPedigree($dog);
+        // $dog = $pedigree['dog'];
 
         return view('dogs/show-dog',compact('dog','completedBreedings'));
     }
