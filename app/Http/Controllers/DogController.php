@@ -588,6 +588,9 @@ class DogController extends Controller
             $paymentProtected['id_hash'] = md5($payment->payment_id);
             $paymentProtected['rol'] = $role->name;
             
+            $kennel_name = (!empty($profile->kennel_name)  && $profile->kennel_name_status==1) ? $profile->kennel_name : $profile->last_name;
+            
+
             $dog = Dog::create([
                 'reg_no'=>$regnum,
                 'name' => $validatedData['name'],

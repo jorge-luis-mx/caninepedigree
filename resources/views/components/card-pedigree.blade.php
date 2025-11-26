@@ -76,8 +76,55 @@
       <div class="table-container table is-bordered is-striped is-narrow is-hoverable">
         <table class="table is-fullwidth">
           <tbody>
-            <!-- Información del perro principal -->
+
             <tr>
+                <td colspan="4">
+                  <div class="container">
+                    <div class="columns is-vcentered is-multiline">
+
+                        <!-- COLUMNA IMAGEN -->
+                        <div class="column is-full-mobile is-one-quarter-tablet has-text-centered">
+                            <figure class="image is-128x128 is-192x192-tablet is-inline-block">
+                                <img src="{{ asset('assets/img/dogs-image.jpg') }}">
+                                
+                            </figure>
+                        </div>
+
+                        <!-- COLUMNA DETALLES -->
+                        <div class="column is-full-mobile is-three-quarters-tablet">
+                            <div class="dog-details">
+                                <p><label>{{__('messages.main.dogDetails.name')}}:</label> <span>{{$dog['aliasDog']}}</span></p>
+                                <p><label>{{__('messages.main.dogDetails.owner')}}:</label> <span>{{$dog['owner']['name']}}</span></p>
+                                <p><label>{{__('messages.main.dogDetails.regNo')}}:</label> <span>{{$dog['number']}}</span></p>
+                                <p><label>{{__('messages.main.dogDetails.breed')}}:</label> <span>{{$dog['breed']}}</span></p>
+                                <p><label>{{__('messages.main.dogDetails.color')}}:</label> <span>{{$dog['color']}}</span></p>
+                                <p><label>{{__('messages.main.dogDetails.sex')}}:</label> <span>{{$dog['sex']=='M'?'Male':'Female' }}</span></p>
+                                <p><label>{{__('messages.main.dogDetails.date')}}:</label>
+                                    <span>{{ \Carbon\Carbon::parse($dog['birthdate'])->format('F d, Y') }}</span>
+                                </p>
+                                <p><label>{{__('messages.main.dogDetails.registered')}}:</label>
+                                    <span>{{ \Carbon\Carbon::parse($dog['date'])->format('F d, Y') }}</span>
+                                </p>
+                              @isset($dog['url'])
+                                  @if(!empty($dog['url']))
+                                      <p>
+                                          <label>Link to Public Pedigree:</label>
+                                          <a href="{{ $dog['url'] }}" target="_blank">{{ $dog['url'] }}</a>
+                                      </p>
+                                  @endif
+                              @endisset
+
+                            </div>
+                        </div>
+
+                    </div>
+                    </div>
+                </td>
+            </tr>
+
+
+            <!-- Información del perro principal -->
+            <!-- <tr>
               <td colspan="4">
                     <div class="dog-info">
                         <div class="container-imagen">
@@ -105,7 +152,7 @@
                         </div>
                     </div>
               </td>
-            </tr>
+            </tr> -->
             <tr>
               <td>{{__('messages.main.pedigree.first')}}</td>
               <td>{{__('messages.main.pedigree.second')}}</td>

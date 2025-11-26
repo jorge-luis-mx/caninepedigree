@@ -151,6 +151,8 @@ class PuppyController extends Controller
                 
             }
 
+            $kennel_name = (!empty($profile->kennel_name)  && $profile->kennel_name_status==1) ? $profile->kennel_name : $profile->last_name;
+            
             foreach ($validated['puppies'] as $puppy) {
 
                 $dog = Dog::create([
