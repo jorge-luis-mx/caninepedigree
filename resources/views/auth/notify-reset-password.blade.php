@@ -5,7 +5,7 @@
         <div class="hidden md:flex w-1/2  bg-custom-gray flex-col">
             <!-- (logo) -->
             <x-application-logo/>
-            <x-image-component-logo image-path="{{ asset('assets/img/taxi_airport.png') }}" />
+            <!-- <x-image-component-logo image-path="{{ asset('assets/img/taxi_airport.png') }}" /> -->
         </div>
 
         <div class="flex h-screen w-full md:w-1/2  bg-white flex items-center justify-center">

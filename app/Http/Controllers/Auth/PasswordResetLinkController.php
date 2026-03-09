@@ -57,7 +57,7 @@ class PasswordResetLinkController extends Controller
         );
 
         $datos = [
-            'from'=>'notify@airporttransportation.com',
+            'from'=>'info@devscun.com',
             'subject' => 'Password change request | ',
             'url'=>$resetUrl
         ];
