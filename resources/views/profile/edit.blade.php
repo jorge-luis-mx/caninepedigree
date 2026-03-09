@@ -82,7 +82,10 @@
                             
                             <div class="column">
                                 <div class="field mb-4">
-                                    <label class="label" for="kennel_name">{{__('messages.main.profile.kennel_name')}}</label>
+                                    <label class="label" for="kennel_name">
+                                        {{ __('messages.main.profile.kennel_name') }}
+                                    </label>
+
                                     <div class="control">
                                         <input
                                             class="input {{ $errors->has('kennel_name') ? 'is-danger' : '' }}"
@@ -90,8 +93,10 @@
                                             name="kennel_name"
                                             id="kennel_name"
                                             value="{{ old('kennel_name', $profileUser->kennel_name) }}"
+                                            {{ !empty($profileUser->kennel_name) ? 'readonly' : '' }}
                                         >
                                     </div>
+
                                     <x-input-error :messages="$errors->get('kennel_name')" />
                                 </div>
                             </div>

@@ -48,6 +48,7 @@ class PasswordResetLinkController extends Controller
             [
                 'email' => $email,
                 'token' => $token,
+                'user_id'=>$existingUserProfile->user[0]->user_id,
                 'created_at' =>  now()->toDateTimeString(),
             ]
         ],
@@ -68,7 +69,7 @@ class PasswordResetLinkController extends Controller
     }
 
 
-    public function index($id)
+    public function notify($id)
     {
         $userProfile = UserProfile::whereRaw('MD5(profile_id) = ?', [$id])->firstOrFail();
         $email = $userProfile->email;
