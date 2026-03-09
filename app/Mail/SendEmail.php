@@ -30,8 +30,10 @@ class SendEmail extends Mailable
     {
         
         return new Envelope(
-            from: new Address($this->datos['from']),
-            subject: $this->datos['subject']
+            from: new Address(config('mail.from.address'),'IDDR Notifications'),
+            subject: $this->datos['subject'],
+            replyTo: [new Address('contact@iddr.com.mx', 'IDDR Support')]
+        
         );
     }
 

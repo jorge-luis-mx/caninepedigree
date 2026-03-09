@@ -57,8 +57,7 @@ class PasswordResetLinkController extends Controller
         );
 
         $datos = [
-            'from'=>'info@devscun.com',
-            'subject' => 'Password change request | ',
+            'subject' => 'Password Reset Request | IDDR',
             'url'=>$resetUrl
         ];
 
