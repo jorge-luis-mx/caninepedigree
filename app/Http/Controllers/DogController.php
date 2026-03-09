@@ -282,7 +282,7 @@ class DogController extends Controller
                                 ->orWhere('last_name', 'LIKE', "%$reg_no%");
                     })
 
-                    // 🔥 Buscar por cada palabra dentro de la concatenación kennel_name + name
+                    //  Buscar por cada palabra dentro de la concatenación kennel_name + name
                     ->orWhere(function ($q) use ($words) {
                         foreach ($words as $word) {
                             $q->whereRaw("
@@ -365,17 +365,7 @@ class DogController extends Controller
                 $data['status'] = 200;
                 $data['data'] = $dog;
             } else {
-                // Buscar por nombre si no se encontró por número de registro
-                // $dogs = Dog::where('name', 'LIKE', "%$reg_no%")->where('sex','M')->whereIn('status', ['completed','exempt'])->get();
 
-                // if ($dogs->isNotEmpty()) {
-                //     $dogs->each(function ($dog) {
-                //         $dog->dog_hash = md5($dog->dog_id);
-                //     });
-
-                //     $data['status'] = 200;
-                //     $data['data'] = $dogs;
-                // }
 
                 //  Buscar por nombre (cuando no se encuentra por número de registro)
                 $dogs = Dog::with(['creator.userprofile'])
@@ -421,7 +411,7 @@ class DogController extends Controller
                     ", [$reg_no, "$reg_no%", "%$reg_no"])
                     ->get();
 
-                // 🔹 Si encontró perros, procesar resultados
+                //  Si encontró perros, procesar resultados
                 if ($dogs->isNotEmpty()) {
                     $dogs->each(function ($dog) {
                         // Genera hash MD5 basado en dog_id
@@ -462,17 +452,7 @@ class DogController extends Controller
             $data['status'] = 200;
             $data['data'] = $dog;
         } else {
-            // Buscar por nombre si no se encontró por número de registro
-            // $dogs = Dog::where('name', 'LIKE', "%$reg_no%")->whereIn('status', ['completed','exempt'])->get();
 
-            // if ($dogs->isNotEmpty()) {
-            //     $dogs->each(function ($dog) {
-            //         $dog->dog_hash = md5($dog->dog_id);
-            //     });
-
-            //     $data['status'] = 200;
-            //     $data['data'] = $dogs;
-            // }
 
             $dogs = Dog::with(['creator.userprofile'])
                 ->whereIn('status', ['completed', 'exempt'])
@@ -694,7 +674,7 @@ class DogController extends Controller
                     // Configure email data
                     $emailData = [
                         'from' => config('mail.from.address'),
-                        'from_name' => config('mail.from.name', 'Canine'),
+                        'from_name' =>'IDDR Notifications',
                         'subject' => 'Dog registration request',
                         'url' => '',
                         'dog' => $dog,
@@ -738,8 +718,8 @@ class DogController extends Controller
 
                     // Configure email data
                     $emailData = [
-                        'from' => config('mail.from.address', 'info@devscun.com'),
-                        'from_name' => config('mail.from.name', 'Canine'),
+                        'from' => config('mail.from.address'),
+                        'from_name' => 'IDDR Notifications',
                         'subject' => 'Dog registration request',
                         'url' =>'',
                         'dog' => $dog,
@@ -894,8 +874,6 @@ class DogController extends Controller
             ->orderBy('created_at', 'desc') // opcional, para mostrar primero las más recientes
             ->get();
 
-        //$pedigree = $this->findPedigree($dog);
-        // $dog = $pedigree['dog'];
 
         return view('dogs/show-dog',compact('dog','completedBreedings'));
     }
