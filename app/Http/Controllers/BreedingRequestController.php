@@ -478,20 +478,9 @@ class BreedingRequestController extends Controller
         $breeding = BreedingRequest::whereRaw('request_id =?', $breedingId)
         ->with(['femaleDog', 'maleDog'])
         ->firstOrFail();
-        //$breeding = BreedingRequest::findOrFail($breedingId);
+
         $femaleDog = $breeding->maleDog; 
 
-
-
-        // $request->validate([
-        //     'photos' => 'required|array',
-        //     'photos.*' => 'image|max:2048',
-        // ], [
-        //     'photos.required' => 'You must select at least one image.',
-        //     'photos.array' => 'The photos must be sent in a valid format.',
-        //     'photos.*.image' => 'Each file must be a valid image (JPG, PNG, etc.).',
-        //     'photos.*.max' => 'Each image must not exceed 2 MB.',
-        // ]);
 
         $request->validate([
             'photos' => 'required|array',

@@ -47,7 +47,7 @@
                                 </div>
                             </div>
                             
-                            <div class="column is-narrow">
+                            <!-- <div class="column is-narrow">
                                 <div class="field mt-5">
                                     <label class="checkbox">
                                         <input 
@@ -59,7 +59,26 @@
                                         <span class="ml-2">Accept Kennel Name</span>
                                     </label>
                                 </div>
+                            </div> -->
+                            <div class="column is-narrow">
+                                <div class="field mt-5">
+                                    <label class="checkbox">
+                                        <input 
+                                            type="checkbox" 
+                                            name="use_kennel_name" 
+                                            value="1"
+
+                                            {{ !empty($profileUser->kennel_name) ? 'checked disabled' : '' }}
+
+                                            {{ empty($profileUser->kennel_name) && old('use_kennel_name', $profileUser->kennel_name_status) == 1 ? 'checked' : '' }}
+                                        >
+                                        <span class="ml-2">Accept Kennel Name</span>
+                                    </label>
+                                </div>
                             </div>
+                            @if(!empty($profileUser->kennel_name))
+                            <input type="hidden" name="use_kennel_name" value="1">
+                            @endif
                         </div>
 
                         <!-- Segunda fila: Middle Name y Kennel Name -->

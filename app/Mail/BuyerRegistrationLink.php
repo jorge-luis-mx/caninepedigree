@@ -30,8 +30,9 @@ class BuyerRegistrationLink extends Mailable
     {
         
         return new Envelope(
-            from: new Address($this->datos['from']),
-            subject: $this->datos['subject']
+            from: new Address($this->datos['from'],$this->datos['from_name']),
+            subject: $this->datos['subject'],
+            replyTo: [new Address('contact@iddr.com.mx', 'IDDR Support')]
         );
     }
 

@@ -120,8 +120,8 @@ class DogSaleController extends Controller
 
         $emailData = [
             'from' => config('mail.from.address'),
-            'from_name' => config('mail.from.name', 'Canine'),
-            'subject' => 'update owner request',
+            'from_name' => 'IDDR Notifications',
+            'subject' => 'Dog Ownership Transfer Request',
             'url' => $url,
             'sale' => $sale,
         ];

@@ -4,8 +4,7 @@
     <!-- Content section -->
     <div class="hidden md:flex w-1/2  bg-custom-gray flex-col">
         
-            <!-- <x-application-logo/> -->
-            <!-- <x-image-component-logo image-path="{{ asset('assets/img/dog.jpg') }}" /> -->
+
     </div>
 
     <!-- Login section -->
