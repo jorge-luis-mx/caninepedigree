@@ -1,8 +1,8 @@
 <?php
 
 // PayPal Environment 
-define("PAYPAL_ENVIRONMENT", "sandbox");
-//define("PAYPAL_ENVIRONMENT", "production");
+//define("PAYPAL_ENVIRONMENT", "sandbox");
+define("PAYPAL_ENVIRONMENT", "production");
 
 // PayPal REST API endpoints
 define("PAYPAL_ENDPOINTS", array(
@@ -17,8 +17,8 @@ define("PAYPAL_CREDENTIALS", array(
 		"client_secret" => "EATpwbVvZZtmWzyKnchWBmjgmn_A2ter3hEIzANcqu2rRGvFawazPKRDEpfMZRd2xWy2DPisJLjY1__Y"
 	],
 	"production" => [
-		"client_id" => "AchNiBlV930Kno4SopMQ0YmY5swOWCdVi_WqrOF8uPgl1WaTKdnbGIiTBEZDBclbHx4DkRnz4Y77iP8l",
-		"client_secret" => "EKUkb243CboJUvo9NU9sAOz1jy5MxlDARuUTPqsXNgXTuKvLHmnGHjRPMcZ-myMy5yIPIZwjnyArxGej"
+		"client_id" => "AZ43o7FX2C_76ZZdKUpcPt7N3nxIsOIwi8h7gaRLBpwO537yYJZ0bwjpnoQDd8DNWVZ88vZM861OyAc-",
+		"client_secret" => "EEwQn47sGvaAbZKFSSvfP4aYzL3xZ4nnqX_lzc-3t3m_HEkRJpX7oX0Cq0NUXR4tWCrcXLczv6mZSgoL"
 	]
 ));
 

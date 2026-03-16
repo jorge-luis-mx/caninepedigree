@@ -78,7 +78,9 @@
 
 
 <!-- Sandbox -->
-<script src="https://www.paypal.com/sdk/js?client-id=AcnIDyl2_CkrcUup_vpY1Ttraiiu-B79GGuzh2IY2fIuKcH76N9-EQ_SMtjXNUPtcdEuq_uo35_YzaF5&currency=MXN"></script>
+<!-- <script src="https://www.paypal.com/sdk/js?client-id=AcnIDyl2_CkrcUup_vpY1Ttraiiu-B79GGuzh2IY2fIuKcH76N9-EQ_SMtjXNUPtcdEuq_uo35_YzaF5&currency=MXN"></script> -->
+<!-- Production -->
+<script src="https://www.paypal.com/sdk/js?client-id=AZ43o7FX2C_76ZZdKUpcPt7N3nxIsOIwi8h7gaRLBpwO537yYJZ0bwjpnoQDd8DNWVZ88vZM861OyAc-&currency=MXN"></script>
 <script>
    const elInvoice = document.getElementById('invoice');
    const csrfToken = document.getElementById('csrf_token').getAttribute('data-csrf_token');

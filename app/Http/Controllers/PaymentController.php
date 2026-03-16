@@ -90,8 +90,8 @@ class PaymentController extends Controller
         $order = [
             "intent" => "CAPTURE",
             "application_context" => [
-                "return_url" => "",
-                "cancel_url" => ""
+                "return_url" => url('/paypal/success'),
+                "cancel_url" => url('/paypal/cancel')
             ],
             "purchase_units" => [
                 [

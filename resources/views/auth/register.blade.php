@@ -66,7 +66,7 @@
                 </div>
 
                 <div class="flex items-center justify-between mt-4">
-                    <a class="text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
+                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
                         {{ __('Already registered?') }}
                     </a>
                     <x-primary-button>
