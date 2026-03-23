@@ -21,20 +21,22 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                // Si viene un token en la URL
+
+                $params = [];
+
                 if ($request->filled('token')) {
-                    //Guardar token en sesión
                     session(['pending_invite_token' => $request->input('token')]);
-                    //Redirigir con token
-                    return redirect()->route('dogs.create', ['token' => $request->input('token')]);
+                    $params['token'] = $request->input('token');
                 }
 
-                // Si viene un token en la URL
                 if ($request->filled('invoice')) {
-                    //Guardar token en sesión
                     session(['pending_invite_invoice' => $request->input('invoice')]);
-                    //Redirigir con token
-                    return redirect()->route('dogs.create', ['invoice' => $request->input('invoice')]);
+                    $params['invoice'] = $request->input('invoice');
+                }
+
+                // Si hay params → redirige con ellos
+                if (!empty($params)) {
+                    return redirect()->route('dogs.create', $params);
                 }
 
                 return redirect(RouteServiceProvider::HOME);
