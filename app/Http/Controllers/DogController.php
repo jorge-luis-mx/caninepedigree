@@ -684,9 +684,9 @@ class DogController extends Controller
                     $this->createPendingRelation($emailData,'sire',$sireEmail,$sireName);
 
                     //Log successful sending
-                    Log::info('Dog registration email sent successfully', [
+                    Log::info('Dog registration email sent successfully sire', [
                         'recipient' => $sireEmail,
-                        'dog_id' => $dog->id ?? null
+                        'dog_id' => $dog->dog_id
                     ]);
 
                 } catch (Exception $e) {
@@ -694,7 +694,7 @@ class DogController extends Controller
                         Log::error('Error sending dog registration email', [
                             'error' => $e->getMessage(),
                             'recipient' => $sireEmail ?? 'undefined',
-                            'dog_id' => $dog->id ?? null
+                            'dog_id' => $dog->dog_id
                         ]);
                         
                         // Optional: throw custom exception or handle error according to requirements
@@ -727,14 +727,18 @@ class DogController extends Controller
                     ];
 
                     $this->createPendingRelation($emailData,'dam',$damEmail,$damName);
-
+                    //Log successful sending
+                    Log::info('Dog registration email sent successfully dam', [
+                        'recipient' => $damEmail,
+                        'dog_id' => $dog->dog_id
+                    ]);
 
                 } catch (Exception $e) {
                     // Log the error
                     Log::error('Error sending dog registration email to dam', [
                         'error' => $e->getMessage(),
                         'recipient' => $damEmail ?? 'undefined',
-                        'dog_id' => $dog->id ?? null
+                        'dog_id' => $dog->dog_id
                     ]);
                     
                     // Optional: throw custom exception or handle error according to requirements
@@ -767,7 +771,7 @@ class DogController extends Controller
                 }
             }
 
-            $data['message'] = 'CANINE inserted successfully';
+            $data['message'] = 'Canine inserted successfully';
             $data['status'] = 200;
             $data['data'] = $paymentProtected;
             
